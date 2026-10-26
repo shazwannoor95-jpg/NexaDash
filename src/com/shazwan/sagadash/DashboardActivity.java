@@ -230,7 +230,7 @@ public class DashboardActivity extends Activity implements LocationListener {
                 io.execute(()->{
                     try{
                         SagaShowroom.importVideo(this,uri);
-                        handler.post(()->{if(!isDestroyed()){showroom.reload();setVehicleVideo(true);toast("Car video ready. Tap it to play or pause.");}});
+                        handler.post(()->{if(!isDestroyed()){selectVehicleVideo("imported");toast("Car video ready. Tap it to play or pause.");}});
                     }catch(Exception e){handler.post(()->{if(!isDestroyed())new AlertDialog.Builder(this).setTitle("Cannot import video").setMessage("Choose a playable video up to 2 minutes and 32 MB, preferably MP4 / H.264. Your previous video has been kept.").setPositiveButton("OK",null).show();});}
                 });
             }
@@ -239,17 +239,26 @@ public class DashboardActivity extends Activity implements LocationListener {
         DashShortcuts.handleResult(this,request,result,data);
     }
     void vehicleDialog(){
-        String[] modes=SagaShowroom.hasVideo(this)?new String[]{"Choose car video…","Interactive 3D model","Video preview"}:new String[]{"Choose car video…","Interactive 3D model"};
+        String[] modes=SagaShowroom.hasImportedVideo(this)
+            ?new String[]{"Transparent Saga video","Original Saga video","Interactive 3D model","Choose car video…","Imported video preview"}
+            :new String[]{"Transparent Saga video","Original Saga video","Interactive 3D model","Choose car video…"};
         new AlertDialog.Builder(this).setTitle("Vehicle view").setItems(modes,(d,index)->{
-            if(index==0){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
-            else setVehicleVideo(index==2);
+            if(index==0)selectVehicleVideo("transparent");
+            else if(index==1)selectVehicleVideo("original");
+            else if(index==2)setVehicleVideo(false);
+            else if(index==3){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
+            else selectVehicleVideo("imported");
         }).setNegativeButton("Close",null).show();
+    }
+    void selectVehicleVideo(String source){
+        dashPrefs().edit().putString("vehicle_preview_source",source).apply();showroom.reload();setVehicleVideo(true);
     }
     void setVehicleVideo(boolean useVideo){
         vehicleVideo=useVideo&&SagaShowroom.hasVideo(this);dashPrefs().edit().putBoolean("vehicle_video",vehicleVideo).apply();
         showroom.setVisibility(vehicleVideo?View.VISIBLE:View.GONE);car.setVisibility(vehicleVideo?View.GONE:View.VISIBLE);
-        vehicleMode.setText(vehicleVideo?"Video ▾":"3D ▾");vehicleMode.setContentDescription("Choose vehicle view");
-        vehicleHint.setText(vehicleVideo?"Video preview · Tap to play / pause":"Drag to rotate · Pinch to zoom · Double-tap to reset");
+        boolean cutout=vehicleVideo&&"transparent".equals(dashPrefs().getString("vehicle_preview_source","transparent"));
+        vehicleMode.setText(vehicleVideo?(cutout?"Cutout ▾":"Video ▾"):"3D ▾");vehicleMode.setContentDescription("Choose vehicle view");
+        vehicleHint.setText(vehicleVideo?(cutout?"Transparent video · Tap to play / pause":"Video preview · Tap to play / pause"):"Drag to rotate · Pinch to zoom · Double-tap to reset");
         if(vehicleVideo){car.onPause();if(visible)showroom.resume();}
         else{showroom.pause();if(visible)car.onResume();}
     }

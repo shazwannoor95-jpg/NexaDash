@@ -285,10 +285,27 @@ all 240 decoded video frames match the upload exactly. The baked-in NEXA plate a
 background/annotations are retained. The 3D renderer also labels its front/rear plates NEXA.
 
 New installs default to the paused video preview. Existing saved mode choices remain; select
-Vehicle View > Video preview to use it. Imported private videos still take priority. MediaPlayer reads
+Vehicle View > Video preview to use it. Private imports can now be selected explicitly in Vehicle View. MediaPlayer reads
 the packaged resource FD directly, without first extracting it to private storage. No audio focus,
 MediaSession or background playback is added. This video is not a reconstructed 3D mesh.
 
 Validation of the bundled version: Gradle debug build passed; 336 emulator assertions passed,
 including actual decode/play/pause/release from the APK resource with no imported file present,
 and private-import override behavior. All 240 decoded frames match the original uploaded video.
+
+
+## Transparent Saga preview — 26 October 2026
+
+The owner-requested background removal is available as [transparent WebM](media/saga-transparent.webm)
+and a bundled H.264 RGB/matte transport. See [format, Windows update and regeneration notes](TRANSPARENT_VIDEO.md).
+The car and NEXA remain from the supplied clip. It is automatic video segmentation, not a new
+3D asset; fine edge/antenna artifacts and original generated-video/framing changes may remain.
+
+The new GLES2 renderer restores alpha from the matte and composites a translucent SurfaceView
+onto the dashboard. Original and imported videos remain available as fully opaque playback.
+The video source choice is persisted separately from the 3D/video mode. No model weights,
+Python/ONNX runtime, audio focus or extra MediaSession are added to the Android app.
+
+Validation:348 emulator assertions and the Gradle debug build passed. Android screenshot pixel
+samples confirmed transparent video corners reveal the exact underlying card background; a
+settings dialog correctly renders above the car. See the [actual app screenshot](img/saga-transparent-android.png).

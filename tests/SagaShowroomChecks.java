@@ -26,10 +26,15 @@ public final class SagaShowroomChecks {
         Context context=instrumentation.getTargetContext();
         boolean hadMode=dashboard.dashPrefs().contains("vehicle_video");
         boolean oldMode=dashboard.dashPrefs().getBoolean("vehicle_video",true);
+        boolean hadSource=dashboard.dashPrefs().contains("vehicle_preview_source");
+        String oldSource=dashboard.dashPrefs().getString("vehicle_preview_source","transparent");
         File video=SagaShowroom.file(context);
         File backup=new File(video.getParentFile(),"vehicle-preview.check-backup");
         if(backup.exists())throw new IOException("Previous showroom test backup exists; restore it before running tests");
-        instrumentation.runOnMainSync(()->dashboard.setVehicleVideo(false));
+        instrumentation.runOnMainSync(()->{
+            dashboard.setVehicleVideo(false);
+            dashboard.dashPrefs().edit().putString("vehicle_preview_source","transparent").commit();
+        });
         boolean existed=video.isFile(),protectedOriginal=false;
         try{
             if(existed){
@@ -42,6 +47,35 @@ public final class SagaShowroomChecks {
             check(picker.hasCategory(Intent.CATEGORY_OPENABLE),"picker requests readable local documents");
             check(!SagaShowroom.hasImportedVideo(context),"there is no private override before import");
             check(SagaShowroom.hasVideo(context),"bundled car preview is available without importing a private file");
+            MediaMetadataRetriever alphaMetadata=new MediaMetadataRetriever();
+            try(AssetFileDescriptor descriptor=context.getResources().openRawResourceFd(R.raw.saga_showroom_alpha)){
+                alphaMetadata.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
+                check("1280".equals(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
+                        &&"360".equals(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)),"packed color/matte preview retains its known 1280x360 layout");
+                long duration=Long.parseLong(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                check(duration>=9900&&duration<=10100,"transparent preview retains the ten-second sequence");
+                check(!"yes".equals(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)),"transparent preview has no audio track");
+            }finally{alphaMetadata.release();}
+            instrumentation.runOnMainSync(()->{
+                dashboard.dashPrefs().edit().putString("vehicle_preview_source","transparent").commit();
+                dashboard.setVehicleVideo(true);
+            });
+            waitPrepared(instrumentation,dashboard);
+            final Throwable[] alphaFailure={null};
+            instrumentation.runOnMainSync(()->{
+                try{
+                    SagaShowroom view=dashboard.showroom;
+                    check(view.packedAlpha,"transparent source enables packed color/matte compositing");
+                    check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==360,"transparent mode prepares the actual packed video decoder");
+                    check(!view.playing(),"transparent preview starts paused");
+                    check(!view.player.isLooping(),"transparent preview does not auto-loop");
+                    view.toggle();check(view.playing(),"transparent preview can start playback");
+                    view.toggle();check(!view.playing(),"transparent preview can pause playback");
+                    dashboard.setVehicleVideo(false);
+                    check(view.player==null&&!view.active,"switching away releases the transparent-preview decoder");
+                }catch(Throwable failure){alphaFailure[0]=failure;}
+            });
+            rethrow(alphaFailure[0]);
             MediaMetadataRetriever bundled=new MediaMetadataRetriever();
             try(AssetFileDescriptor descriptor=context.getResources().openRawResourceFd(R.raw.saga_showroom)){
                 bundled.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
@@ -56,13 +90,17 @@ public final class SagaShowroomChecks {
                 check(frame!=null,"packaged video has a decodable opening frame");
                 if(frame!=null)frame.recycle();
             }finally{bundled.release();}
-            instrumentation.runOnMainSync(()->dashboard.setVehicleVideo(true));
+            instrumentation.runOnMainSync(()->{
+                dashboard.dashPrefs().edit().putString("vehicle_preview_source","original").commit();
+                dashboard.setVehicleVideo(true);
+            });
             waitPrepared(instrumentation,dashboard);
             final Throwable[] bundledFailure={null};
             instrumentation.runOnMainSync(()->{
                 try{
                     SagaShowroom view=dashboard.showroom;
-                    check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==720,"decoder uses the packaged preview when no private override exists");
+                    check(!view.packedAlpha,"original source uses normal video rendering");
+                    check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==720,"decoder uses the original packaged preview when selected");
                     check(!view.playing(),"packaged preview also starts paused");
                     view.toggle();check(view.playing(),"packaged preview can start playback");
                     view.toggle();check(!view.playing(),"packaged preview can pause playback");
@@ -92,14 +130,18 @@ public final class SagaShowroomChecks {
             });}catch(IOException expected){failed=true;}
             check(failed&&Arrays.equals(read(video),fixture),"interrupted source read preserves the last working video");
             check(!new File(video.getParentFile(),"vehicle-preview.pending").exists(),"failed imports leave no pending file");
-            instrumentation.runOnMainSync(()->dashboard.setVehicleVideo(true));
+            instrumentation.runOnMainSync(()->{
+                dashboard.dashPrefs().edit().putString("vehicle_preview_source","imported").commit();
+                dashboard.setVehicleVideo(true);
+            });
             waitPrepared(instrumentation,dashboard);
             final Throwable[] failure={null};
             instrumentation.runOnMainSync(()->{
                 try{
                     SagaShowroom view=dashboard.showroom;
                     check(view!=null&&view.active&&view.prepared,"visible video mode prepares the real decoder");
-                    check(view.player.getVideoWidth()==64&&view.player.getVideoHeight()==64,"private imported clip overrides the bundled preview for playback");
+                    check(!view.packedAlpha,"imported source uses normal video rendering");
+                    check(view.player.getVideoWidth()==64&&view.player.getVideoHeight()==64,"imported source plays the selected private clip");
                     check(!view.playing(),"video preview is paused by default");
                     check(!view.player.isLooping(),"a recording with a discontinuous seam does not auto-loop");
                     view.toggle();check(view.playing(),"tap starts the video preview");
@@ -130,6 +172,7 @@ public final class SagaShowroomChecks {
             }finally{
                 SharedPreferences.Editor edit=dashboard.dashPrefs().edit();
                 if(hadMode)edit.putBoolean("vehicle_video",oldMode);else edit.remove("vehicle_video");
+                if(hadSource)edit.putString("vehicle_preview_source",oldSource);else edit.remove("vehicle_preview_source");
                 edit.commit();
             }
         }

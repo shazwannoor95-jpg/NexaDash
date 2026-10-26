@@ -11,22 +11,34 @@ import android.widget.*;
 import java.io.*;
 
 /** Bundled or locally imported, muted video preview. It is never an Android media session or a 3D model. */
-final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextureListener {
+final class SagaShowroom extends FrameLayout {
     static final int PICK_CAR_VIDEO=4813;
     static final long MAX_BYTES=32L*1024*1024, MAX_DURATION_MS=120000;
-    final TextureView texture;
+    final SagaAlphaVideoView video;
     final TextView status;
     MediaPlayer player;
-    boolean prepared,active;
+    boolean prepared,active,packedAlpha;
     private Surface surface;
-    private int position,videoWidth,videoHeight;
+    private int position;
 
     SagaShowroom(Context context){
-        super(context);setBackgroundColor(0xff0b1725);
-        texture=new TextureView(context);texture.setSurfaceTextureListener(this);
-        addView(texture,new LayoutParams(-1,-1));
+        super(context);setBackgroundColor(Color.TRANSPARENT);
         status=new TextView(context);status.setTextColor(0xffb6cddd);status.setGravity(Gravity.CENTER);
-        status.setText("Choose a car video using View");addView(status,new LayoutParams(-1,-1));
+        status.setText("Choose a car video using View");
+        video=new SagaAlphaVideoView(context);
+        video.setListener(new SagaAlphaVideoView.Listener(){
+            @Override public void ready(){
+                if(player!=null&&surface!=video.decoderSurface())release();
+                if(active)open();
+            }
+            @Override public void lost(){release();}
+            @Override public void frame(){if(prepared&&status.getVisibility()!=GONE)status.setVisibility(GONE);}
+            @Override public void error(){
+                release();status.setText("Video rendering is unavailable on this graphics driver. Use View to choose the 3D model.");status.setVisibility(VISIBLE);
+            }
+        });
+        addView(video,new LayoutParams(-1,-1));
+        addView(status,new LayoutParams(-1,-1));
         setContentDescription("Car video preview. Tap to play or pause. This is a recorded video, not an interactive 3D model.");
         setOnClickListener(v->toggle());
     }
@@ -73,39 +85,42 @@ final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextu
             if(!temporary.renameTo(destination))throw new IOException("Could not save this video");
         }finally{temporary.delete();}
     }
-    void resume(){active=true;if(texture.isAvailable())open();}
-    void pause(){active=false;release();}
-    void reload(){release();position=0;if(active&&texture.isAvailable())open();}
+    void resume(){if(!active){active=true;video.onResume();}if(video.decoderSurface()!=null)open();}
+    void pause(){active=false;release();video.onPause();}
+    void reload(){release();position=0;if(active&&video.decoderSurface()!=null)open();}
     void release(){
         MediaPlayer old=player;player=null;
         if(old!=null){
             if(prepared)try{position=old.getCurrentPosition();}catch(IllegalStateException ignored){}
             prepared=false;old.reset();old.release();
         }
-        if(surface!=null){surface.release();surface=null;}
+        surface=null;video.clearFrame();
     }
     void open(){
-        if(!active||!texture.isAvailable()||player!=null)return;
+        if(!active||video.decoderSurface()==null||player!=null)return;
         if(!hasVideo(getContext())){status.setText("Choose a car video using View");status.setVisibility(VISIBLE);return;}
         status.setText("Loading video preview…");status.setVisibility(VISIBLE);
         MediaPlayer current=new MediaPlayer();player=current;
         try{
-            surface=new Surface(texture.getSurfaceTexture());current.setSurface(surface);
+            String source=getContext().createDeviceProtectedStorageContext().getSharedPreferences("dashboard",0).getString("vehicle_preview_source","transparent");
+            boolean imported="imported".equals(source)&&hasImportedVideo(getContext());
+            packedAlpha=!imported&&!"original".equals(source);
+            surface=video.decoderSurface();current.setSurface(surface);
             current.setVolume(0,0); // No audio focus request, audio output or MediaSession.
             current.setLooping(false);
-            current.setOnVideoSizeChangedListener((m,w,h)->{if(player==m){videoWidth=w;videoHeight=h;fit();}});
+            current.setOnVideoSizeChangedListener((m,w,h)->{if(player==m)video.setVideoSize(w,h,packedAlpha);});
             current.setOnPreparedListener(m->{
                 if(player!=m||!active)return;prepared=true;m.setVolume(0,0);
-                videoWidth=m.getVideoWidth();videoHeight=m.getVideoHeight();fit();
+                video.setVideoSize(m.getVideoWidth(),m.getVideoHeight(),packedAlpha);
                 m.seekTo(Math.min(Math.max(1,position),Math.max(1,m.getDuration()-1)));
             });
             current.setOnCompletionListener(m->{if(player==m)position=0;});
             current.setOnErrorListener((m,what,extra)->{
                 if(player==m){release();status.setText("Cannot play this video. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}return true;
             });
-            if(hasImportedVideo(getContext()))current.setDataSource(file(getContext()).getAbsolutePath());
-            else try(AssetFileDescriptor video=getResources().openRawResourceFd(R.raw.saga_showroom)){
-                current.setDataSource(video.getFileDescriptor(),video.getStartOffset(),video.getLength());
+            if(imported)current.setDataSource(file(getContext()).getAbsolutePath());
+            else try(AssetFileDescriptor descriptor=getResources().openRawResourceFd(packedAlpha?R.raw.saga_showroom_alpha:R.raw.saga_showroom)){
+                current.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
             }
             current.prepareAsync();
         }catch(IOException|RuntimeException e){release();status.setText("Video unavailable. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}
@@ -118,14 +133,5 @@ final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextu
             else{if(player.getCurrentPosition()>=player.getDuration()-100)player.seekTo(1);player.start();}
         }catch(IllegalStateException ignored){}
     }
-    void fit(){
-        int w=texture.getWidth(),h=texture.getHeight();if(w==0||h==0||videoWidth==0||videoHeight==0)return;
-        float factor=Math.min((float)w/videoWidth,(float)h/videoHeight);
-        Matrix matrix=new Matrix();matrix.setScale(videoWidth*factor/w,videoHeight*factor/h,w/2f,h/2f);texture.setTransform(matrix);
-    }
-    @Override public void onSurfaceTextureAvailable(SurfaceTexture surface,int width,int height){if(active)open();}
-    @Override public void onSurfaceTextureSizeChanged(SurfaceTexture surface,int width,int height){fit();}
-    @Override public boolean onSurfaceTextureDestroyed(SurfaceTexture surface){release();return true;}
-    @Override public void onSurfaceTextureUpdated(SurfaceTexture surface){if(prepared)status.setVisibility(GONE);}
     @Override protected void onDetachedFromWindow(){pause();super.onDetachedFromWindow();}
 }

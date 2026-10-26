@@ -1,0 +1,20 @@
+{
+  "frames": 240,
+  "fps": 24.0,
+  "rgba_size": [
+    960,
+    540
+  ],
+  "android_packed_size": [
+    1280,
+    360
+  ],
+  "source_sha256": "94e7a9c73f5eb63fdeb5fefc86351a81a402206e4c6e2a8832e5eb79f0ba36b4",
+  "model_sha256": "8d10d2f3bb75ae3b6d527c77944fc5e7dcd94b29809d47a739a7a728a912b491",
+  "foreground_fraction_range": [
+    0.1671045524691358,
+    0.397920524691358
+  ],
+  "method": "U2Net segmentation, guided edge filter, gentle erosion and flow-aligned temporal blending",
+  "limitation": "Automatic masks may omit fine antenna/edge detail; source framing and generated car detail changes remain."
+}

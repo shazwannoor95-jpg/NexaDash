@@ -1,3 +1,6 @@
+> **Update transparent:** ikut [panduan ini](TRANSPARENT_VIDEO.md#windows-update), copy folder `src` dan `res`,
+> kemudian pilih **Transparent Saga video**. Video asal dan pilihan 3D masih ada.
+
 # Video kereta dan shortcut — panduan Windows
 
 S/D dahulu ialah singkatan Saga Dash. Sidebar kini memaparkan Saga Dash dengan jelas.
@@ -26,8 +29,8 @@ Video asal kini dimasukkan terus sebagai `res/raw/saga_showroom.mp4`: MP4 H.264,
 24fps, 10 saat, kira-kira 3.8 MB. Semua 240 frame gambar sama dengan video asal; hanya audio dibuang.
 Plat **NEXA** dikekalkan atas permintaan pemilik, termasuk pada label model 3D.
 
-Install baru menggunakan video sebagai paparan awal. Jika projek lama masih menunjukkan model,
-klik **3D ▾ > Video preview**. Tak perlu pindah MP4 ke emulator atau import fail untuk video ini.
+Install baru menggunakan video transparent sebagai paparan awal. Jika projek lama masih menunjukkan model,
+klik **3D ▾ > Transparent Saga video**. Pilih **Original Saga video** jika mahu latar studio asal. Tak perlu pindah MP4 ke emulator atau import fail untuk video ini.
 Pilihan 3D masih tersedia melalui **Video ▾ > Interactive 3D model**.
 
 Fail video/plat ini memang disertakan dalam source dan APK edisi peribadi yang diminta pemilik.
@@ -46,12 +49,12 @@ Untuk menggantikan preview dengan video lain, import fail sendiri:
 1. Pastikan MP4 asal ada pada komputer Windows kau.
 2. Hidupkan emulator. Cuba drag fail MP4 dari File Explorer ke skrin emulator; fail biasanya
    disalin ke Download. Jika drag-and-drop tidak tersedia, gunakan langkah alternatif di bawah.
-3. Dalam Saga Dash, klik **3D ▾** di atas panel kereta, sebelah PROTON SAGA.
+3. Dalam Saga Dash, klik **3D ▾ / Video ▾ / Cutout ▾** di atas panel kereta, sebelah PROTON SAGA.
 4. Klik **Choose car video…**.
 5. Dalam pemilih fail Android, buka menu ☰ > Downloads dan pilih MP4 tersebut.
 6. Tunggu import. Panel bertukar ke **Video ▾**. Ketuk video untuk Play/Pause.
 7. Untuk kembali kepada model yang boleh diputar, klik **Video ▾ > Interactive 3D model**.
-   Pilihan **Video preview** membolehkan kau kembali kepada video yang disimpan.
+   Pilihan **Imported video preview** membolehkan kau kembali kepada video yang disimpan.
 
 Alternatif untuk menghantar MP4 ke emulator:
 
