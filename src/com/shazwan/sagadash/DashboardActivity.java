@@ -29,6 +29,9 @@ public class DashboardActivity extends Activity implements LocationListener {
     TextView clock,date,next,speed,gps,trip,title,artist,source,lyric,play,progress;
     ImageView artwork;
     SagaView car;
+    SagaShowroom showroom;
+    TextView vehicleHint,vehicleMode;
+    boolean vehicleVideo;
     DashMedia media;
     LocationManager locations;
     Location previous;
@@ -90,7 +93,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void build(){
         LinearLayout root=row();root.setBackgroundColor(BG);pad(root,14);setContentView(root);
         LinearLayout nav=column();nav.setGravity(Gravity.CENTER);root.addView(nav,new LinearLayout.LayoutParams(px(96),-1));
-        TextView brand=text("S / D",23,BLUE);brand.setGravity(Gravity.CENTER);nav.addView(brand,new LinearLayout.LayoutParams(-1,px(84)));
+        TextView brand=text("Saga\nDash",17,BLUE);brand.setContentDescription("Saga Dash");brand.setGravity(Gravity.CENTER);nav.addView(brand,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
         main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);
         LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));TextView status=button("Media access  ·  ⚙",this::settings);header.addView(status);main.addView(header);clock.setOnClickListener(v->clockDialog());
@@ -99,12 +102,18 @@ public class DashboardActivity extends Activity implements LocationListener {
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
         LinearLayout content=row();main.addView(content,new LinearLayout.LayoutParams(-1,0,1));
         LinearLayout left=card();LinearLayout.LayoutParams leftP=new LinearLayout.LayoutParams(0,-1,.43f);leftP.setMargins(0,px(6),px(10),px(6));content.addView(left,leftP);
-        LinearLayout vehicleHeader=row();TextView model=text("PROTON SAGA",17,MUTED);vehicleHeader.addView(model,new LinearLayout.LayoutParams(0,-2,1));speed=text("— km/h",24,TEXT);vehicleHeader.addView(speed);left.addView(vehicleHeader);
-        car=new SagaView(this);left.addView(car,new LinearLayout.LayoutParams(-1,0,1));TextView hint=text("Drag to rotate · Pinch to zoom · Double-tap to reset",13,MUTED);hint.setGravity(Gravity.CENTER);left.addView(hint);
+        LinearLayout vehicleHeader=row();TextView model=text("PROTON SAGA",17,MUTED);vehicleHeader.addView(model,new LinearLayout.LayoutParams(0,-2,1));
+        vehicleMode=text("View ▾",15,BLUE);vehicleMode.setGravity(Gravity.CENTER);vehicleMode.setOnClickListener(v->vehicleDialog());vehicleHeader.addView(vehicleMode,new LinearLayout.LayoutParams(px(66),px(38)));
+        speed=text("— km/h",22,TEXT);vehicleHeader.addView(speed);left.addView(vehicleHeader);
+        FrameLayout vehicleStage=new FrameLayout(this);left.addView(vehicleStage,new LinearLayout.LayoutParams(-1,0,1));
+        car=new SagaView(this);vehicleStage.addView(car,new FrameLayout.LayoutParams(-1,-1));
+        showroom=new SagaShowroom(this);vehicleStage.addView(showroom,new FrameLayout.LayoutParams(-1,-1));
+        vehicleHint=text("",13,MUTED);vehicleHint.setGravity(Gravity.CENTER);left.addView(vehicleHint);
+        setVehicleVideo(dashPrefs().getBoolean("vehicle_video",false));
         gps=text("GPS · Waiting for signal",14,BLUE);left.addView(gps);trip=text("",14,MUTED);left.addView(trip);trip.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("Reset GPS trip?").setPositiveButton("Reset",(d,w)->{tripMetres=0;saveTrip();}).setNegativeButton("Cancel",null).show();return true;});updateTrip();
         LinearLayout right=column();content.addView(right,new LinearLayout.LayoutParams(0,-1,.57f));
         LinearLayout shortcuts=row();right.addView(shortcuts,new LinearLayout.LayoutParams(-1,px(115)));
-        equal(shortcuts,button("▶\nYouTube",()->launchVideo()));equal(shortcuts,button("↗\nNavigation",()->launch(new String[]{"com.waze","com.google.android.apps.maps"})));equal(shortcuts,button("♫\nMedia sources",this::sources));
+        TextView youtube=button("▶\nYouTube",this::launchVideo);youtube.setOnLongClickListener(v->{DashShortcuts.choose(this,"YouTube");return true;});equal(shortcuts,youtube);TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
         LinearLayout player=card();right.addView(player,new LinearLayout.LayoutParams(-1,0,1));
         source=text("NOW PLAYING",12,BLUE);player.addView(source);
         LinearLayout details=row();artwork=new ImageView(this);artwork.setScaleType(ImageView.ScaleType.CENTER_CROP);details.addView(artwork,new LinearLayout.LayoutParams(px(68),px(68)));LinearLayout labels=column();pad(labels,8);details.addView(labels,new LinearLayout.LayoutParams(0,-2,1));title=text("No active media",24,TEXT);title.setMaxLines(1);title.setEllipsize(android.text.TextUtils.TruncateAt.END);labels.addView(title);artist=text("Play YouTube, radio or Bluetooth audio",15,MUTED);artist.setMaxLines(2);labels.addView(artist);player.addView(details);
@@ -114,8 +123,8 @@ public class DashboardActivity extends Activity implements LocationListener {
         String[] names={"Music","Bluetooth","Radio","Video","Files","Equalizer","Car Link","DSP"};
         int[] colors={0xffec4d79,0xff288ff0,0xff9459ec,0xffec7148,0xffe7a52b,0xff6e8199,0xff239366,0xff336bf2};
         String[] symbols={"♫","ᛒ","FM","▶","▣","▥","▱","☷"};
-        for(int i=0;i<names.length;i++){final String name=names[i];equal(dock,iconButton(name,symbols[i],colors[i],()->shortcut(name)));}
-        TextView footer=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footer,10);footer.setBackground(background(0xff0c1b29));footer.setOnClickListener(v->launch(new String[]{"com.android.car.setting"}));main.addView(footer,new LinearLayout.LayoutParams(-1,px(44)));
+        for(int i=0;i<names.length;i++){final String name=names[i];LinearLayout item=iconButton(name,symbols[i],colors[i],()->shortcut(name));item.setOnLongClickListener(v->{DashShortcuts.choose(this,name);return true;});item.setContentDescription(name+". Long press to choose app.");equal(dock,item);}
+        TextView footer=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footer,10);footer.setBackground(background(0xff0c1b29));footer.setOnClickListener(v->shortcut("Vehicle settings"));footer.setOnLongClickListener(v->{DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footer,new LinearLayout.LayoutParams(-1,px(44)));
     }
     void refreshClock(){
         TrustedClock.Reading time=TrustedClock.read(this);long now=time.utc;SimpleDateFormat f=new SimpleDateFormat("HH:mm",Locale.US);f.setTimeZone(JakimSchedule.MY);clock.setText(f.format(new Date(now)));f.applyPattern("EEEE, dd MMM yyyy  ·  'Malaysia'");date.setText(f.format(new Date(now))+" · "+TrustedClock.label(this));
@@ -210,10 +219,40 @@ public class DashboardActivity extends Activity implements LocationListener {
     String appName(String pkg){try{return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg,0)).toString();}catch(Exception e){return pkg;}}
     void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Open Radio");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
     void settings(){String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;}}).show();}
-    void apps(){io.execute(()->{Intent query=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);List<ResolveInfo> list=getPackageManager().queryIntentActivities(query,0);Collections.sort(list,(a,b)->a.loadLabel(getPackageManager()).toString().compareToIgnoreCase(b.loadLabel(getPackageManager()).toString()));List<String> labels=new ArrayList<>();for(ResolveInfo r:list)labels.add(r.loadLabel(getPackageManager()).toString());handler.post(()->{if(isDestroyed())return;new AlertDialog.Builder(this).setTitle("Applications").setItems(labels.toArray(new String[0]),(d,i)->{ResolveInfo r=list.get(i);try{startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(new ComponentName(r.activityInfo.packageName,r.activityInfo.name)));}catch(Exception e){toast("Unable to open app");}}).show();});});}
-    void shortcut(String name){switch(name){case "Bluetooth":launch(new String[]{"com.nwd.android.bt","com.nwd.android.phone"});break;case "Radio":launch(new String[]{"com.nwd.android.radio"});break;case "Music":launch(new String[]{"com.spotify.music","com.nwd.android.music"});break;case "Video":launchVideo();break;case "Car Link":launch(new String[]{"com.zjinnova.zlink","com.zjinnova.zlink5"});break;case "Files":try{startActivity(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE));}catch(Exception e){apps();}break;case "Equalizer":try{startActivity(new Intent("android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL").putExtra("android.media.extra.PACKAGE_NAME",getPackageName()));}catch(Exception e){toast("Choose your head unit's equalizer in Apps");}break;default:toast("Choose your head unit's DSP app in Apps");}}
-    void launchVideo(){launch(new String[]{"io.gh.reisxd.tizentube.cobalt","com.google.android.youtube","com.google.android.youtube.tv"});}
-    void launch(String[] packages){for(String pkg:packages){Intent i=getPackageManager().getLaunchIntentForPackage(pkg);if(i==null)i=getPackageManager().getLeanbackLaunchIntentForPackage(pkg);if(i!=null){try{startActivity(i);return;}catch(Exception ignored){}}}toast("App not installed or not compatible. Choose an installed app.");apps();}
+    void apps(){io.execute(()->{Intent query=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);List<ResolveInfo> list=getPackageManager().queryIntentActivities(query,0);Collections.sort(list,(a,b)->a.loadLabel(getPackageManager()).toString().compareToIgnoreCase(b.loadLabel(getPackageManager()).toString()));List<String> labels=new ArrayList<>();for(ResolveInfo r:list)labels.add(r.loadLabel(getPackageManager()).toString());handler.post(()->{if(isDestroyed())return;new AlertDialog.Builder(this).setTitle("Installed apps").setItems(labels.toArray(new String[0]),(d,i)->{ResolveInfo r=list.get(i);try{startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(new ComponentName(r.activityInfo.packageName,r.activityInfo.name)));}catch(Exception e){toast("Unable to open app");}}).show();});});}
+    void shortcut(String name){DashShortcuts.open(this,name);}
+    void launchVideo(){DashShortcuts.open(this,"YouTube");}
+    @Override protected void onActivityResult(int request,int result,Intent data){
+        super.onActivityResult(request,result,data);
+        if(request==SagaShowroom.PICK_CAR_VIDEO){
+            if(result==RESULT_OK&&data!=null&&data.getData()!=null){
+                final Uri uri=data.getData();toast("Importing car video…");
+                io.execute(()->{
+                    try{
+                        SagaShowroom.importVideo(this,uri);
+                        handler.post(()->{if(!isDestroyed()){showroom.reload();setVehicleVideo(true);toast("Car video ready. Tap it to play or pause.");}});
+                    }catch(Exception e){handler.post(()->{if(!isDestroyed())new AlertDialog.Builder(this).setTitle("Cannot import video").setMessage("Choose a playable video up to 2 minutes and 32 MB, preferably MP4 / H.264. Your previous video has been kept.").setPositiveButton("OK",null).show();});}
+                });
+            }
+            return;
+        }
+        DashShortcuts.handleResult(this,request,result,data);
+    }
+    void vehicleDialog(){
+        String[] modes=SagaShowroom.hasVideo(this)?new String[]{"Choose car video…","Interactive 3D model","Imported video preview"}:new String[]{"Choose car video…","Interactive 3D model"};
+        new AlertDialog.Builder(this).setTitle("Vehicle view").setItems(modes,(d,index)->{
+            if(index==0){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
+            else setVehicleVideo(index==2);
+        }).setNegativeButton("Close",null).show();
+    }
+    void setVehicleVideo(boolean useVideo){
+        vehicleVideo=useVideo&&SagaShowroom.hasVideo(this);dashPrefs().edit().putBoolean("vehicle_video",vehicleVideo).apply();
+        showroom.setVisibility(vehicleVideo?View.VISIBLE:View.GONE);car.setVisibility(vehicleVideo?View.GONE:View.VISIBLE);
+        vehicleMode.setText(vehicleVideo?"Video ▾":"3D ▾");vehicleMode.setContentDescription("Choose vehicle view");
+        vehicleHint.setText(vehicleVideo?"Video preview · Tap to play / pause":"Drag to rotate · Pinch to zoom · Double-tap to reset");
+        if(vehicleVideo){car.onPause();if(visible)showroom.resume();}
+        else{showroom.pause();if(visible)car.onResume();}
+    }
     void openUrl(String url){try{startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)));}catch(Exception e){toast("No browser installed");}}
     android.content.SharedPreferences dashPrefs(){return createDeviceProtectedStorageContext().getSharedPreferences("dashboard",0);}
     android.content.SharedPreferences lockPrefs(){return createDeviceProtectedStorageContext().getSharedPreferences("klikdash",0);}
@@ -241,8 +280,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onProviderEnabled(String p){}
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
-    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;car.onResume();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
-    @Override protected void onPause(){visible=false;if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);car.onPause();media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
+    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;if(vehicleVideo)showroom.resume();else car.onResume();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
+    @Override protected void onPause(){visible=false;if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);car.onPause();showroom.pause();media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
     @Override protected void onDestroy(){if(clockEventsRegistered)unregisterReceiver(clockEvents);io.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){}
 }

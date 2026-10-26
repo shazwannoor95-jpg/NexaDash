@@ -10,12 +10,14 @@ mkdir -p "$TEST_BUILD/classes" "$TEST_BUILD/dex"
 cat > "$TEST_BUILD/AndroidManifest.xml" <<'MANIFEST'
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.shazwan.sagadash.checks">
 <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="29" />
-<application android:label="Saga Dash checks" />
+<application android:label="Saga Dash checks">
+<provider android:name="com.shazwan.sagadash.SagaShowroomChecks$VideoProvider" android:authorities="com.shazwan.sagadash.checks.showroom" android:exported="true" />
+</application>
 <instrumentation android:name="com.shazwan.sagadash.DashboardChecks" android:targetPackage="com.shazwan.sagadash" />
 </manifest>
 MANIFEST
 "$BT/aapt2" link -o "$TEST_BUILD/base.apk" -I "$JAR" --manifest "$TEST_BUILD/AndroidManifest.xml"
-javac --release 8 -encoding UTF-8 -classpath "$JAR:build/classes" -d "$TEST_BUILD/classes" tests/DashboardChecks.java tests/PrayerGpsChecks.java tests/SagaModelChecks.java tests/TrustedClockChecks.java
+javac --release 8 -encoding UTF-8 -classpath "$JAR:build/classes" -d "$TEST_BUILD/classes" tests/DashboardChecks.java tests/PrayerGpsChecks.java tests/SagaModelChecks.java tests/TrustedClockChecks.java tests/DashShortcutsChecks.java tests/SagaShowroomChecks.java
 "$BT/d8" --min-api 24 --lib "$JAR" --classpath build/classes --output "$TEST_BUILD/dex" "$TEST_BUILD/classes/com/shazwan/sagadash/"*.class
 (cd "$TEST_BUILD/dex" && zip -q "$TEST_BUILD/base.apk" classes.dex)
 "$BT/zipalign" -f 4 "$TEST_BUILD/base.apk" "$TEST_BUILD/aligned.apk"

@@ -252,3 +252,26 @@ accuracy to manufacturer CAD or frame-rate performance on the physical head unit
 Actual Android screenshot at 1024×600 (OpenGL lighting, not the studio render):
 
 ![Updated model in the Android dashboard](img/saga-curved-android.png)
+
+
+## Local car-video preview and assigned shortcuts — 26 October 2026
+
+See the [Windows video/shortcut guide](VIDEO_AND_SHORTCUTS_MS.md). Vehicle View can import a
+local document-provider video into private device-protected storage (32MB, up to two minutes
+and 4K; H.264 MP4 recommended). Metadata and a decoded frame are checked before atomic replacement.
+No personal video is bundled or published. This is a recorded clip with baked-in background,
+not a reconstructed 3D model or free orbit. The interactive 3D option remains available.
+
+Preview playback starts paused, is muted, does not loop, creates no MediaSession and requests no
+audio focus. Its decoder is released when hidden/paused. Public media playback stays separate.
+Dock shortcuts support persistent installed-activity assignments with long press and reset.
+Video's automatic candidates are separate from YouTube/TizenTube. Missing OEM apps show an
+explanatory chooser rather than silently redirecting to the generic Apps list. Apps lists installed
+launchable apps; the sidebar spells out Saga Dash. No head-unit install or physical test performed.
+
+
+Validation: Gradle debug build and 325 emulator assertions passed (including content-provider
+imports, corrupted-file preservation, decoder prepare/play/pause/release/resume, shortcut assignment
+and the existing prayer/model/media checks). The owner's original 1280×720 H.264 clip was also
+selected through Android's real document picker and rendered successfully as a paused preview.
+Only synthetic media is embedded in tests; no owner clip or plate screenshot is published.

@@ -123,3 +123,8 @@ Tidak perlu install Blender atau Python untuk membina APK daripada asset yang su
 
 Untuk bantuan, berikan teks ralat pertama daripada panel Build. Signing key, password dan API key
 jangan dihantar dalam chat atau dimasukkan ke GitHub.
+
+## 10. Video kereta dan shortcut sendiri
+
+Ikut [panduan video dan shortcut](VIDEO_AND_SHORTCUTS_MS.md) untuk import MP4 daripada Windows,
+bertukar antara video/3D dan menetapkan Music, Radio atau DSP dengan tekan lama.

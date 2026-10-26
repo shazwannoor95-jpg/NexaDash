@@ -18,6 +18,7 @@ public class DashboardChecks extends Instrumentation {
         Bundle result=new Bundle();MediaSession[] session=new MediaSession[1];DashboardActivity[] dash=new DashboardActivity[1];
         try{
             assertions+=new TrustedClockChecks().run();
+            assertions+=new DashShortcutsChecks().run(getTargetContext());
             final String applicationId="com.shazwan.sagadash";
             check(getTargetContext().getPackageName().equals(applicationId),"personal application ID");
             check(DashboardActivity.class.getName().equals(applicationId+".DashboardActivity")
@@ -54,6 +55,7 @@ public class DashboardChecks extends Instrumentation {
                 check(absent,"removed launcher feature: "+removed);
             }
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            assertions+=new SagaShowroomChecks().run(this,dash[0]);
             assertions+=modelChecks.view(this,dash[0]);
             // Regression: a busy timetable cache must not make UI refresh wait for its global monitor.
             final java.util.concurrent.CountDownLatch locked=new java.util.concurrent.CountDownLatch(1);
