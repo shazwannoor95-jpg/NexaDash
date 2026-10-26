@@ -1,3 +1,9 @@
+> **Saga Dash personal edition** — Android Studio project for Windows. Start with the
+> [Windows beginner guide](docs/WINDOWS_ANDROID_STUDIO_MS.md) and
+> [current features and limitations](docs/PERSONAL_EDITION.md).
+> Package ID: `com.shazwan.sagadash`. The README below describes upstream KlikDash;
+> its release APKs are not this Saga Dash build. Physical TEST9278B testing is pending.
+
 <p align="center">
   <img src="design/header.png" alt="KlikDash on an Android car headunit: home screen with prayer times and an offline Quran">
 </p>
@@ -103,7 +109,7 @@ replaces the home screen, and the optional power saver only stops apps you pick 
 
 | Change | When | How to undo it |
 |---|---|---|
-| Default launcher `persist.nwd.launcher.default=com.ashafizullah.klikdash` (NWD) and HOME preference | When you tap **JADIKAN TAMPILAN UTAMA** | **Settings › Launcher › LAUNCHER BAWAAN**, or `adb shell setprop persist.nwd.launcher.default com.android.launcher` |
+| Default launcher `persist.nwd.launcher.default=com.shazwan.sagadash` (NWD) and HOME preference | When you tap **JADIKAN TAMPILAN UTAMA** | **Settings › Launcher › LAUNCHER BAWAAN**, or `adb shell setprop persist.nwd.launcher.default com.android.launcher` |
 | ksmd turned off | Every boot, while KlikDash is the home screen (needs ADB on) | Switch back to the stock launcher or uninstall KlikDash, then reboot |
 | Zlink sent back to home when it opens by itself | First 3 minutes after boot or wake-up | Same as above |
 | Apps blocked from running in the background (`appops RUN_ANY_IN_BACKGROUND/RUN_IN_BACKGROUND ignore`) | Only for apps you switch on in **HEMAT DAYA**, or ask TANYA AI to | Tap the app again, or **KEMBALIKAN SEMUA** |

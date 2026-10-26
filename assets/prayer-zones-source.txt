@@ -1,0 +1,22 @@
+Offline district map: Selangor, Kuala Lumpur and Putrajaya (11 districts).
+Extracted without geometry simplification or modification from:
+https://github.com/mptwaktusolat/jakim.geojson
+Revision: 734f25e5899c3528c4abe6f9a9e65a3c340b6b3e
+File: malaysia.district-jakim.geojson
+Original geometry repository: https://github.com/nullifye/malaysia.geojson
+Retained geographic facts: district polygons and district-to-zone mapping.
+Property names normalized to district and zone; other regions omitted.
+This community district dataset is not an official JAKIM boundary survey.
+No explicit data license is stated upstream; the app's MIT license does not
+purport to license the upstream dataset. Retain this provenance with the data.
+
+Zone assignments cross-checked against the current official e-Solat zone list:
+https://www.e-solat.gov.my/ (retrieved 2026-10-25)
+SGR01: Gombak, Petaling, Sepang, Hulu Langat, Hulu Selangor, Shah Alam
+SGR02: Kuala Selangor, Sabak Bernam
+SGR03: Klang, Kuala Langat
+WLY01: Kuala Lumpur, Putrajaya
+
+Use GPS accuracy plus a 100-metre minimum boundary buffer; ambiguous positions
+keep the last confirmed zone and show a status message. A manual override is
+available. No nationwide coverage or exact cadastral boundary accuracy is claimed.

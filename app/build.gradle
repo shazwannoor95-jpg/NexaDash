@@ -1,0 +1,35 @@
+plugins { id 'com.android.application' }
+
+// Keep one canonical manifest shared with the existing shell build.
+def studioManifest = layout.buildDirectory.file('generated/studio/AndroidManifest.xml')
+def prepareManifest = tasks.register('prepareStudioManifest') {
+    inputs.file(rootProject.file('AndroidManifest.xml'))
+    outputs.file(studioManifest)
+    doLast {
+        def out = studioManifest.get().asFile
+        out.parentFile.mkdirs()
+        out.text = rootProject.file('AndroidManifest.xml').getText('UTF-8').replaceFirst(/\s+package="[^"]+"/, '')
+    }
+}
+android {
+    namespace 'com.shazwan.sagadash'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.shazwan.sagadash'
+        minSdk 24
+        targetSdk 29
+        versionCode 25
+        versionName '1.6.7-sagadash'
+    }
+    sourceSets {
+        main {
+            manifest.srcFile studioManifest.get().asFile
+            java.srcDirs = [rootProject.file('src')]
+            res.srcDirs = [rootProject.file('res')]
+            assets.srcDirs = [rootProject.file('assets')]
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+    buildTypes { release { minifyEnabled false } }
+}
+tasks.named('preBuild').configure { dependsOn prepareManifest }

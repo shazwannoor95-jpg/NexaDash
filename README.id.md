@@ -1,3 +1,9 @@
+> **Saga Dash personal edition** — Android Studio project for Windows. Start with the
+> [Windows beginner guide](docs/WINDOWS_ANDROID_STUDIO_MS.md) and
+> [current features and limitations](docs/PERSONAL_EDITION.md).
+> Package ID: `com.shazwan.sagadash`. The README below describes upstream KlikDash;
+> its release APKs are not this Saga Dash build. Physical TEST9278B testing is pending.
+
 <p align="center">
   <img src="design/header.id.png" alt="KlikDash di headunit Android mobil: home dengan jadwal sholat dan Al-Qur'an offline">
 </p>
@@ -104,7 +110,7 @@ di latar.
 
 | Perubahan | Kapan | Cara mengembalikan |
 |---|---|---|
-| Launcher default `persist.nwd.launcher.default=com.ashafizullah.klikdash` (NWD) dan preferensi HOME | Saat Anda mengetuk **JADIKAN TAMPILAN UTAMA** | **Pengaturan › Launcher › LAUNCHER BAWAAN**, atau `adb shell setprop persist.nwd.launcher.default com.android.launcher` |
+| Launcher default `persist.nwd.launcher.default=com.shazwan.sagadash` (NWD) dan preferensi HOME | Saat Anda mengetuk **JADIKAN TAMPILAN UTAMA** | **Pengaturan › Launcher › LAUNCHER BAWAAN**, atau `adb shell setprop persist.nwd.launcher.default com.android.launcher` |
 | ksmd dimatikan | Setiap boot, selama KlikDash jadi tampilan home (butuh ADB aktif) | Kembali ke launcher bawaan atau uninstall KlikDash, lalu reboot |
 | Zlink dikembalikan ke home bila terbuka sendiri | 3 menit pertama setelah boot atau bangun dari tidur | Sama seperti di atas |
 | Aplikasi dilarang jalan di latar (`appops RUN_ANY_IN_BACKGROUND/RUN_IN_BACKGROUND ignore`) | Hanya untuk aplikasi yang Anda nyalakan di **HEMAT DAYA**, atau atas permintaan ke TANYA AI | Ketuk aplikasinya lagi, atau **KEMBALIKAN SEMUA** |

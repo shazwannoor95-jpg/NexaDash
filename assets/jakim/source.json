@@ -1,0 +1,30 @@
+{
+  "source": "https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=year&zone=<zone>",
+  "retrieved_at_utc": "2026-10-25T14:04:36.376837+00:00",
+  "zones": {
+    "SGR01": {
+      "days": 365,
+      "first": "01-Jan-2026",
+      "last": "31-Dis-2026",
+      "sha256": "1e31db23df4796df488f364a43be7a57a1254035ea6626aeee6a6f1441198dc8"
+    },
+    "SGR02": {
+      "days": 365,
+      "first": "01-Jan-2026",
+      "last": "31-Dis-2026",
+      "sha256": "278ec94b560a9663af6c71410b9fb11ffe700e4c13efd28cde3579a4a6e0b1ef"
+    },
+    "SGR03": {
+      "days": 365,
+      "first": "01-Jan-2026",
+      "last": "31-Dis-2026",
+      "sha256": "d936251c07912e2a3556bc335a132646dc0647589a2a9afe629088f5cf2fefc0"
+    },
+    "WLY01": {
+      "days": 365,
+      "first": "01-Jan-2026",
+      "last": "31-Dis-2026",
+      "sha256": "7bdbab2edba87a2b1f54d79574ce0274fd5b31d6e9c79a26ed95a65e7a0218dc"
+    }
+  }
+}

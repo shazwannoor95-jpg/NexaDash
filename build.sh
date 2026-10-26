@@ -9,6 +9,7 @@ cd "$(dirname "$0")"
 
 VERSION_NAME=${VERSION_NAME:-1.6.7}
 VERSION_CODE=${VERSION_CODE:-25}
+APP_ID=${PKG:-com.shazwan.sagadash}
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}
 BT=$SDK/build-tools/36.0.0
@@ -32,7 +33,7 @@ if [ "$MODE" = "release" ] || [ ! -s assets/quran-en.txt ]; then rm -f build/ass
 # dan ART menjalankannya lebih lambat (cold start home ±1,5 dtk vs ±1,1 dtk di headunit K2401).
 # DEBUGGABLE=1 ./build.sh install: build pengembangan debuggable, untuk uji TANYA lewat adb (lihat AskActivity).
 DEBUG_FLAG=""; [ "$MODE" != "release" ] && [ "${DEBUGGABLE:-0}" = "1" ] && DEBUG_FLAG="--debug-mode"
-# PKG=com.ashafizullah.klikdash.demo ./build.sh release: salinan dengan nama paket lain (mis. rekam tutorial "pasang pertama kali"
+# PKG=com.shazwan.sagadash.demo ./build.sh release: salinan dengan nama paket lain (mis. rekam tutorial "pasang pertama kali"
 # tanpa menghapus KlikDash yang terpasang).
 [ -n "${PKG:-}" ] && DEBUG_FLAG="$DEBUG_FLAG --rename-manifest-package $PKG"
 "$BT/aapt2" link -o build/base.apk -I "$JAR" --manifest AndroidManifest.xml -A build/assets -0 ttf $DEBUG_FLAG \
@@ -84,9 +85,9 @@ fi
 if [ "$MODE" = "install" ]; then
     adb -s "$DEVICE" install -r build/klikdash.apk
     # AOT sekarang juga: dexopt latar menunggu perangkat diam + dicas, headunit hampir tidak pernah begitu (lihat Tweaks.compileAsync).
-    adb -s "$DEVICE" shell cmd package compile -m speed -f com.ashafizullah.klikdash || true
-    adb -s "$DEVICE" shell pm grant com.ashafizullah.klikdash android.permission.ACCESS_FINE_LOCATION
-    adb -s "$DEVICE" shell pm grant com.ashafizullah.klikdash android.permission.ACCESS_COARSE_LOCATION
-    adb -s "$DEVICE" shell cmd package set-home-activity com.ashafizullah.klikdash/.HomeActivity
+    adb -s "$DEVICE" shell cmd package compile -m speed -f "$APP_ID" || true
+    adb -s "$DEVICE" shell pm grant "$APP_ID" android.permission.ACCESS_FINE_LOCATION
+    adb -s "$DEVICE" shell pm grant "$APP_ID" android.permission.ACCESS_COARSE_LOCATION
+    adb -s "$DEVICE" shell cmd package set-home-activity "$APP_ID/com.shazwan.sagadash.DashboardActivity"
     adb -s "$DEVICE" shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
 fi

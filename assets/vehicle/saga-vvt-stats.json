@@ -1,0 +1,29 @@
+{
+  "triangles": 24732,
+  "batches": 17,
+  "bounds": [
+    [
+      -2.211,
+      0.006000000000000005,
+      -0.963
+    ],
+    [
+      2.217,
+      1.7235491408859438,
+      0.963
+    ]
+  ],
+  "coordinates": "metres; front -X, up +Y, lateral Z",
+  "plate_front": {
+    "x": -2.212,
+    "y": 0.585,
+    "width": 0.5,
+    "height": 0.112
+  },
+  "plate_rear": {
+    "x": 2.202,
+    "y": 0.631,
+    "width": 0.5,
+    "height": 0.112
+  }
+}
