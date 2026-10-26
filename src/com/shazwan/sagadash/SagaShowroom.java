@@ -1,6 +1,8 @@
 package com.shazwan.sagadash;
 
 import android.content.*;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.media.*;
 import android.net.Uri;
@@ -8,7 +10,7 @@ import android.view.*;
 import android.widget.*;
 import java.io.*;
 
-/** Local, muted video preview. It is never an Android media session or a 3D model. */
+/** Bundled or locally imported, muted video preview. It is never an Android media session or a 3D model. */
 final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextureListener {
     static final int PICK_CAR_VIDEO=4813;
     static final long MAX_BYTES=32L*1024*1024, MAX_DURATION_MS=120000;
@@ -29,7 +31,13 @@ final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextu
         setOnClickListener(v->toggle());
     }
     static File file(Context context){return new File(context.createDeviceProtectedStorageContext().getFilesDir(),"vehicle-preview.mp4");}
-    static boolean hasVideo(Context context){return file(context).isFile();}
+    static boolean hasImportedVideo(Context context){return file(context).isFile();}
+    static boolean hasVideo(Context context){
+        if(hasImportedVideo(context))return true;
+        try(AssetFileDescriptor video=context.getResources().openRawResourceFd(R.raw.saga_showroom)){
+            return video!=null&&video.getLength()>0;
+        }catch(IOException|Resources.NotFoundException e){return false;}
+    }
     static Intent pickIntent(){return new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("video/*").addCategory(Intent.CATEGORY_OPENABLE);}
     static void importVideo(Context context,Uri uri) throws IOException {
         if(uri==null||!"content".equals(uri.getScheme()))throw new IOException("Choose a local video file");
@@ -95,7 +103,11 @@ final class SagaShowroom extends FrameLayout implements TextureView.SurfaceTextu
             current.setOnErrorListener((m,what,extra)->{
                 if(player==m){release();status.setText("Cannot play this video. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}return true;
             });
-            current.setDataSource(file(getContext()).getAbsolutePath());current.prepareAsync();
+            if(hasImportedVideo(getContext()))current.setDataSource(file(getContext()).getAbsolutePath());
+            else try(AssetFileDescriptor video=getResources().openRawResourceFd(R.raw.saga_showroom)){
+                current.setDataSource(video.getFileDescriptor(),video.getStartOffset(),video.getLength());
+            }
+            current.prepareAsync();
         }catch(IOException|RuntimeException e){release();status.setText("Video unavailable. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}
     }
     boolean playing(){if(!prepared||player==null)return false;try{return player.isPlaying();}catch(IllegalStateException e){return false;}}

@@ -2,6 +2,8 @@ package com.shazwan.sagadash;
 
 import android.app.Instrumentation;
 import android.content.*;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -10,7 +12,7 @@ import android.util.Base64;
 import java.io.*;
 import java.util.Arrays;
 
-/** Exercises actual local-video imports and decoder lifecycle using synthetic test-only media. */
+/** Exercises bundled-video fallback, private imports and decoder lifecycle. Import fixtures are synthetic. */
 public final class SagaShowroomChecks {
     static final String AUTHORITY="com.shazwan.sagadash.checks.showroom";
     static final Uri VALID=Uri.parse("content://"+AUTHORITY+"/valid");
@@ -22,7 +24,8 @@ public final class SagaShowroomChecks {
     int run(Instrumentation instrumentation,DashboardActivity dashboard) throws Exception {
         int before=assertions;
         Context context=instrumentation.getTargetContext();
-        boolean oldMode=dashboard.dashPrefs().getBoolean("vehicle_video",false);
+        boolean hadMode=dashboard.dashPrefs().contains("vehicle_video");
+        boolean oldMode=dashboard.dashPrefs().getBoolean("vehicle_video",true);
         File video=SagaShowroom.file(context);
         File backup=new File(video.getParentFile(),"vehicle-preview.check-backup");
         if(backup.exists())throw new IOException("Previous showroom test backup exists; restore it before running tests");
@@ -37,10 +40,40 @@ public final class SagaShowroomChecks {
             check(Intent.ACTION_OPEN_DOCUMENT.equals(picker.getAction()),"video import uses the Android document picker");
             check("video/*".equals(picker.getType()),"picker filters video files");
             check(picker.hasCategory(Intent.CATEGORY_OPENABLE),"picker requests readable local documents");
-            check(!SagaShowroom.hasVideo(context),"no video is claimed before import");
+            check(!SagaShowroom.hasImportedVideo(context),"there is no private override before import");
+            check(SagaShowroom.hasVideo(context),"bundled car preview is available without importing a private file");
+            MediaMetadataRetriever bundled=new MediaMetadataRetriever();
+            try(AssetFileDescriptor descriptor=context.getResources().openRawResourceFd(R.raw.saga_showroom)){
+                bundled.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
+                check("1280".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
+                        &&"720".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)),"bundled clip preserves the supplied 720p video dimensions");
+                long duration=Long.parseLong(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                check(duration>=9900&&duration<=10100,"bundled preview retains the original ten-second sequence");
+                check(!"yes".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)),"bundled preview contains no audio track");
+                Bitmap frame=android.os.Build.VERSION.SDK_INT>=27
+                        ?bundled.getScaledFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC,320,180)
+                        :bundled.getFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                check(frame!=null,"packaged video has a decodable opening frame");
+                if(frame!=null)frame.recycle();
+            }finally{bundled.release();}
+            instrumentation.runOnMainSync(()->dashboard.setVehicleVideo(true));
+            waitPrepared(instrumentation,dashboard);
+            final Throwable[] bundledFailure={null};
+            instrumentation.runOnMainSync(()->{
+                try{
+                    SagaShowroom view=dashboard.showroom;
+                    check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==720,"decoder uses the packaged preview when no private override exists");
+                    check(!view.playing(),"packaged preview also starts paused");
+                    view.toggle();check(view.playing(),"packaged preview can start playback");
+                    view.toggle();check(!view.playing(),"packaged preview can pause playback");
+                    dashboard.setVehicleVideo(false);
+                    check(view.player==null&&!view.active,"switching away releases the packaged-video decoder before importing");
+                }catch(Throwable failure){bundledFailure[0]=failure;}
+            });
+            rethrow(bundledFailure[0]);
             SagaShowroom.importVideo(context,VALID);
             byte[] fixture=Base64.decode(FIXTURE,Base64.DEFAULT);
-            check(SagaShowroom.hasVideo(context)&&Arrays.equals(read(video),fixture),"content URI is copied intact into private storage");
+            check(SagaShowroom.hasImportedVideo(context)&&SagaShowroom.hasVideo(context)&&Arrays.equals(read(video),fixture),"content URI is copied intact into the private override");
             check(video.getParentFile().equals(context.createDeviceProtectedStorageContext().getFilesDir()),"video stays in app-private device-protected files");
             MediaMetadataRetriever metadata=new MediaMetadataRetriever();
             try{
@@ -66,6 +99,7 @@ public final class SagaShowroomChecks {
                 try{
                     SagaShowroom view=dashboard.showroom;
                     check(view!=null&&view.active&&view.prepared,"visible video mode prepares the real decoder");
+                    check(view.player.getVideoWidth()==64&&view.player.getVideoHeight()==64,"private imported clip overrides the bundled preview for playback");
                     check(!view.playing(),"video preview is paused by default");
                     check(!view.player.isLooping(),"a recording with a discontinuous seam does not auto-loop");
                     view.toggle();check(view.playing(),"tap starts the video preview");
@@ -93,7 +127,11 @@ public final class SagaShowroomChecks {
                     if(video.exists()&&!video.delete())throw new IOException("Could not remove synthetic test clip");
                     if(protectedOriginal&&!backup.renameTo(video))throw new IOException("Restore the previous clip from "+backup.getName());
                 }
-            }finally{dashboard.dashPrefs().edit().putBoolean("vehicle_video",oldMode).commit();}
+            }finally{
+                SharedPreferences.Editor edit=dashboard.dashPrefs().edit();
+                if(hadMode)edit.putBoolean("vehicle_video",oldMode);else edit.remove("vehicle_video");
+                edit.commit();
+            }
         }
         return assertions-before;
     }

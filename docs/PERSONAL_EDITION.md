@@ -73,7 +73,7 @@ This does not alter the signing key or upstream copyright/source links.
   It remains a custom approximation, not manufacturer CAD or a photogrammetry scan.
 - Studio lighting, contact shadow and precomputed vertex/normal buffers. Drag rotates/tilts,
   pinch zooms, and double-tap resets. Rendering is on-demand and paused when hidden.
-  The public plate label is neutral SAGA DASH, not the owner's registration.
+  The Android plate label is now owner-requested NEXA.
 - The bundled mesh is ready to use without Blender. To edit geometry, regenerate it using
   `python3 tools/build_saga_model.py`; optional Blender reviews use
   `blender --background --python tools/render_saga_preview.py -- assets/vehicle/saga-vvt.mesh <output>`.
@@ -259,7 +259,7 @@ Actual Android screenshot at 1024×600 (OpenGL lighting, not the studio render):
 See the [Windows video/shortcut guide](VIDEO_AND_SHORTCUTS_MS.md). Vehicle View can import a
 local document-provider video into private device-protected storage (32MB, up to two minutes
 and 4K; H.264 MP4 recommended). Metadata and a decoded frame are checked before atomic replacement.
-No personal video is bundled or published. This is a recorded clip with baked-in background,
+The owner-requested video is now bundled; additional local imports stay private. This is a recorded clip with baked-in background,
 not a reconstructed 3D model or free orbit. The interactive 3D option remains available.
 
 Preview playback starts paused, is muted, does not loop, creates no MediaSession and requests no
@@ -274,4 +274,21 @@ Validation: Gradle debug build and 325 emulator assertions passed (including con
 imports, corrupted-file preservation, decoder prepare/play/pause/release/resume, shortcut assignment
 and the existing prayer/model/media checks). The owner's original 1280×720 H.264 clip was also
 selected through Android's real document picker and rendered successfully as a paused preview.
-Only synthetic media is embedded in tests; no owner clip or plate screenshot is published.
+Only synthetic media is embedded in test fixtures; the separately bundled owner video is now included as requested.
+
+
+## Bundled original video and NEXA — 26 October 2026
+
+At the owner's request, `res/raw/saga_showroom.mp4` includes the uploaded video directly in the APK.
+It is H.264 1280×720 at 24fps, ten seconds, 3,801,076 bytes. The audio track was removed by stream copy;
+all 240 decoded video frames match the upload exactly. The baked-in NEXA plate and generated
+background/annotations are retained. The 3D renderer also labels its front/rear plates NEXA.
+
+New installs default to the paused video preview. Existing saved mode choices remain; select
+Vehicle View > Video preview to use it. Imported private videos still take priority. MediaPlayer reads
+the packaged resource FD directly, without first extracting it to private storage. No audio focus,
+MediaSession or background playback is added. This video is not a reconstructed 3D mesh.
+
+Validation of the bundled version: Gradle debug build passed; 336 emulator assertions passed,
+including actual decode/play/pause/release from the APK resource with no imported file present,
+and private-import override behavior. All 240 decoded frames match the original uploaded video.

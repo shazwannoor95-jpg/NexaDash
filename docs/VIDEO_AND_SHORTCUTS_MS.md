@@ -12,20 +12,36 @@ Emulator telefon tidak mempunyai radio FM, DSP atau Bluetooth audio vendor head 
 4. Jika belum mengubah coding sendiri, copy folder `src` daripada ZIP baharu ke folder root projek lama
    (folder yang ada `settings.gradle`). Pilih Replace untuk fail yang sama. Ini menambah
    `DashShortcuts.java` dan `SagaShowroom.java`, serta menggantikan `DashboardActivity.java`.
-5. Untuk model 3D versi terkini juga, copy folder `assets/vehicle` ke lokasi sama dalam projek lama.
-6. Klik Run dalam Android Studio. Tidak perlu uninstall app, upgrade Gradle, ganti `local.properties`
+5. Copy **`res/raw/saga_showroom.mp4`** daripada ZIP baharu ke lokasi sama dalam projek lama.
+   Fail ini diperlukan kerana video kini disertakan terus dalam APK.
+6. Untuk model 3D versi terkini juga, copy folder `assets/vehicle` ke lokasi sama dalam projek lama.
+7. Klik Run dalam Android Studio. Tidak perlu uninstall app, upgrade Gradle, ganti `local.properties`
    atau ulang setup SDK/JDK. Jangan ganti signing key atau folder `.idea`.
 
 Jika sudah membuat perubahan coding sendiri, semak perbezaan tiga fail Java itu sebelum menggantikannya.
 
-## Guna video kereta sendiri
+## Video yang sudah ada dalam APK
+
+Video asal kini dimasukkan terus sebagai `res/raw/saga_showroom.mp4`: MP4 H.264, 1280×720,
+24fps, 10 saat, kira-kira 3.8 MB. Semua 240 frame gambar sama dengan video asal; hanya audio dibuang.
+Plat **NEXA** dikekalkan atas permintaan pemilik, termasuk pada label model 3D.
+
+Install baru menggunakan video sebagai paparan awal. Jika projek lama masih menunjukkan model,
+klik **3D ▾ > Video preview**. Tak perlu pindah MP4 ke emulator atau import fail untuk video ini.
+Pilihan 3D masih tersedia melalui **Video ▾ > Interactive 3D model**.
+
+Fail video/plat ini memang disertakan dalam source dan APK edisi peribadi yang diminta pemilik.
+Video sendiri yang diimport kemudian kekal dalam storan peribadi peranti dan menggantikan
+preview terbina dalam semasa playback.
+
+## Guna video kereta lain
 
 Video yang dihantar dalam chat ialah rakaman 10 saat. Ia boleh dimainkan sebagai preview,
 dengan gerakan/sudut yang sudah dirakam. Ia bukan model yang boleh diputar bebas. Latar studio,
 plat nombor dan tulisan/grafik dalam rakaman juga akan kelihatan. Dua upload tersebut ialah fail sama.
 Preview tidak auto-loop kerana hujung dan permulaan rakaman mempunyai framing berlainan.
 
-Video peribadi **tidak disertakan dalam repo GitHub atau APK**. Import fail sendiri:
+Untuk menggantikan preview dengan video lain, import fail sendiri:
 
 1. Pastikan MP4 asal ada pada komputer Windows kau.
 2. Hidupkan emulator. Cuba drag fail MP4 dari File Explorer ke skrin emulator; fail biasanya
@@ -35,7 +51,7 @@ Video peribadi **tidak disertakan dalam repo GitHub atau APK**. Import fail send
 5. Dalam pemilih fail Android, buka menu ☰ > Downloads dan pilih MP4 tersebut.
 6. Tunggu import. Panel bertukar ke **Video ▾**. Ketuk video untuk Play/Pause.
 7. Untuk kembali kepada model yang boleh diputar, klik **Video ▾ > Interactive 3D model**.
-   Pilihan **Imported video preview** membolehkan kau kembali kepada video yang disimpan.
+   Pilihan **Video preview** membolehkan kau kembali kepada video yang disimpan.
 
 Alternatif untuk menghantar MP4 ke emulator:
 
@@ -68,3 +84,15 @@ background. Sesi Spotify/YouTube/radio untuk mini player tetap merupakan sumber 
 
 Assignment radio/Bluetooth/DSP perlu dibuat pada head unit menggunakan app vendor yang sebenar.
 Membuka app itu sahaja tidak menjamin firmware akan membekalkan metadata kepada mini player.
+
+
+## Format yang diperlukan
+
+| Tujuan | Format |
+| --- | --- |
+| Video preview dalam APK | MP4 dengan video H.264; 720p / 24–30fps sesuai untuk head unit ini. Video asal sudah sesuai. |
+| Model 3D untuk integrasi akan datang | GLB (glTF 2.0), dengan mesh, normals, UV dan tekstur/material sekali. |
+
+MP4 tidak menyimpan mesh atau tekstur 3D. Untuk model yang boleh diputar bebas, model Saga perlu
+dibina atau diperoleh secara berasingan. Fail GLB kemudian perlu diintegrasikan dengan renderer;
+app semasa tidak menyediakan import GLB melalui pemilih fail. Jangan sekadar rename MP4 kepada GLB.

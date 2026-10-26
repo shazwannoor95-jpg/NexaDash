@@ -5,8 +5,7 @@ photos and 2016-era Proton Saga brochure proportions. It is not manufacturer CAD
 not a photogrammetry reconstruction, and not an exact scale survey of the car.
 The shell, wheel arches, curved cabin, lamps, grille, split-spoke wheels, mirrors,
 door seams, handles and dark window visors are actual three-dimensional geometry.
-No photograph is used as a fake rotatable billboard. The plate contains no owner's
-registration; Android overlays SAGA DASH as a neutral plate label.
+No photograph is used as a fake rotatable billboard. Android overlays the owner-requested NEXA registration on the plate.
 
 Generate: python3 tools/build_saga_model.py
 Coordinates: front -X, ground Y=0, up +Y, left/right Z; metres.

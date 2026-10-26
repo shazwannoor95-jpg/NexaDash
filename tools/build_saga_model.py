@@ -323,7 +323,7 @@ for y in[.35,.39,.43,.47,.51]:
  tube('grille',[(frontx(z)-.010,y,z) for z in[-.43,-.21,0,.21,.43]],.009,5)
 for z in[-.33,-.22,-.11,0,.11,.22,.33]:tube('grille',[(frontx(z)-.012,.337,z),(frontx(z)-.012,.546,z)],.004,5)
 tube('black_trim',[(frontx(z)-.006,.248,z) for z in[-.72,-.5,0,.5,.72]],.025,8)
-# Plate planes are separate batches so the Android renderer can overlay SAGA DASH text.
+# Plate planes are separate batches so the Android renderer can overlay NEXA text.
 quad('plate_front',(-2.211,.529,-.25),(-2.211,.529,.25),(-2.211,.641,.25),(-2.211,.641,-.25),(-1,0,0))
 # Rear light clusters wrap onto the rear quarter and have inner clear wedges.
 for sign in[-1,1]:
@@ -462,8 +462,7 @@ photos and 2016-era Proton Saga brochure proportions. It is not manufacturer CAD
 not a photogrammetry reconstruction, and not an exact scale survey of the car.
 The shell, wheel arches, curved cabin, lamps, grille, split-spoke wheels, mirrors,
 door seams, handles and dark window visors are actual three-dimensional geometry.
-No photograph is used as a fake rotatable billboard. The plate contains no owner's
-registration; Android overlays SAGA DASH as a neutral plate label.
+No photograph is used as a fake rotatable billboard. Android overlays the owner-requested NEXA registration on the plate.
 
 Generate: python3 tools/build_saga_model.py
 Coordinates: front -X, ground Y=0, up +Y, left/right Z; metres.

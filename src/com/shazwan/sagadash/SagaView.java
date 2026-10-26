@@ -79,7 +79,7 @@ final class SagaView extends GLSurfaceView implements GLSurfaceView.Renderer {
         Bitmap bitmap=Bitmap.createBitmap(256,64,Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(bitmap);canvas.drawColor(0xff090b10);
         Paint text=new Paint(Paint.ANTI_ALIAS_FLAG);text.setColor(0xffedf2f5);text.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));text.setTextSize(37);text.setTextAlign(Paint.Align.CENTER);
-        Paint.FontMetrics fm=text.getFontMetrics();canvas.drawText("SAGA DASH",128,32-(fm.ascent+fm.descent)/2,text);
+        Paint.FontMetrics fm=text.getFontMetrics();canvas.drawText("NEXA",128,32-(fm.ascent+fm.descent)/2,text);
         int[] textures=new int[1];gl.glGenTextures(1,textures,0);plateTexture=textures[0];gl.glBindTexture(GL10.GL_TEXTURE_2D,plateTexture);
         gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MIN_FILTER,GL10.GL_LINEAR);gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_MAG_FILTER,GL10.GL_LINEAR);
         gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_CLAMP_TO_EDGE);gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_CLAMP_TO_EDGE);

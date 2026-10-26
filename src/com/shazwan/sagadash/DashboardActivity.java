@@ -109,7 +109,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         car=new SagaView(this);vehicleStage.addView(car,new FrameLayout.LayoutParams(-1,-1));
         showroom=new SagaShowroom(this);vehicleStage.addView(showroom,new FrameLayout.LayoutParams(-1,-1));
         vehicleHint=text("",13,MUTED);vehicleHint.setGravity(Gravity.CENTER);left.addView(vehicleHint);
-        setVehicleVideo(dashPrefs().getBoolean("vehicle_video",false));
+        setVehicleVideo(dashPrefs().getBoolean("vehicle_video",true));
         gps=text("GPS · Waiting for signal",14,BLUE);left.addView(gps);trip=text("",14,MUTED);left.addView(trip);trip.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("Reset GPS trip?").setPositiveButton("Reset",(d,w)->{tripMetres=0;saveTrip();}).setNegativeButton("Cancel",null).show();return true;});updateTrip();
         LinearLayout right=column();content.addView(right,new LinearLayout.LayoutParams(0,-1,.57f));
         LinearLayout shortcuts=row();right.addView(shortcuts,new LinearLayout.LayoutParams(-1,px(115)));
@@ -239,7 +239,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         DashShortcuts.handleResult(this,request,result,data);
     }
     void vehicleDialog(){
-        String[] modes=SagaShowroom.hasVideo(this)?new String[]{"Choose car video…","Interactive 3D model","Imported video preview"}:new String[]{"Choose car video…","Interactive 3D model"};
+        String[] modes=SagaShowroom.hasVideo(this)?new String[]{"Choose car video…","Interactive 3D model","Video preview"}:new String[]{"Choose car video…","Interactive 3D model"};
         new AlertDialog.Builder(this).setTitle("Vehicle view").setItems(modes,(d,index)->{
             if(index==0){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
             else setVehicleVideo(index==2);
