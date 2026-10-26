@@ -16,8 +16,8 @@ ARGS=PARSER.parse_args()
 TAU=math.tau
 M=OrderedDict()
 MATS={
- 'paint':((.58,.035,.055,1),88),
- 'paint_edge':((.71,.065,.081,1),96),
+ 'paint':((.60,.035,.052,1),64),
+ 'paint_edge':((.64,.045,.064,1),72),
  'paint_dark':((.27,.015,.025,1),55),
  'glass':((.055,.086,.100,1),112),
  'rubber':((.018,.022,.026,1),8),
@@ -80,14 +80,14 @@ def tube(mat,points,radius=.004,sides=6):
    aa=add(a,mul(n,radius));bb=add(b,mul(n,radius));cc=add(b,mul(nn,radius));dd=add(a,mul(nn,radius))
    tri(mat,aa,bb,cc,n,n,nn);tri(mat,aa,cc,dd,n,nn,nn)
 def ellipsoid(mat,center,scale,nu=24,nv=12):
- nu=min(nu,12);nv=min(nv,6)
+ nu=min(nu,28);nv=min(nv,14)
  def f(u,v):
   th=u*TAU;ph=v*math.pi
   return(center[0]+scale[0]*math.sin(ph)*math.cos(th),center[1]+scale[1]*math.cos(ph),center[2]+scale[2]*math.sin(ph)*math.sin(th))
  surface(mat,f,nu,nv)
 def torus(mat,center,major,minor,axial=None,segments=48,sides=8):
  axial=minor if axial is None else axial
- segments=min(segments,32);sides=min(sides,6)
+ segments=min(segments,48);sides=min(sides,10)
  def f(u,v):
   t=u*TAU;p=v*TAU;r=major+minor*math.cos(p)
   return(center[0]+r*math.cos(t),center[1]+r*math.sin(t),center[2]+axial*math.sin(p))
@@ -101,14 +101,22 @@ def box(mat,c,s):
  pts=[(x-a,y-b,z-d),(x+a,y-b,z-d),(x+a,y+b,z-d),(x-a,y+b,z-d),(x-a,y-b,z+d),(x+a,y-b,z+d),(x+a,y+b,z+d),(x-a,y+b,z+d)]
  for ids in[(0,3,2,1),(4,5,6,7),(0,1,5,4),(3,7,6,2),(0,4,7,3),(1,2,6,5)]:quad(mat,*(pts[i] for i in ids))
 def profile(x,points):
- for i in range(len(points)-1):
-  a,b=points[i],points[i+1]
+ # Shape-preserving cubic interpolation: continuous slopes rather than a flat
+ # tangent at every station, which made the roof and fenders look stepped.
+ if x<=points[0][0]:return points[0][1]
+ if x>=points[-1][0]:return points[-1][1]
+ def slope(i):
+  if i==0:return (points[1][1]-points[0][1])/(points[1][0]-points[0][0])
+  if i==len(points)-1:return (points[-1][1]-points[-2][1])/(points[-1][0]-points[-2][0])
+  left=(points[i][1]-points[i-1][1])/(points[i][0]-points[i-1][0])
+  right=(points[i+1][1]-points[i][1])/(points[i+1][0]-points[i][0])
+  return 0 if left*right<=0 else 2*left*right/(left+right)
+ for i,(a,b) in enumerate(zip(points,points[1:])):
   if a[0]<=x<=b[0]:
-   t=(x-a[0])/(b[0]-a[0]);t=t*t*(3-2*t)
-   return a[1]+(b[1]-a[1])*t
- return points[0][1] if x<points[0][0] else points[-1][1]
-WIDTH=[(-2.1655,.72),(-2.02,.82),(-1.65,.84),(-.5,.8445),(.8,.8445),(1.65,.84),(2.05,.82),(2.1655,.72)]
-TOP=[(-2.1655,.93),(-1.97,.95),(-.95,.985),(.8,.99),(1.45,.985),(2.0,.985),(2.1655,.98)]
+   h=b[0]-a[0];t=(x-a[0])/h
+   return (2*t**3-3*t*t+1)*a[1]+(t**3-2*t*t+t)*h*slope(i)+(-2*t**3+3*t*t)*b[1]+(t**3-t*t)*h*slope(i+1)
+WIDTH=[(-2.1655,.735),(-2.01,.802),(-1.65,.84),(-.5,.8445),(.8,.8445),(1.65,.84),(2.04,.802),(2.1655,.735)]
+TOP=[(-2.1655,.905),(-1.97,.94),(-.95,1.005),(.8,1.005),(1.45,.99),(2.0,.96),(2.1655,.94)]
 AXLES=(-1.25,1.215)
 def width(x):return profile(x,WIDTH)
 def top(x):return profile(x,TOP)
@@ -120,22 +128,22 @@ def lower(x):
  return y
 def side_point(x,y,sign,extra=0):
  t=max(0,min(1,(y-.215)/max(.01,top(x)-.215)))
- bulge=.91+.09*math.sin(math.pi*t*.8)
+ bulge=.91+.09*math.sin(math.pi*t*.86)
  return(x,y,sign*(width(x)*bulge+extra))
 # Smooth painted side shell with genuine wheel arch openings, rather than black decals.
-xs=sorted(set([-2.1655+i*4.331/76 for i in range(77)]+[a+dx for a in AXLES for dx in[-.338,-.337,-.336,.336,.337,.338]]))
+xs=sorted(set([-2.1655+i*4.331/120 for i in range(121)]+[a+dx for a in AXLES for dx in[-.338,-.337,-.336,.336,.337,.338]]))
 for sign in[-1,1]:
  for xa,xb in zip(xs,xs[1:]):
-  for j in range(4):
+  for j in range(8):
    def pt(x,t):
-    lo=lower(x);hi=top(x)-.045
+    lo=lower(x);hi=top(x)-.09
     return side_point(x,lo+(hi-lo)*t,sign)
-   a,b,c,d=pt(xa,j/4),pt(xb,j/4),pt(xb,(j+1)/4),pt(xa,(j+1)/4)
+   a,b,c,d=pt(xa,j/8),pt(xb,j/8),pt(xb,(j+1)/8),pt(xa,(j+1)/8)
    # Longitudinal/vertical finite differences yield a smooth side surface normal.
    def no(x,t):
-    y=lower(x)+(top(x)-.045-lower(x))*t
+    y=lower(x)+(top(x)-.09-lower(x))*t
     return norm(cross(sub(pt(x+1e-5,t),pt(x-1e-5,t)),sub(pt(x,t+1e-5),pt(x,t-1e-5)))) if sign>0 else mul(norm(cross(sub(pt(x+1e-5,t),pt(x-1e-5,t)),sub(pt(x,t+1e-5),pt(x,t-1e-5)))),-1)
-   ns=[no(xa,j/4),no(xb,j/4),no(xb,(j+1)/4),no(xa,(j+1)/4)]
+   ns=[no(xa,j/8),no(xb,j/8),no(xb,(j+1)/8),no(xa,(j+1)/8)]
    if sign<0:a,b,c,d=d,c,b,a;ns.reverse()
    tri('paint',a,b,c,*ns[:3]);tri('paint',a,c,d,ns[0],ns[2],ns[3])
  # Painted wheel arch lip and black inner liner are actual thin curved surfaces.
@@ -156,16 +164,20 @@ for sign in[-1,1]:
  tube('paint_dark',sill,.012,6)
 # Hood/deck surface; cabin will cover the central section.
 def deck(u,v):
- x=-2.1655+u*4.331;z=(v*2-1)*width(x)*(.91+.09*math.sin(math.pi*.8));y=top(x)-.045*(abs(v*2-1)**2)
- return(x,y,z)
-surface('paint',deck,56,8,reverse=True)
+ x=-2.1655+u*4.331;t=max(-1.,min(1.,v*2-1))
+ edge=abs(side_point(x,top(x)-.09,1)[2])
+ # A rounded shoulder meets the side shell tangentially, instead of a 90deg
+ # box edge. The wide centre retains the Saga's pressed bonnet/deck shape.
+ y=top(x)-.09+.09*math.sqrt(max(0.,1-t**6))
+ return(x,y,t*edge)
+surface('paint',deck,96,24,reverse=True)
 # Front/rear end caps round slightly into the fenders.
 for end in[-1,1]:
  def cap(u,v,end=end):
-  y=.215+v*(top(end*2.1655)-.215-.045*(u*2-1)**2)
+  y=.215+v*(top(end*2.1655)-.215-.09+.09*math.sqrt(max(0.,1-(u*2-1)**6)))
   z=(u*2-1)*abs(side_point(end*2.1655,y,1)[2])
   return(end*2.1655,y,z)
- surface('paint',cap,14,6,reverse=end>0)
+ surface('paint',cap,32,12,reverse=end>0)
 # Opaque chassis only visible deep within the wheel wells.
 box('black_trim',(0,.225,0),(1.90,.035,.66))
 # Hood perimeter, boot seams and integrated rear lip.
@@ -177,29 +189,26 @@ for sign in[-1,1]:
  tube('paint_dark',[(1.40,.962,sign*.65),(1.74,.945,sign*.65),(2.06,.90,sign*.57),(2.172,.57,sign*.53)],.003,5)
 tube('paint_edge',[(2.09,.932,-.70),(2.13,.935,0),(2.09,.932,.70)],.014,7)
 # Cabin loft: raised roof and curved windscreen/rear screen, not a rectangular extrusion.
-ROOF=[(-.97,1.005),(-.44,1.435),(-.22,1.485),(.25,1.492),(.61,1.46),(.72,1.435),(1.37,.98)]
 RW=[(-.97,.76),(-.44,.663),(.20,.658),(.70,.667),(1.37,.75)]
 def roof(x):
- if x<=-.44:return 1.005+(x+.97)/.53*(1.435-1.005)
- if x>=.72:return 1.435+(x-.72)/.65*(.98-1.435)
- return profile(x,ROOF)
+ return profile(x,[(-.97,1.005),(-.72,1.205),(-.44,1.435),(-.22,1.485),(.25,1.492),(.61,1.46),(.72,1.435),(1.10,1.16),(1.37,.98)])
 
 def cabin(u,v):
  x=-.97+u*2.34;t=v*2-1
  y=roof(x)-.045*t*t;z=profile(x,RW)*t
  return(x,y,z)
-surface('paint',cabin,40,8,reverse=True)
+surface('paint',cabin,64,16,reverse=True)
 # Painted side cabin supports provide real pillars behind the glazing.
 for sign in[-1,1]:
  def cabin_side(u,v,sign=sign):
   x=-.97+u*2.34;y0=top(x)-.015;y1=roof(x)-.045
-  return(x,y0+(y1-y0)*v,sign*(.785+(profile(x,RW)-.785)*v))
+  return(x,y0+(y1-y0)*v,sign*(.785+(profile(x,RW)-.785)*v+.018*math.sin(math.pi*v)))
  surface('paint',cabin_side,36,3,reverse=sign<0)
  # Window frames: front window and rear window with a real B-pillar gap.
  windows=[ [(-.875,.988),(-.394,1.390),(.142,1.402),(.154,.982)],[(.257,.982),(.249,1.403),(.678,1.378),(1.185,1.000)] ]
  def window_point(x,y,offset=0):
   y0=top(x)-.015;y1=roof(x)-.045;t=max(0,min(1,(y-y0)/max(.02,y1-y0)))
-  return(x,y,sign*(.785+(profile(x,RW)-.785)*t+offset))
+  return(x,y,sign*(.785+(profile(x,RW)-.785)*t+.018*math.sin(math.pi*t)+offset))
  for window in windows:
   def window_surface(corners,offset):
    def f(u,v):
@@ -242,12 +251,18 @@ for z in[-.38,.15]:
 tube('black_trim',[(.68,1.465,0),(.83,1.72,0)],.007,7)
 ellipsoid('black_trim',(.68,1.467,0),(.048,.017,.033),16,6)
 # Front grille and lamp assembly. X is curved outward by the wrap at each corner.
+def hull_width_at_height(x,y):
+ if y<=top(x)-.09:return abs(side_point(x,y,1)[2])
+ if y>=top(x):return 0.
+ h=(y-top(x)+.09)/.09
+ return abs(side_point(x,top(x)-.09,1)[2])*(max(0.,1-h*h)**(1/6))
+
 def hull_end_x(z,y,front):
  end=-2.1655 if front else 2.1655
- if abs(z)<=abs(side_point(end,y,1)[2]):return end
+ if abs(z)<=hull_width_at_height(end,y):return end
  lo,hi=(-2.1655,-.5) if front else(.8,2.1655)
  for _ in range(24):
-  mid=(lo+hi)/2;w=abs(side_point(mid,y,1)[2])
+  mid=(lo+hi)/2;w=hull_width_at_height(mid,y)
   if (w<abs(z))==front:lo=mid
   else:hi=mid
  return (lo+hi)/2
@@ -266,7 +281,7 @@ def endpoly(mat,zy,front,offset):
   z,y=q;e=.0001;fn=frontx if front else rearx
   dxdy=(fn(z,y+e)-fn(z,y-e))/(2*e);dxdz=(fn(z+e,y)-fn(z-e,y))/(2*e)
   return norm((-1,dxdy,dxdz) if front else(1,-dxdy,-dxdz))
- N=4
+ N=6
  for k in range(1,len(zy)-1):
   a,b,c=zy[0],zy[k],zy[k+1]
   def q(i,j):return(a[0]+(b[0]-a[0])*i/N+(c[0]-a[0])*j/N,a[1]+(b[1]-a[1])*i/N+(c[1]-a[1])*j/N)
@@ -287,7 +302,7 @@ ellipsoid('chrome',(-2.180,.815,0),(.009,.061,.063),24,10)
 ellipsoid('black_trim',(-2.188,.816,0),(.004,.050,.051),20,8)
 frontpoly('chrome',[(-.032,.852),(.032,.852),(.024,.800),(0,.779),(-.024,.800)])
 for sign in[-1,1]:
- shape=[(.345,.911),(.59,.933),(.790,.933),(.781,.780),(.570,.735),(.382,.775)]
+ shape=[(.345,.847),(.55,.928),(.790,.973),(.795,.790),(.570,.735),(.382,.775)]
  shape=[(sign*z,y-.04) for z,y in shape]
  frontpoly('black_trim',shape)
  centerz=sum(z for z,y in shape)/len(shape);centery=sum(y for z,y in shape)/len(shape)
@@ -318,14 +333,17 @@ for sign in[-1,1]:
  rearpoly('lamp_white',[(sign*.378,.910),(sign*.624,.919),(sign*.554,.826),(sign*.448,.798)],.022)
  # Red segmented lens ribs are actual mesh strips.
  for yy in[.724,.752,.780]:tube('tail_highlight',[(rearx(sign*z,yy)+.020,yy,sign*z) for z in[.58,.65,.73,.78]],.004,5)
- # Side quarter portion of rear lens.
- pts=[(1.92,.927,sign*.820),(2.12,.945,sign*.780),(2.15,.749,sign*.775),(1.99,.742,sign*.820)]
- face('tail_red',pts,(.35,0,sign))
+ # Curved outer lens follows the rear quarter, rather than a floating flat
+ # rectangle. Its upper edge sits below the rounded deck shoulder.
+ def quarter_lens(u,v,sign=sign):
+  x=1.86+u*.30;y=.735+v*(.17-.035*u)
+  return side_point(x,y,sign,.010)
+ surface('tail_red',quarter_lens,16,8,reverse=sign<0)
 # Chrome boot garnish and badge.
 tube('chrome',[(rearx(z)+.004,.858,z) for z in[-.57,-.30,0,.30,.57]],.024,7)
-ellipsoid('chrome',(2.190,.927,0),(.011,.052,.052),24,10)
-ellipsoid('black_trim',(2.202,.927,0),(.005,.043,.043),20,8)
-rearpoly('chrome',[(-.025,.955),(.025,.955),(.018,.920),(0,.900),(-.018,.920)])
+ellipsoid('chrome',(2.190,.862,0),(.011,.052,.052),24,10)
+ellipsoid('black_trim',(2.202,.862,0),(.005,.043,.043),20,8)
+rearpoly('chrome',[(-.025,.890),(.025,.890),(.018,.855),(0,.835),(-.018,.855)])
 quad('plate_rear',(2.201,.575,-.25),(2.201,.687,-.25),(2.201,.687,.25),(2.201,.575,.25),(1,0,0))
 # Plate recess outline and camera keyhole.
 tube('paint_dark',[(2.192,.558,-.278),(2.192,.705,-.278),(2.192,.705,.278),(2.192,.558,.278),(2.192,.558,-.278)],.005,6)
@@ -378,7 +396,7 @@ ellipsoid('black_trim',(2.107,.216,-.573),(.11,.032,.033),16,8)
 def bumper_warp(p):
  x,y,z=p;t=max(0.,min(1.,(y-.215)/.755))
  blend=max(0.,min(1.,(abs(x)-1.78)/.43));blend=blend*blend*(3-2*blend)
- shift=.050*math.sin(math.pi*t)-.115*(1-t)**2-.055*t**4
+ shift=.045*math.sin(math.pi*t)-.105*(1-t)**2-.040*t**4-.19*(abs(z)/.85)**3
  return(x+(1 if x>=0 else -1)*blend*shift,y,z*(1-.04*blend*(1-t)**2))
 for mesh in M.values():
  vv=mesh['vertices']
@@ -390,6 +408,17 @@ for mesh in M.values():
   u,v,w=columns
   transformed=norm(add(add(mul(cross(v,w),n[0]),mul(cross(w,u),n[1])),mul(cross(u,v),n[2])))
   vv[i:i+6]=[*bumper_warp(p),*transformed]
+
+# Orient the final tessellation after the nonlinear bumper deformation.
+# Cofactor normals preserve smooth shading, but broad trim triangles can change
+# winding when their corners move different distances around the bumper.
+for mesh in M.values():
+ vv=mesh['vertices']
+ for i in range(0,len(vv),18):
+  area=cross(sub(vv[i+6:i+9],vv[i:i+3]),sub(vv[i+12:i+15],vv[i:i+3]))
+  average=add(add(vv[i+3:i+6],vv[i+9:i+12]),vv[i+15:i+18])
+  if dot(area,average)<0:
+   vv[i+6:i+18]=vv[i+12:i+18]+vv[i+6:i+12]
 
 # Validate finite coordinates and normals before saving.
 ROOT.mkdir(parents=True,exist_ok=True)

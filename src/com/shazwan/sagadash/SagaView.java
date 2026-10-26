@@ -18,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 /** Touch-driven studio viewer for the hand-modelled Saga VVT asset. */
 final class SagaView extends GLSurfaceView implements GLSurfaceView.Renderer {
-    static final float DEFAULT_YAW=35, DEFAULT_PITCH=14;
+    static final float DEFAULT_YAW=48, DEFAULT_PITCH=11;
     volatile float yaw=DEFAULT_YAW, pitch=DEFAULT_PITCH, zoom=1;
     volatile SagaMesh model;
     volatile String modelError;
@@ -26,7 +26,7 @@ final class SagaView extends GLSurfaceView implements GLSurfaceView.Renderer {
     private final ScaleGestureDetector scaleGesture;
     private final GestureDetector gestures;
     private final FloatBuffer shadowVertices,shadowColors;
-    private final float[] ambient={.32f,.37f,.44f,1};
+    private final float[] ambient={.50f,.50f,.50f,1};
     private final float[] keyPosition={-3,5,4,0},keyDiffuse={.88f,.91f,1,1};
     private final float[] fillPosition={4,2,-3,0},fillDiffuse={.32f,.42f,.60f,1};
     private FloatBuffer frontPlate, rearPlate;
@@ -96,7 +96,7 @@ final class SagaView extends GLSurfaceView implements GLSurfaceView.Renderer {
     }
     @Override public void onSurfaceChanged(GL10 gl,int width,int height){
         float aspect=(float)width/Math.max(1,height);
-        distance=Math.max(5.2f,2.6f/((float)Math.tan(Math.toRadians(17))*aspect)+1.4f);
+        distance=Math.max(4.9f,2.3f/((float)Math.tan(Math.toRadians(17))*aspect)+1.3f);
         gl.glViewport(0,0,width,height);gl.glMatrixMode(GL10.GL_PROJECTION);gl.glLoadIdentity();
         GLU.gluPerspective(gl,34,aspect,.1f,40);gl.glMatrixMode(GL10.GL_MODELVIEW);
     }

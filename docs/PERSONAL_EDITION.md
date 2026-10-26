@@ -175,7 +175,7 @@ were subsequently verified during the GPS/offline implementation; lyric lookup r
 
 Current separate-ID APK: `/workspace/artifacts/saga-dash-final/saga-dash-independent.apk`.
 Model review assets: `/workspace/artifacts/saga-model/` (five actual-mesh renders, GLB and Blender scene).
-Generated mesh: 24,732 triangles in17 opaque batches; ≈1.7MB. It is already included in the APK.
+Generated mesh: 46,216 triangles in 17 opaque batches; ≈3.3MB (decimal). It is already included in the APK.
 The original shared-ID preview is retained as an older artifact, not the current installation target.
 Latest app screenshot: `/workspace/artifacts/saga-dash-final/dashboard-1024x600.png`.
 
@@ -216,3 +216,35 @@ When GPS app time and Android device time differ, other apps and the Android TLS
 clock still depend on the device setting. Correct that device time through Android Settings
 or a separately verified device-specific system route; this integration does not bypass TLS
 verification or silently issue a privileged clock-setting command.
+
+## Curved vehicle model update — 26 October 2026
+
+The bonnet/deck shoulders now roll into the side panels, bumper corners curve in plan view,
+and the cabin uses a continuous cubic roof profile. Tires and mirror housings have finer
+curved surfaces; side glass has a slight bow. Front lamps sweep outward and the rear-quarter
+lens follows the body rather than a floating flat patch. Paint highlights are broader, ambient
+light is brighter and neutral, and the starting camera is lower and closer with more side visible. The asset remains
+an original handmade approximation; it is not a manufacturer-accurate Saga model.
+Rendering stays on-demand. Physical TEST9278B graphics performance remains untested.
+
+To update a Windows ZIP checkout without replacing local IDE settings:
+
+1. Stop the running app in Android Studio.
+2. Download/extract the current `saga-dash-android-studio` branch ZIP to a **separate** folder.
+3. Copy `assets/vehicle/saga-vvt.mesh` and `src/com/shazwan/sagadash/SagaView.java` from that
+   folder into the same paths in your existing project, replacing those two files.
+4. Click Run again. No uninstall, signing-key change or Gradle upgrade is needed.
+
+For model source editing, also take `tools/build_saga_model.py`, the vehicle README and stats.
+Do not replace `local.properties`, `.idea` or local keystores with files from another computer.
+
+Actual-mesh studio previews (Blender lighting; Android uses its own simpler lighting):
+
+![Curved model front](img/saga-curved-front.png)
+
+![Curved model rear](img/saga-curved-rear.png)
+
+Validation of this update: Gradle `:app:assembleDebug` passed; the final asset and viewer passed
+286 assertions on the cloud Android 10 emulator, including geometry, rotate/pinch/reset and media
+session controls. Five actual-mesh studio views were reviewed. This does not establish visual
+accuracy to manufacturer CAD or frame-rate performance on the physical head unit.
