@@ -24,8 +24,8 @@ public final class SagaShowroomChecks {
     int run(Instrumentation instrumentation,DashboardActivity dashboard) throws Exception {
         int before=assertions;
         Context context=instrumentation.getTargetContext();
-        boolean hadMode=dashboard.dashPrefs().contains("vehicle_video");
-        boolean oldMode=dashboard.dashPrefs().getBoolean("vehicle_video",true);
+        boolean hadView=dashboard.dashPrefs().contains("vehicle_view");
+        String oldView=dashboard.dashPrefs().getString("vehicle_view","angles");
         boolean hadSource=dashboard.dashPrefs().contains("vehicle_preview_source");
         String oldSource=dashboard.dashPrefs().getString("vehicle_preview_source","transparent");
         File video=SagaShowroom.file(context);
@@ -55,9 +55,14 @@ public final class SagaShowroomChecks {
                 long duration=Long.parseLong(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                 check(duration>=9900&&duration<=10100,"transparent preview retains the ten-second sequence");
                 check(!"yes".equals(alphaMetadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)),"transparent preview has no audio track");
+                Bitmap frame=android.os.Build.VERSION.SDK_INT>=27
+                        ?alphaMetadata.getScaledFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC,320,180)
+                        :alphaMetadata.getFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                check(frame!=null,"remaining packaged video has a decodable opening frame");
+                if(frame!=null)frame.recycle();
             }finally{alphaMetadata.release();}
             instrumentation.runOnMainSync(()->{
-                dashboard.dashPrefs().edit().putString("vehicle_preview_source","transparent").commit();
+                dashboard.dashPrefs().edit().putString("vehicle_preview_source","original").commit();
                 dashboard.setVehicleVideo(true);
             });
             waitPrepared(instrumentation,dashboard);
@@ -65,7 +70,7 @@ public final class SagaShowroomChecks {
             instrumentation.runOnMainSync(()->{
                 try{
                     SagaShowroom view=dashboard.showroom;
-                    check(view.packedAlpha,"transparent source enables packed color/matte compositing");
+                    check(view.packedAlpha,"a removed Original-video preference safely falls back to the transparent preview");
                     check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==360,"transparent mode prepares the actual packed video decoder");
                     check(!view.playing(),"transparent preview starts paused");
                     check(!view.player.isLooping(),"transparent preview does not auto-loop");
@@ -76,39 +81,6 @@ public final class SagaShowroomChecks {
                 }catch(Throwable failure){alphaFailure[0]=failure;}
             });
             rethrow(alphaFailure[0]);
-            MediaMetadataRetriever bundled=new MediaMetadataRetriever();
-            try(AssetFileDescriptor descriptor=context.getResources().openRawResourceFd(R.raw.saga_showroom)){
-                bundled.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
-                check("1280".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
-                        &&"720".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)),"bundled clip preserves the supplied 720p video dimensions");
-                long duration=Long.parseLong(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-                check(duration>=9900&&duration<=10100,"bundled preview retains the original ten-second sequence");
-                check(!"yes".equals(bundled.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)),"bundled preview contains no audio track");
-                Bitmap frame=android.os.Build.VERSION.SDK_INT>=27
-                        ?bundled.getScaledFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC,320,180)
-                        :bundled.getFrameAtTime(0,MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-                check(frame!=null,"packaged video has a decodable opening frame");
-                if(frame!=null)frame.recycle();
-            }finally{bundled.release();}
-            instrumentation.runOnMainSync(()->{
-                dashboard.dashPrefs().edit().putString("vehicle_preview_source","original").commit();
-                dashboard.setVehicleVideo(true);
-            });
-            waitPrepared(instrumentation,dashboard);
-            final Throwable[] bundledFailure={null};
-            instrumentation.runOnMainSync(()->{
-                try{
-                    SagaShowroom view=dashboard.showroom;
-                    check(!view.packedAlpha,"original source uses normal video rendering");
-                    check(view.player.getVideoWidth()==1280&&view.player.getVideoHeight()==720,"decoder uses the original packaged preview when selected");
-                    check(!view.playing(),"packaged preview also starts paused");
-                    view.toggle();check(view.playing(),"packaged preview can start playback");
-                    view.toggle();check(!view.playing(),"packaged preview can pause playback");
-                    dashboard.setVehicleVideo(false);
-                    check(view.player==null&&!view.active,"switching away releases the packaged-video decoder before importing");
-                }catch(Throwable failure){bundledFailure[0]=failure;}
-            });
-            rethrow(bundledFailure[0]);
             SagaShowroom.importVideo(context,VALID);
             byte[] fixture=Base64.decode(FIXTURE,Base64.DEFAULT);
             check(SagaShowroom.hasImportedVideo(context)&&SagaShowroom.hasVideo(context)&&Arrays.equals(read(video),fixture),"content URI is copied intact into the private override");
@@ -157,7 +129,7 @@ public final class SagaShowroomChecks {
                 try{
                     check(!dashboard.showroom.playing(),"resuming does not restart video without a tap");
                     dashboard.setVehicleVideo(false);
-                    check(dashboard.car!=null,"switching back restores the interactive 3D viewer");
+                    check(dashboard.angles!=null&&dashboard.showroom==null,"switching back restores the image angle viewer and releases video");
                 }catch(Throwable e){failure[0]=e;}
             });
             rethrow(failure[0]);
@@ -171,7 +143,7 @@ public final class SagaShowroomChecks {
                 }
             }finally{
                 SharedPreferences.Editor edit=dashboard.dashPrefs().edit();
-                if(hadMode)edit.putBoolean("vehicle_video",oldMode);else edit.remove("vehicle_video");
+                if(hadView)edit.putString("vehicle_view",oldView);else edit.remove("vehicle_view");
                 if(hadSource)edit.putString("vehicle_preview_source",oldSource);else edit.remove("vehicle_preview_source");
                 edit.commit();
             }

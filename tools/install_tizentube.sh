@@ -3,6 +3,14 @@
 set -euo pipefail
 : "${DEVICE:?Set DEVICE to the intended Android head unit serial}"
 : "${ANDROID_HOME:?Set ANDROID_HOME to your Android SDK}"
+sdk=$(adb -s "$DEVICE" shell getprop ro.build.version.sdk | tr -d '\r')
+case "$sdk" in
+  ''|*[!0-9]*) echo "Cannot verify the device's Android API level: $sdk" >&2; exit 1 ;;
+esac
+if [ "$sdk" -lt 24 ]; then
+  echo "TizenTube Cobalt v2.0.3 requires Android 7.0 / API 24 or newer; device API: $sdk" >&2
+  exit 1
+fi
 abi=$(adb -s "$DEVICE" shell getprop ro.product.cpu.abilist | tr -d '\r')
 case "$abi" in
   *arm64-v8a*) arch=arm64; hash=4e3df211abb243cb06b06ba3676fe62c3d5b59baa47c1a0050cb180b3493e539 ;;

@@ -1,0 +1,15 @@
+{
+  "file": "SagaDash-1.6.7-sagadash.2.apk",
+  "application_id": "com.shazwan.sagadash",
+  "version_name": "1.6.7-sagadash.2",
+  "version_code": 26,
+  "min_sdk": 24,
+  "target_sdk": 29,
+  "compile_sdk": 35,
+  "size_bytes": 5167928,
+  "sha256": "f97e73da626fba591757ae82bd36bd92c3a662617f70191fe77a9e2c390c925c",
+  "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
+  "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
+  "validation": "Android Studio debug/release assembly; shell APK signature verified; 403 assertions passed on Android 10 x86_64 software emulator.",
+  "hardware_status": "TEST9278B hardware not connected or tested."
+}

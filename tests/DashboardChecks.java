@@ -19,6 +19,9 @@ public class DashboardChecks extends Instrumentation {
         try{
             assertions+=new TrustedClockChecks().run();
             assertions+=new DashShortcutsChecks().run(getTargetContext());
+            assertions+=new DashLayoutChecks().run(this);
+            assertions+=new DashNavigationChecks().run();
+            assertions+=new DashMediaChecks().run(this);
             final String applicationId="com.shazwan.sagadash";
             check(getTargetContext().getPackageName().equals(applicationId),"personal application ID");
             check(DashboardActivity.class.getName().equals(applicationId+".DashboardActivity")
@@ -30,8 +33,6 @@ public class DashboardChecks extends Instrumentation {
             for(android.content.pm.ActivityInfo component:installed.activities)componentsMigrated&=component.name.startsWith(applicationId+".");
             for(android.content.pm.ServiceInfo component:installed.services)componentsMigrated&=component.name.startsWith(applicationId+".");
             check(componentsMigrated,"all registered activity/service classes use personal namespace");
-            SagaModelChecks modelChecks=new SagaModelChecks();
-            assertions+=modelChecks.run(getTargetContext());
             assertions+=new PrayerGpsChecks().run(getTargetContext());
             JSONObject day=new JSONObject("{\"date\":\"25-Oct-2026\",\"fajr\":\"05:48:00\",\"syuruk\":\"07:00:00\",\"dhuhr\":\"13:10:00\",\"asr\":\"16:25:00\",\"maghrib\":\"19:12:00\",\"isha\":\"20:23:00\"}");
             JakimSchedule.Day parsed=new JakimSchedule.Day(day);
@@ -55,8 +56,9 @@ public class DashboardChecks extends Instrumentation {
                 check(absent,"removed launcher feature: "+removed);
             }
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            assertions+=new DashCustomizationChecks().run(this,dash[0]);
             assertions+=new SagaShowroomChecks().run(this,dash[0]);
-            assertions+=modelChecks.view(this,dash[0]);
+            assertions+=new SagaAngleChecks().run(this,dash[0]);
             // Regression: a busy timetable cache must not make UI refresh wait for its global monitor.
             final java.util.concurrent.CountDownLatch locked=new java.util.concurrent.CountDownLatch(1);
             final java.util.concurrent.CountDownLatch release=new java.util.concurrent.CountDownLatch(1);
@@ -75,12 +77,12 @@ public class DashboardChecks extends Instrumentation {
                 session[0].setCallback(new MediaSession.Callback(){
                     @Override public void onPause(){session[0].setPlaybackState(new PlaybackState.Builder().setState(PlaybackState.STATE_PAUSED,2500,0).setActions(PlaybackState.ACTION_PLAY|PlaybackState.ACTION_PAUSE).build());}
                 },new Handler(Looper.getMainLooper()));
-                session[0].setMetadata(new MediaMetadata.Builder().putString(MediaMetadata.METADATA_KEY_TITLE,"Dashboard test track").putString(MediaMetadata.METADATA_KEY_ARTIST,"Test artist").build());
+                session[0].setMetadata(new MediaMetadata.Builder().putString(MediaMetadata.METADATA_KEY_TITLE,"Dashboard test track").putString(MediaMetadata.METADATA_KEY_ARTIST,"Test artist").putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART,android.graphics.Bitmap.createBitmap(512,512,android.graphics.Bitmap.Config.ARGB_8888)).build());
                 session[0].setPlaybackState(new PlaybackState.Builder().setState(PlaybackState.STATE_PLAYING,1000,1).setActions(PlaybackState.ACTION_PLAY|PlaybackState.ACTION_PAUSE).build());
                 session[0].setActive(true);dash[0].media.choose(getTargetContext().getPackageName());
             });
             waitForIdleSync();
-            runOnMainSync(()->{check(dash[0].title.getText().toString().equals("Dashboard test track"),"session metadata displayed");check(dash[0].play.getText().toString().equals("Pause"),"playing state displayed");dash[0].media.command(0);});
+            runOnMainSync(()->{check(dash[0].title.getText().toString().equals("Dashboard test track"),"session metadata displayed");check(dash[0].play.getText().toString().equals("Pause"),"playing state displayed");check(((android.graphics.drawable.BitmapDrawable)dash[0].artwork.getDrawable()).getBitmap().getWidth()<=128,"album artwork is bounded before display");dash[0].media.command(0);});
             for(int n=0;n<30;n++){SystemClock.sleep(100);if(!dash[0].media.playing())break;}
             runOnMainSync(()->check(!dash[0].media.playing(),"pause routed to selected session"));
             result.putString("stream","PASS: "+assertions+" assertions (JAKIM parser, lyrics, dashboard, real MediaSession controls)\n");

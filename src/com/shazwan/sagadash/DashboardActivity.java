@@ -28,10 +28,29 @@ public class DashboardActivity extends Activity implements LocationListener {
     LinearLayout main, prayerBar;
     TextView clock,date,next,speed,gps,trip,title,artist,source,lyric,play,progress;
     ImageView artwork;
-    SagaView car;
+    SagaAngleView angles;
     SagaShowroom showroom;
     TextView vehicleHint,vehicleMode;
     boolean vehicleVideo;
+    LinearLayout root,dock,vehicleContent;
+    FrameLayout vehicleStage;
+    DashLayoutSurface layoutSurface;
+    Pane leftPane,rightPane;
+    DashMediaPanel primaryMedia;
+    TextView editButton,footerText;
+    int editMode,artToken;
+    boolean blockEditTouch;
+    final Rect editSurfaceBounds=new Rect(),editDockBounds=new Rect();
+    String dockBeforeEdit="";
+    final float[] dockSizesBefore=new float[8];
+    ArrayList<String> dockOrder;
+    Bitmap smallArtwork;
+    Location latestFix;
+    final SimpleDateFormat clockFormat=new SimpleDateFormat("HH:mm",Locale.US);
+    final SimpleDateFormat dayFormat=new SimpleDateFormat("EEEE, dd MMM yyyy  ·  'Malaysia'",Locale.US);
+    static final String[] DOCK_NAMES={"Music","Bluetooth","Radio","Video","Files","Equalizer","Car Link","DSP"};
+    static final String[] DOCK_SYMBOLS={"♫","ᛒ","FM","▶","▣","▥","▱","☷"};
+    static final int[] DOCK_COLORS={0xffec4d79,0xff288ff0,0xff9459ec,0xffec7148,0xffe7a52b,0xff6e8199,0xff239366,0xff336bf2};
     DashMedia media;
     LocationManager locations;
     Location previous;
@@ -49,18 +68,23 @@ public class DashboardActivity extends Activity implements LocationListener {
     long fixAt, fixTime;
     double tripMetres;
     boolean visible, prayerLoading;
-    int lyricGeneration;
+    volatile int lyricGeneration;
     String prayerRenderKey="";
     final Handler handler=new Handler(Looper.getMainLooper());
     final ExecutorService io=Executors.newSingleThreadExecutor();
+    final ExecutorService lyricsIo=Executors.newSingleThreadExecutor();
     final ExecutorService prayerIo=Executors.newSingleThreadExecutor();
     String lyricKey="", prayerStatus="", requestedZone="";
     DashLyrics lyrics=new DashLyrics();
-    final Runnable tick=new Runnable(){public void run(){if(!visible)return;refreshClock();if(SystemClock.elapsedRealtime()-fixAt>10000){speed.setText("— km/h");gps.setText("GPS · Waiting for signal");previous=null;}lyric.setText(lyrics.at(media.position()));long pos=media.position()/1000;progress.setText(String.format(Locale.US,"%d:%02d",pos/60,pos%60));handler.postDelayed(this,1000);}};
+    final Runnable tick=new Runnable(){public void run(){
+        if(!visible)return;refreshClock();
+        if(SystemClock.elapsedRealtime()-fixAt>10000){setText(speed,"— km/h");setText(gps,"GPS · Waiting for signal");previous=null;}
+        updateMediaPosition();handler.postDelayed(this,1000);
+    }};
     @Override protected void attachBaseContext(Context base){super.attachBaseContext(Lang.wrap(base));}
     @Override public void onCreate(Bundle state){
         super.onCreate(state);
-        TrustedClock.initialize(this);
+        TrustedClock.initialize(this);clockFormat.setTimeZone(JakimSchedule.MY);dayFormat.setTimeZone(JakimSchedule.MY);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN);
         float density=getResources().getDisplayMetrics().density;
@@ -78,7 +102,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     int px(float n){return Math.max(1,Math.round(n*scale*getResources().getDisplayMetrics().density));}
     TextView text(String s,int size,int color){TextView v=new TextView(this);v.setText(s);v.setTextColor(color);v.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,px(size));v.setGravity(Gravity.CENTER_VERTICAL);v.setFontFeatureSettings("tnum");return v;}
-    GradientDrawable background(int color){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(px(20));d.setStroke(px(1),LINE);return d;}
+    GradientDrawable background(int color){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(px(20));d.setStroke(px(1),neon()?0x8061ccff:LINE);return d;}
     LinearLayout column(){LinearLayout l=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);return l;}
     LinearLayout row(){LinearLayout l=new LinearLayout(this);l.setGravity(Gravity.CENTER_VERTICAL);return l;}
     void pad(View v,int n){v.setPadding(px(n),px(n),px(n),px(n));}
@@ -86,62 +110,137 @@ public class DashboardActivity extends Activity implements LocationListener {
     void equal(LinearLayout parent,View child){LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-1,1);p.setMargins(px(5),px(4),px(5),px(4));parent.addView(child,p);}
     LinearLayout iconButton(String label,String symbol,int color,Runnable action){
         LinearLayout box=column();box.setGravity(Gravity.CENTER);box.setOnClickListener(v->action.run());box.setContentDescription(label);
-        TextView icon=text(symbol,25,TEXT);icon.setGravity(Gravity.CENTER);GradientDrawable bg=background(color);bg.setCornerRadius(px(13));icon.setBackground(bg);box.addView(icon,new LinearLayout.LayoutParams(px(46),px(46)));
+        float iconScale=Math.max(.7f,Math.min(1.3f,dashPrefs().getFloat("dock_icon_scale_"+label,1)));
+        TextView icon=text(symbol,Math.round(25*iconScale),TEXT);icon.setGravity(Gravity.CENTER);GradientDrawable bg=background(color);bg.setCornerRadius(px(13));icon.setBackground(bg);box.addView(icon,new LinearLayout.LayoutParams(px(46*iconScale),px(46*iconScale)));
         TextView caption=text(label,13,TEXT);caption.setGravity(Gravity.CENTER);box.addView(caption,new LinearLayout.LayoutParams(-1,px(24)));return box;
     }
-    LinearLayout card(){LinearLayout l=column();l.setBackground(background(PANEL));pad(l,18);return l;}
+    LinearLayout card(){LinearLayout l=column();l.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));pad(l,14);return l;}
     void build(){
-        LinearLayout root=row();root.setBackgroundColor(BG);pad(root,14);setContentView(root);
+        root=row();root.setBackground(new DashBackdrop(unit(),neon()));pad(root,14);setContentView(root);
         LinearLayout nav=column();nav.setGravity(Gravity.CENTER);root.addView(nav,new LinearLayout.LayoutParams(px(96),-1));
         TextView brand=text("Saga\nDash",17,BLUE);brand.setContentDescription("Saga Dash");brand.setGravity(Gravity.CENTER);nav.addView(brand,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
         main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);
-        LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));TextView status=button("Media access  ·  ⚙",this::settings);header.addView(status);main.addView(header);clock.setOnClickListener(v->clockDialog());
+        LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
+        editButton=button("Edit layout",this::editLayoutMenu);header.addView(editButton);header.addView(button("Media access  ·  ⚙",this::settings));main.addView(header);clock.setOnClickListener(v->clockDialog());
         date=text("",16,MUTED);main.addView(date,new LinearLayout.LayoutParams(-1,px(27)));
-        prayerBar=row();prayerBar.setBackground(background(0xff0b1c2b));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
+        prayerBar=row();prayerBar.setBackground(new DashPanelDrawable(0xff0b1c2b,BLUE,px(20),neon()));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
-        LinearLayout content=row();main.addView(content,new LinearLayout.LayoutParams(-1,0,1));
-        LinearLayout left=card();LinearLayout.LayoutParams leftP=new LinearLayout.LayoutParams(0,-1,.43f);leftP.setMargins(0,px(6),px(10),px(6));content.addView(left,leftP);
-        LinearLayout vehicleHeader=row();TextView model=text("PROTON SAGA",17,MUTED);vehicleHeader.addView(model,new LinearLayout.LayoutParams(0,-2,1));
-        vehicleMode=text("View ▾",15,BLUE);vehicleMode.setGravity(Gravity.CENTER);vehicleMode.setOnClickListener(v->vehicleDialog());vehicleHeader.addView(vehicleMode,new LinearLayout.LayoutParams(px(66),px(38)));
-        speed=text("— km/h",22,TEXT);vehicleHeader.addView(speed);left.addView(vehicleHeader);
-        FrameLayout vehicleStage=new FrameLayout(this);left.addView(vehicleStage,new LinearLayout.LayoutParams(-1,0,1));
-        car=new SagaView(this);vehicleStage.addView(car,new FrameLayout.LayoutParams(-1,-1));
-        showroom=new SagaShowroom(this);vehicleStage.addView(showroom,new FrameLayout.LayoutParams(-1,-1));
-        vehicleHint=text("",13,MUTED);vehicleHint.setGravity(Gravity.CENTER);left.addView(vehicleHint);
-        setVehicleVideo(dashPrefs().getBoolean("vehicle_video",true));
-        gps=text("GPS · Waiting for signal",14,BLUE);left.addView(gps);trip=text("",14,MUTED);left.addView(trip);trip.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("Reset GPS trip?").setPositiveButton("Reset",(d,w)->{tripMetres=0;saveTrip();}).setNegativeButton("Cancel",null).show();return true;});updateTrip();
-        LinearLayout right=column();content.addView(right,new LinearLayout.LayoutParams(0,-1,.57f));
-        LinearLayout shortcuts=row();right.addView(shortcuts,new LinearLayout.LayoutParams(-1,px(115)));
-        TextView youtube=button("▶\nYouTube",this::launchVideo);youtube.setOnLongClickListener(v->{DashShortcuts.choose(this,"YouTube");return true;});equal(shortcuts,youtube);TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
-        LinearLayout player=card();right.addView(player,new LinearLayout.LayoutParams(-1,0,1));
-        source=text("NOW PLAYING",12,BLUE);player.addView(source);
-        LinearLayout details=row();artwork=new ImageView(this);artwork.setScaleType(ImageView.ScaleType.CENTER_CROP);details.addView(artwork,new LinearLayout.LayoutParams(px(68),px(68)));LinearLayout labels=column();pad(labels,8);details.addView(labels,new LinearLayout.LayoutParams(0,-2,1));title=text("No active media",24,TEXT);title.setMaxLines(1);title.setEllipsize(android.text.TextUtils.TruncateAt.END);labels.addView(title);artist=text("Play YouTube, radio or Bluetooth audio",15,MUTED);artist.setMaxLines(2);labels.addView(artist);player.addView(details);
-        lyric=text("Lyrics appear when a track is available",17,TEXT);lyric.setGravity(Gravity.CENTER);lyric.setMaxLines(3);player.addView(lyric,new LinearLayout.LayoutParams(-1,0,1));lyric.setOnClickListener(v->new AlertDialog.Builder(this).setTitle("Lyrics · LRCLIB").setMessage(lyrics.plain).setPositiveButton("Close",null).show());
-        LinearLayout controls=row();progress=text("0:00",13,MUTED);controls.addView(progress,new LinearLayout.LayoutParams(px(50),-1));equal(controls,button("Previous",()->media.command(-1)));play=button("Play",()->media.command(0));equal(controls,play);equal(controls,button("Next",()->media.command(1)));player.addView(controls,new LinearLayout.LayoutParams(-1,px(54)));
-        LinearLayout dock=row();main.addView(dock,new LinearLayout.LayoutParams(-1,px(87)));
-        String[] names={"Music","Bluetooth","Radio","Video","Files","Equalizer","Car Link","DSP"};
-        int[] colors={0xffec4d79,0xff288ff0,0xff9459ec,0xffec7148,0xffe7a52b,0xff6e8199,0xff239366,0xff336bf2};
-        String[] symbols={"♫","ᛒ","FM","▶","▣","▥","▱","☷"};
-        for(int i=0;i<names.length;i++){final String name=names[i];LinearLayout item=iconButton(name,symbols[i],colors[i],()->shortcut(name));item.setOnLongClickListener(v->{DashShortcuts.choose(this,name);return true;});item.setContentDescription(name+". Long press to choose app.");equal(dock,item);}
-        TextView footer=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footer,10);footer.setBackground(background(0xff0c1b29));footer.setOnClickListener(v->shortcut("Vehicle settings"));footer.setOnLongClickListener(v->{DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footer,new LinearLayout.LayoutParams(-1,px(44)));
+        buildVehicleContent();
+        primaryMedia=newMediaPanel();bindPrimaryMedia();
+        layoutSurface=new DashLayoutSurface(this,dashPrefs(),unit());main.addView(layoutSurface,new LinearLayout.LayoutParams(-1,0,1));
+        leftPane=new Pane("vehicle",dashPrefs().getString("pane_vehicle","car"));
+        rightPane=new Pane("media",dashPrefs().getString("pane_media","media"));
+        layoutSurface.addPanel("vehicle",leftPane.box);layoutSurface.addPanel("media",rightPane.box);
+        LinearLayout shortcuts=row();
+        TextView youtube=button("▶\nYouTube",this::launchVideo);youtube.setOnLongClickListener(v->{DashShortcuts.choose(this,"YouTube");return true;});equal(shortcuts,youtube);
+        TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
+        layoutSurface.addPanel("shortcuts",shortcuts);
+        dock=row();buildDock();layoutSurface.addPanel("dock",dock);
+        footerText=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
+        footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));
     }
+    float unit(){return scale*getResources().getDisplayMetrics().density;}
+    boolean neon(){return dashPrefs().getBoolean("style_neon",true);}
+    static void setText(TextView view,CharSequence value){if(view!=null&&!android.text.TextUtils.equals(view.getText(),value))view.setText(value);}
+    void buildVehicleContent(){
+        vehicleContent=column();
+        LinearLayout vehicleHeader=row();TextView model=text("PROTON SAGA",16,MUTED);vehicleHeader.addView(model,new LinearLayout.LayoutParams(0,-2,1));
+        vehicleMode=text("View ▾",14,BLUE);vehicleMode.setGravity(Gravity.CENTER);vehicleMode.setOnClickListener(v->vehicleDialog());vehicleHeader.addView(vehicleMode,new LinearLayout.LayoutParams(px(66),px(34)));
+        speed=text("— km/h",22,TEXT);vehicleHeader.addView(speed);vehicleContent.addView(vehicleHeader);
+        vehicleStage=new FrameLayout(this);vehicleContent.addView(vehicleStage,new LinearLayout.LayoutParams(-1,0,1));
+        angles=new SagaAngleView(this,io,dashPrefs());
+        angles.setOnClickListener(v->{if(vehicleVideo)startVehicleVideo();else angles.setFrame(angles.frame()+1);});vehicleStage.addView(angles,new FrameLayout.LayoutParams(-1,-1));
+        vehicleHint=text("",13,MUTED);vehicleHint.setGravity(Gravity.CENTER);vehicleContent.addView(vehicleHint);
+        vehicleVideo="video".equals(dashPrefs().getString("vehicle_view","angles"));updateVehicleLabels();
+        gps=text("GPS · Waiting for signal",14,BLUE);vehicleContent.addView(gps);trip=text("",14,MUTED);vehicleContent.addView(trip);
+        trip.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("Reset GPS trip?").setPositiveButton("Reset",(d,w)->{tripMetres=0;saveTrip();}).setNegativeButton("Cancel",null).show();return true;});updateTrip();
+    }
+    DashMediaPanel newMediaPanel(){return new DashMediaPanel(this,unit(),()->{if(media!=null)media.command(-1);},()->{if(media!=null)media.command(0);},()->{if(media!=null)media.command(1);},()->new AlertDialog.Builder(this).setTitle("Lyrics · LRCLIB").setMessage(lyrics.plain).setPositiveButton("Close",null).show());}
+    void bindPrimaryMedia(){title=primaryMedia.title;artist=primaryMedia.artist;source=primaryMedia.source;lyric=primaryMedia.lyric;play=primaryMedia.play;progress=primaryMedia.progress;artwork=primaryMedia.artwork;}
+    final class Pane {
+        final String key;final LinearLayout box;final FrameLayout slot;final TextView selector;
+        String mode;DashNavigationView navigation;DashMediaPanel mediaPanel;DashSourcePanel sourcePanel;
+        Pane(String key,String initial){
+            this.key=key;box=card();LinearLayout head=row();TextView caption=text(key.equals("vehicle")?"LEFT PANEL":"RIGHT PANEL",11,MUTED);head.addView(caption,new LinearLayout.LayoutParams(0,-1,1));
+            selector=text("Switch ▾",14,BLUE);selector.setGravity(Gravity.CENTER);selector.setOnClickListener(v->menu());selector.setContentDescription("Switch "+key+" panel");head.addView(selector,new LinearLayout.LayoutParams(px(142),-1));box.addView(head,new LinearLayout.LayoutParams(-1,px(27)));
+            slot=new FrameLayout(DashboardActivity.this);box.addView(slot,new LinearLayout.LayoutParams(-1,0,1));setMode(initial);
+        }
+        void menu(){
+            String[] labels=key.equals("vehicle")?new String[]{"Car preview","Navigation preview","YouTube controls","TizenTube controls","Media player","Radio controls"}:new String[]{"Media player","Navigation preview","Radio controls","YouTube controls","TizenTube controls"};
+            String[] values=key.equals("vehicle")?new String[]{"car","navigation","youtube","tizentube","media","radio"}:new String[]{"media","navigation","radio","youtube","tizentube"};
+            new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(labels,(d,i)->setMode(values[i])).setNegativeButton("Cancel",null).show();
+        }
+        void setMode(String requested){
+            String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio").contains(requested)?requested:"media";
+            if(valid.equals("car")&&!key.equals("vehicle"))valid="media";
+            if(navigation!=null){navigation.close();navigation=null;}
+            if("car".equals(mode))releaseVehicleResources();
+            slot.removeAllViews();mode=valid;mediaPanel=null;sourcePanel=null;dashPrefs().edit().putString("pane_"+key,mode).apply();
+            String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Navigation":mode.equals("media")?"Media player":mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";selector.setText(caption+" ▾");
+            if(mode.equals("car")){detach(vehicleContent);slot.addView(vehicleContent,new FrameLayout.LayoutParams(-1,-1));}
+            else if(mode.equals("media")){mediaPanel=key.equals("media")?primaryMedia:newMediaPanel();detach(mediaPanel);slot.addView(mediaPanel,new FrameLayout.LayoutParams(-1,-1));}
+            else if(mode.equals("navigation")){navigation=new DashNavigationView(DashboardActivity.this,()->shortcut("Navigation"));slot.addView(navigation,new FrameLayout.LayoutParams(-1,-1));if(latestFix!=null)navigation.setLocation(latestFix);if(visible&&editMode==0)navigation.resume();}
+            else{
+                String name=mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";
+                String app=mode.equals("youtube")?"YouTube app":name;
+                sourcePanel=new DashSourcePanel(DashboardActivity.this,unit(),name,()->shortcut(app),()->DashShortcuts.choose(DashboardActivity.this,app),()->media.command(-1),()->media.command(0),()->media.command(1));slot.addView(sourcePanel,new FrameLayout.LayoutParams(-1,-1));
+            }
+            if(leftPane!=null)updateVehicleResources();refreshMedia();
+        }
+        void pause(){if(navigation!=null)navigation.pause();}
+        void resume(){if(navigation!=null&&visible&&editMode==0)navigation.resume();}
+    }
+    static void detach(View view){if(view.getParent() instanceof android.view.ViewGroup)((android.view.ViewGroup)view.getParent()).removeView(view);}
+    void buildDock(){
+        dock.removeAllViews();String saved=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));LinkedHashSet<String> order=new LinkedHashSet<>();for(String s:saved.split(","))if(Arrays.asList(DOCK_NAMES).contains(s))order.add(s);Collections.addAll(order,DOCK_NAMES);dockOrder=new ArrayList<>(order);
+        for(String name:dockOrder){int index=Arrays.asList(DOCK_NAMES).indexOf(name);LinearLayout item=iconButton(name,DOCK_SYMBOLS[index],DOCK_COLORS[index],()->{if(editMode==2)iconSizeDialog(name);else if(editMode==0)shortcut(name);});
+            item.setTag(name);item.setOnLongClickListener(v->{if(editMode==2){v.startDragAndDrop(ClipData.newPlainText("dock",name),new View.DragShadowBuilder(v),name,0);return true;}if(editMode==0)DashShortcuts.choose(this,name);return true;});
+            item.setOnDragListener((v,event)->{
+                if(editMode!=2||!(event.getLocalState() instanceof String))return false;
+                if(event.getAction()==DragEvent.ACTION_DROP){String moving=(String)event.getLocalState();int from=dockOrder.indexOf(moving),to=dockOrder.indexOf(name);if(from>=0&&to>=0&&from!=to){dockOrder.remove(from);dockOrder.add(to,moving);dashPrefs().edit().putString("dock_order",android.text.TextUtils.join(",",dockOrder)).apply();buildDock();}return true;}
+                return true;
+            });item.setContentDescription(name+(editMode==2?". Long press and drag to reorder.":". Long press to choose app."));equal(dock,item);
+        }
+    }
+    void editLayoutMenu(){
+        if(editMode!=0){finishEditing(true);return;}
+        new AlertDialog.Builder(this).setTitle("Dashboard layout").setItems(new String[]{"Move / resize panels","Reorder dock icons","Reset default layout","Neon outline: "+(neon()?"On":"Off")},(d,i)->{
+            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
+            else if(i==2){layoutSurface.resetLayout();android.content.SharedPreferences.Editor reset=dashPrefs().edit().remove("dock_order");for(String name:DOCK_NAMES)reset.remove("dock_icon_scale_"+name);reset.apply();buildDock();leftPane.setMode("car");rightPane.setMode("media");}
+            else{dashPrefs().edit().putBoolean("style_neon",!neon()).apply();applyStyle();}
+        }).setNegativeButton("Close",null).show();
+    }
+    void iconSizeDialog(String name){
+        LinearLayout content=column();pad(content,20);TextView value=text("",18,TEXT);content.addView(value);SeekBar slider=new SeekBar(this);slider.setMax(60);slider.setProgress(Math.round((dashPrefs().getFloat("dock_icon_scale_"+name,1)-.7f)*100));content.addView(slider);value.setText("Icon size: "+(70+slider.getProgress())+"%");
+        slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onStartTrackingTouch(SeekBar s){}public void onStopTrackingTouch(SeekBar s){}public void onProgressChanged(SeekBar s,int p,boolean user){value.setText("Icon size: "+(70+p)+"%");}});
+        new AlertDialog.Builder(this).setTitle(name+" icon").setView(content).setPositiveButton("Apply",(d,w)->{dashPrefs().edit().putFloat("dock_icon_scale_"+name,.7f+slider.getProgress()/100f).apply();buildDock();}).setNeutralButton("Default",(d,w)->{dashPrefs().edit().remove("dock_icon_scale_"+name).apply();buildDock();}).setNegativeButton("Cancel",null).show();
+    }
+    void finishEditing(boolean save){
+        if(editMode==0)return;if(layoutSurface.isEditing()){if(save)layoutSurface.setEditing(false);else layoutSurface.cancelEditing();}
+        if(!save){android.content.SharedPreferences.Editor restore=dashPrefs().edit().putString("dock_order",dockBeforeEdit);for(int n=0;n<DOCK_NAMES.length;n++)restore.putFloat("dock_icon_scale_"+DOCK_NAMES[n],dockSizesBefore[n]);restore.apply();}
+        editMode=0;buildDock();editButton.setText("Edit layout");footerText.setText("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION");leftPane.resume();rightPane.resume();updateVehicleResources();
+    }
+    void applyStyle(){root.setBackground(new DashBackdrop(unit(),neon()));leftPane.box.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));rightPane.box.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));prayerBar.setBackground(new DashPanelDrawable(0xff0b1c2b,BLUE,px(20),neon()));styleButtons(root);}
+    void styleButtons(View view){if(view.getBackground() instanceof GradientDrawable)((GradientDrawable)view.getBackground()).setStroke(px(1),neon()?0x8061ccff:LINE);if(view instanceof android.view.ViewGroup){android.view.ViewGroup group=(android.view.ViewGroup)view;for(int i=0;i<group.getChildCount();i++)styleButtons(group.getChildAt(i));}}
     void refreshClock(){
-        TrustedClock.Reading time=TrustedClock.read(this);long now=time.utc;SimpleDateFormat f=new SimpleDateFormat("HH:mm",Locale.US);f.setTimeZone(JakimSchedule.MY);clock.setText(f.format(new Date(now)));f.applyPattern("EEEE, dd MMM yyyy  ·  'Malaysia'");date.setText(f.format(new Date(now))+" · "+TrustedClock.label(this));
+        TrustedClock.Reading time=TrustedClock.read(this);long now=time.utc;Date instant=new Date(now);
+        setText(clock,clockFormat.format(instant));setText(date,dayFormat.format(instant)+" · "+TrustedClock.label(this));
         String zone=JakimSchedule.zone(this);JakimSchedule.Day day=time.verified?JakimSchedule.readyAt(this,now):null;
-        String renderKey=zone+time.verified+(day==null?"missing":day.date)+JakimSchedule.readyNext(this,now);
+        long target=day==null?0:JakimSchedule.readyNext(this,now);
+        String renderKey=zone+time.verified+(day==null?"missing":day.date)+target;
         boolean rebuild=!renderKey.equals(prayerRenderKey);
         if(rebuild){prayerBar.removeAllViews();prayerRenderKey=renderKey;}
-        if(day==null){if(rebuild){TextView prompt=text(!time.verified?"JAKIM · Waiting for verified time — tap the clock":zone.isEmpty()?"JAKIM  ·  Waiting for GPS — tap for prayer settings":zone+(JakimSchedule.ready(this)?"  ·  Today’s offline timetable unavailable/expired — tap to download":"  ·  Loading offline timetable…"),17,BLUE);pad(prompt,12);prayerBar.addView(prompt);}next.setText((time.verified?prayerLocationLabel():"Countdown and prayer alerts wait for GPS time or your confirmation")+" · "+prayerStatus);}
+        if(day==null){if(rebuild){TextView prompt=text(!time.verified?"JAKIM · Waiting for verified time — tap the clock":zone.isEmpty()?"JAKIM  ·  Waiting for GPS — tap for prayer settings":zone+(JakimSchedule.ready(this)?"  ·  Today’s offline timetable unavailable/expired — tap to download":"  ·  Loading offline timetable…"),17,BLUE);pad(prompt,12);prayerBar.addView(prompt);}setText(next,(time.verified?prayerLocationLabel():"Countdown and prayer alerts wait for GPS time or your confirmation")+" · "+prayerStatus);}
         else{
             if(rebuild){TextView zoneView=text(zone+"\nJAKIM",12,MUTED);pad(zoneView,10);prayerBar.addView(zoneView);}
-            long target=JakimSchedule.readyNext(this,now);
             if(rebuild)for(int i=0;i<6;i++){TextView v=text(JakimSchedule.NAMES[i]+"\n"+JakimSchedule.time(day.times[i]),16,day.times[i]==target?BLUE:TEXT);v.setGravity(Gravity.CENTER);if(rebuild)prayerBar.addView(v,new LinearLayout.LayoutParams(0,-1,1));}
-            if(target>0){long sec=(target-now)/1000;next.setText(String.format(Locale.US,"Next prayer in %02d:%02d:%02d · Official JAKIM times · %s",sec/3600,sec/60%60,sec%60,zone)+" · "+prayerLocationLabel());}else next.setText("Today's timetable ended · Download tomorrow's schedule · "+prayerLocationLabel());
+            if(target>0){long sec=(target-now)/1000;setText(next,"Next prayer in "+twoDigits(sec/3600)+":"+twoDigits(sec/60%60)+":"+twoDigits(sec%60)+" · Official JAKIM times · "+zone+" · "+prayerLocationLabel());}else setText(next,"Today's timetable ended · Download tomorrow's schedule · "+prayerLocationLabel());
         }
         String requestKey=zone+(time.verified?JakimSchedule.dateKey(now):"unverified");
         if(!requestKey.equals(requestedZone)){requestedZone=requestKey;fetchPrayer(false);}
     }
+    static String twoDigits(long value){return (value<10?"0":"")+value;}
     String prayerLocationLabel(){
         return prayerLocation==null?(prayerMapFailed?"Offline map unavailable · Choose a zone manually":"Loading offline GPS map…"):prayerLocation.label(SystemClock.elapsedRealtime());
     }
@@ -204,21 +303,37 @@ public class DashboardActivity extends Activity implements LocationListener {
         });dialog.show();
     }
     void refreshMedia(){
-        if(media==null)return;MediaController c=media.current;MediaMetadata m=c==null?null:c.getMetadata();
-        String t=m==null?"":m.getString(MediaMetadata.METADATA_KEY_TITLE),a=m==null?"":m.getString(MediaMetadata.METADATA_KEY_ARTIST);
-        if(t==null)t="";if(a==null)a="";
-        title.setText(t.isEmpty()?"No active media":t);artist.setText(a.isEmpty()?media.problem:a);source.setText(c==null?"NOW PLAYING":appName(c.getPackageName()));play.setText(media.playing()?"Pause":"Play");
-        Bitmap cover=m==null?null:m.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);if(cover==null&&m!=null)cover=m.getBitmap(MediaMetadata.METADATA_KEY_ART);artwork.setImageBitmap(cover);artwork.setVisibility(cover==null?View.GONE:View.VISIBLE);
+        if(media==null)return;MediaController controller=media.current;MediaMetadata metadata=controller==null?null:controller.getMetadata();
+        String t=metadata==null?"":metadata.getString(MediaMetadata.METADATA_KEY_TITLE),a=metadata==null?"":metadata.getString(MediaMetadata.METADATA_KEY_ARTIST);
+        if(t==null)t="";if(a==null)a="";boolean playing=media.playing();String pkg=controller==null?"":controller.getPackageName();String name=controller==null?"NOW PLAYING":appName(pkg);
+        Bitmap cover=metadata==null?null:metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);if(cover==null&&metadata!=null)cover=metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
+        int token=cover==null?0:System.identityHashCode(cover);
+        if(token!=artToken){artToken=token;smallArtwork=null;if(cover!=null&&!cover.isRecycled()){int longest=Math.max(cover.getWidth(),cover.getHeight());smallArtwork=longest>128?Bitmap.createScaledBitmap(cover,Math.max(1,cover.getWidth()*128/longest),Math.max(1,cover.getHeight()*128/longest),true):cover;}}
+        primaryMedia.update(t,a.isEmpty()?media.problem:a,name,playing,smallArtwork);
+        for(Pane pane:new Pane[]{leftPane,rightPane})if(pane!=null){
+            if(pane.mediaPanel!=null&&pane.mediaPanel!=primaryMedia)pane.mediaPanel.update(t,a.isEmpty()?media.problem:a,name,playing,smallArtwork);
+            if(pane.sourcePanel!=null)pane.sourcePanel.setTrack(t,a,sourceMatches(pane.mode,pkg),playing);
+        }
         String key=t+"\n"+a;if(!key.equals(lyricKey)){lyricGeneration++;lyricKey=key;lyrics=new DashLyrics();lyrics.plain=t.isEmpty()?"Play media to show track details":a.isEmpty()?"Artist metadata is needed to find lyrics":"Tap Lyrics in Settings to look up this track";if(dashPrefs().getBoolean("lyrics",false)&&!t.isEmpty()&&!a.isEmpty())fetchLyrics(t,a,key);}
-        lyric.setText(lyrics.at(media.position()));
+        updateMediaPosition();
+    }
+    boolean sourceMatches(String mode,String pkg){
+        if(pkg.isEmpty())return false;
+        String key=mode.equals("youtube")?"YouTube app":mode.equals("tizentube")?"TizenTube":"Radio";
+        return DashShortcuts.matches(this,key,pkg);
+    }
+    void updateMediaPosition(){
+        if(media==null||primaryMedia==null)return;long position=media.position();String line=lyrics.at(position);
+        primaryMedia.updatePosition(position,line);
+        if(leftPane!=null&&leftPane.mediaPanel!=null&&leftPane.mediaPanel!=primaryMedia)leftPane.mediaPanel.updatePosition(position,line);
     }
     void fetchLyrics(String t,String a,String key){
         lyrics.plain="Finding lyrics…";final int generation=lyricGeneration;
-        io.execute(()->{DashLyrics found=new DashLyrics();try{found=DashLyrics.parse(new JSONObject(DashNetwork.get("https://lrclib.net/api/get?track_name="+URLEncoder.encode(t,"UTF-8")+"&artist_name="+URLEncoder.encode(a,"UTF-8"))));}catch(Exception ignored){}final DashLyrics result=found;handler.post(()->{if(!isDestroyed()&&generation==lyricGeneration&&lyricKey.equals(key)&&dashPrefs().getBoolean("lyrics",false)){lyrics=result;lyric.setText(lyrics.at(media.position()));}});});
+        lyricsIo.execute(()->{if(generation!=lyricGeneration)return;DashLyrics found=new DashLyrics();try{found=DashLyrics.parse(new JSONObject(DashNetwork.get("https://lrclib.net/api/get?track_name="+URLEncoder.encode(t,"UTF-8")+"&artist_name="+URLEncoder.encode(a,"UTF-8"))));}catch(Exception ignored){}final DashLyrics result=found;handler.post(()->{if(!isDestroyed()&&generation==lyricGeneration&&lyricKey.equals(key)&&dashPrefs().getBoolean("lyrics",false)){lyrics=result;updateMediaPosition();}});});
     }
     String appName(String pkg){try{return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg,0)).toString();}catch(Exception e){return pkg;}}
     void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Open Radio");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
-    void settings(){String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;}}).show();}
+    void settings(){String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time","Dashboard layout"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;}}).show();}
     void apps(){io.execute(()->{Intent query=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);List<ResolveInfo> list=getPackageManager().queryIntentActivities(query,0);Collections.sort(list,(a,b)->a.loadLabel(getPackageManager()).toString().compareToIgnoreCase(b.loadLabel(getPackageManager()).toString()));List<String> labels=new ArrayList<>();for(ResolveInfo r:list)labels.add(r.loadLabel(getPackageManager()).toString());handler.post(()->{if(isDestroyed())return;new AlertDialog.Builder(this).setTitle("Installed apps").setItems(labels.toArray(new String[0]),(d,i)->{ResolveInfo r=list.get(i);try{startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(new ComponentName(r.activityInfo.packageName,r.activityInfo.name)));}catch(Exception e){toast("Unable to open app");}}).show();});});}
     void shortcut(String name){DashShortcuts.open(this,name);}
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
@@ -240,27 +355,45 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     void vehicleDialog(){
         String[] modes=SagaShowroom.hasImportedVideo(this)
-            ?new String[]{"Transparent Saga video","Original Saga video","Interactive 3D model","Choose car video…","Imported video preview"}
-            :new String[]{"Transparent Saga video","Original Saga video","Interactive 3D model","Choose car video…"};
+            ?new String[]{"Saga image angles (lightweight)","Transparent Saga video","Choose car video…","Imported video preview"}
+            :new String[]{"Saga image angles (lightweight)","Transparent Saga video","Choose car video…"};
         new AlertDialog.Builder(this).setTitle("Vehicle view").setItems(modes,(d,index)->{
-            if(index==0)selectVehicleVideo("transparent");
-            else if(index==1)selectVehicleVideo("original");
-            else if(index==2)setVehicleVideo(false);
-            else if(index==3){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
+            if(index==0)setVehicleVideo(false);
+            else if(index==1)selectVehicleVideo("transparent");
+            else if(index==2){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
             else selectVehicleVideo("imported");
         }).setNegativeButton("Close",null).show();
     }
+    boolean carVisible(){return visible&&editMode==0&&leftPane!=null&&"car".equals(leftPane.mode);}
+    void releaseShowroom(){if(showroom!=null){SagaShowroom old=showroom;showroom=null;old.pause();vehicleStage.removeView(old);}}
+    void releaseVehicleResources(){releaseShowroom();if(angles!=null){angles.pause();angles.setVisibility(View.VISIBLE);}}
+    void updateVehicleResources(){
+        if(vehicleStage==null)return;
+        if(!carVisible()){releaseVehicleResources();return;}
+        if(!vehicleVideo)releaseShowroom();
+        boolean images=showroom==null;
+        angles.setVisibility(images?View.VISIBLE:View.GONE);if(images)angles.resume();else angles.pause();
+        if(showroom!=null)showroom.resume();updateVehicleLabels();
+    }
+    void ensureShowroom(boolean autoPlay){
+        if(!carVisible()||!vehicleVideo)return;
+        angles.pause();angles.setVisibility(View.GONE);
+        if(showroom==null){showroom=new SagaShowroom(this);vehicleStage.addView(showroom,new FrameLayout.LayoutParams(-1,-1));}
+        showroom.playWhenPrepared=autoPlay;showroom.resume();if(autoPlay&&showroom.prepared&&!showroom.playing())showroom.toggle();updateVehicleLabels();
+    }
+    void startVehicleVideo(){if(editMode==0&&vehicleVideo)ensureShowroom(true);}
+    void updateVehicleLabels(){
+        boolean cutout=vehicleVideo&&"transparent".equals(dashPrefs().getString("vehicle_preview_source","transparent"));
+        setText(vehicleMode,vehicleVideo?(cutout?"Cutout ▾":"Video ▾"):"Angles ▾");vehicleMode.setContentDescription("Choose vehicle view");
+        setText(vehicleHint,vehicleVideo?(showroom==null?"Tap the car to play video":"Video preview · Tap to play / pause"):"Drag: 8 image angles · Pinch: zoom · Double-tap: reset");
+    }
     void selectVehicleVideo(String source){
-        dashPrefs().edit().putString("vehicle_preview_source",source).apply();showroom.reload();setVehicleVideo(true);
+        dashPrefs().edit().putString("vehicle_preview_source","imported".equals(source)?"imported":"transparent").apply();releaseShowroom();setVehicleVideo(true);
     }
     void setVehicleVideo(boolean useVideo){
-        vehicleVideo=useVideo&&SagaShowroom.hasVideo(this);dashPrefs().edit().putBoolean("vehicle_video",vehicleVideo).apply();
-        showroom.setVisibility(vehicleVideo?View.VISIBLE:View.GONE);car.setVisibility(vehicleVideo?View.GONE:View.VISIBLE);
-        boolean cutout=vehicleVideo&&"transparent".equals(dashPrefs().getString("vehicle_preview_source","transparent"));
-        vehicleMode.setText(vehicleVideo?(cutout?"Cutout ▾":"Video ▾"):"3D ▾");vehicleMode.setContentDescription("Choose vehicle view");
-        vehicleHint.setText(vehicleVideo?(cutout?"Transparent video · Tap to play / pause":"Video preview · Tap to play / pause"):"Drag to rotate · Pinch to zoom · Double-tap to reset");
-        if(vehicleVideo){car.onPause();if(visible)showroom.resume();}
-        else{showroom.pause();if(visible)car.onResume();}
+        vehicleVideo=useVideo&&SagaShowroom.hasVideo(this);dashPrefs().edit().putString("vehicle_view",vehicleVideo?"video":"angles").remove("vehicle_video").apply();
+        if(leftPane!=null&&!"car".equals(leftPane.mode))leftPane.setMode("car");
+        updateVehicleResources();if(vehicleVideo&&carVisible())ensureShowroom(false);updateVehicleLabels();
     }
     void openUrl(String url){try{startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)));}catch(Exception e){toast("No browser installed");}}
     android.content.SharedPreferences dashPrefs(){return createDeviceProtectedStorageContext().getSharedPreferences("dashboard",0);}
@@ -269,7 +402,14 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(!ScreenLock.hasPin(lockPrefs()))ScreenLock.create(this,pin->{ScreenLock.setPin(lockPrefs(),pin);toast("PIN saved. Open Screen lock again to lock.");});
         else new AlertDialog.Builder(this).setTitle("Screen lock").setItems(new String[]{"Lock now","Remove PIN"},(d,i)->{if(i==0){ScreenLock.setLocked(lockPrefs(),true);toast("Locked · Tap the screen to unlock");}else ScreenLock.verify(this,lockPrefs(),()->ScreenLock.clear(lockPrefs()),()->{});}).show();
     }
-    @Override public boolean dispatchTouchEvent(MotionEvent e){if(ScreenLock.locked(lockPrefs())){if(e.getAction()==MotionEvent.ACTION_UP)ScreenLock.verify(this,lockPrefs(),()->ScreenLock.setLocked(lockPrefs(),false),()->{});return true;}return super.dispatchTouchEvent(e);}
+    @Override public boolean dispatchTouchEvent(MotionEvent e){
+        if(ScreenLock.locked(lockPrefs())){if(e.getAction()==MotionEvent.ACTION_UP)ScreenLock.verify(this,lockPrefs(),()->ScreenLock.setLocked(lockPrefs(),false),()->{});return true;}
+        if(editMode==2){
+            if(e.getActionMasked()==MotionEvent.ACTION_DOWN){layoutSurface.getGlobalVisibleRect(editSurfaceBounds);dock.getGlobalVisibleRect(editDockBounds);int x=Math.round(e.getRawX()),y=Math.round(e.getRawY());blockEditTouch=editSurfaceBounds.contains(x,y)&&!editDockBounds.contains(x,y);}
+            if(blockEditTouch){if(e.getActionMasked()==MotionEvent.ACTION_UP||e.getActionMasked()==MotionEvent.ACTION_CANCEL)blockEditTouch=false;return true;}
+        }
+        return super.dispatchTouchEvent(e);
+    }
     @Override public boolean dispatchKeyEvent(KeyEvent e){if(ScreenLock.locked(lockPrefs())&&e.getKeyCode()!=KeyEvent.KEYCODE_VOLUME_UP&&e.getKeyCode()!=KeyEvent.KEYCODE_VOLUME_DOWN&&e.getKeyCode()!=KeyEvent.KEYCODE_VOLUME_MUTE)return true;return super.dispatchKeyEvent(e);}
     void toast(String s){Toast.makeText(this,s,Toast.LENGTH_LONG).show();}
     void updateTrip(){trip.setText(String.format(Locale.US,"GPS TRIP  %.1f km · Hold to reset",tripMetres/1000));}
@@ -281,16 +421,17 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(prayerLocation!=null&&prayerLocation.update(l)){
             prayerRenderKey="";refreshClock();schedulePrayer();
         }
-        fixTime=l.getTime();fixAt=SystemClock.elapsedRealtime();gps.setText("GPS · Connected");if(l.hasSpeed()){int kmh=Math.round(l.getSpeed()*3.6f);speed.setText(kmh+" km/h");HomeActivity.lastKmh=kmh;HomeActivity.lastKmhAt=fixAt;}else speed.setText("— km/h");
+        latestFix=new Location(l);if(leftPane!=null&&leftPane.navigation!=null)leftPane.navigation.setLocation(latestFix);if(rightPane!=null&&rightPane.navigation!=null)rightPane.navigation.setLocation(latestFix);
+        fixTime=l.getTime();fixAt=SystemClock.elapsedRealtime();setText(gps,"GPS · Connected");if(l.hasSpeed()){int kmh=Math.round(l.getSpeed()*3.6f);setText(speed,kmh+" km/h");HomeActivity.lastKmh=kmh;HomeActivity.lastKmhAt=fixAt;}else setText(speed,"— km/h");
         if(previous!=null){float distance=l.distanceTo(previous);long elapsed=l.getElapsedRealtimeNanos()-previous.getElapsedRealtimeNanos();if(elapsed>0&&elapsed<30000000000L&&distance>Math.max(l.getAccuracy(),previous.getAccuracy())&&distance/(elapsed/1e9)<70){tripMetres+=distance;saveTrip();}else if(elapsed>0&&elapsed<30000000000L&&distance<=Math.max(l.getAccuracy(),previous.getAccuracy()))return;}
         previous=l;
     }
-    @Override public void onProviderDisabled(String p){if(prayerLocation!=null)prayerLocation.signalLost();gps.setText("GPS · Disabled");previous=null;speed.setText("— km/h");}
+    @Override public void onProviderDisabled(String p){if(prayerLocation!=null)prayerLocation.signalLost();latestFix=null;if(leftPane.navigation!=null)leftPane.navigation.setLocation(null);if(rightPane.navigation!=null)rightPane.navigation.setLocation(null);setText(gps,"GPS · Disabled");previous=null;setText(speed,"— km/h");}
     @Override public void onProviderEnabled(String p){}
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
-    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;if(vehicleVideo)showroom.resume();else car.onResume();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
-    @Override protected void onPause(){visible=false;if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);car.onPause();showroom.pause();media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
-    @Override protected void onDestroy(){if(clockEventsRegistered)unregisterReceiver(clockEvents);io.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
-    @Override public void onBackPressed(){}
+    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
+    @Override protected void onPause(){visible=false;if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
+    @Override protected void onDestroy(){if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }

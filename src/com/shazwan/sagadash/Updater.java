@@ -11,9 +11,6 @@ import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,15 +20,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Cek & pasang pembaruan dari GitHub Releases. APK hanya dipasang bila ditandatangani kunci yang sama dengan
  * KlikDash yang terpasang (Android juga menolak pembaruan dengan kunci lain, ini cek lebih awal + pesan jelas).
  */
 final class Updater {
-    static final String LATEST = "https://api.github.com/repos/ashafizullah/klikdash/releases/latest";
     static final String ACTION_STATUS = "com.shazwan.sagadash.INSTALL_STATUS";
 
     static final class Release {
@@ -58,25 +52,9 @@ final class Updater {
         return s.trim();
     }
 
-    /** Rilis terbaru, atau null bila tidak ada APK di rilisnya. Jalankan di thread latar. */
+    /** Personal builds have no remote update channel. Keep this guard even if an old UI calls it. */
     static Release latest() throws Exception {
-        Map<String, String> h = new HashMap<>();
-        h.put("Accept", "application/vnd.github+json");
-        h.put("User-Agent", "KlikDash"); // GitHub menolak permintaan tanpa User-Agent
-        JSONObject o = AiClient.get(LATEST, h);
-        Release r = new Release();
-        r.version = o.optString("tag_name").replaceFirst("^v", "");
-        r.notes = o.optString("body").trim();
-        JSONArray assets = o.optJSONArray("assets");
-        for (int i = 0; assets != null && i < assets.length(); i++) {
-            JSONObject a = assets.getJSONObject(i);
-            if (a.optString("name").endsWith(".apk")) {
-                r.apkUrl = a.optString("browser_download_url");
-                r.size = a.optLong("size");
-                break;
-            }
-        }
-        return r.apkUrl == null ? null : r;
+        return null;
     }
 
     /** &gt; 0 bila {@code a} lebih baru dari {@code b} ("1.10.0" &gt; "1.9.2"). */

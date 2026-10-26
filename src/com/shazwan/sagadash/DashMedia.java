@@ -16,11 +16,11 @@ final class DashMedia {
     String selected="", problem="Enable media access to show track details";
     boolean started;
     final MediaController.Callback callback=new MediaController.Callback(){
-        @Override public void onMetadataChanged(MediaMetadata m){ changed.run(); }
-        @Override public void onPlaybackStateChanged(PlaybackState s){ changed.run(); }
-        @Override public void onSessionDestroyed(){ update(); }
+        @Override public void onMetadataChanged(MediaMetadata m){ if(started)changed.run(); }
+        @Override public void onPlaybackStateChanged(PlaybackState s){ if(started)changed.run(); }
+        @Override public void onSessionDestroyed(){ if(started)update(); }
     };
-    final MediaSessionManager.OnActiveSessionsChangedListener listener=sessions->update();
+    final MediaSessionManager.OnActiveSessionsChangedListener listener=sessions->{if(started)update();};
     DashMedia(Context c,Runnable changed){this.c=c;this.changed=changed;manager=(MediaSessionManager)c.getSystemService(Context.MEDIA_SESSION_SERVICE);access=new ComponentName(c,DashMediaAccess.class);}
     void start(){
         stop(); started=true;
@@ -30,6 +30,9 @@ final class DashMedia {
     List<MediaController> sessions(){try{return manager.getActiveSessions(access);}catch(SecurityException e){return Collections.emptyList();}}
     void choose(String pkg){selected=pkg;update();}
     void update(){
+        // Removal does not retract callbacks already queued on the main looper.
+        // A stopped dashboard must not reacquire a controller through one of them.
+        if(!started)return;
         List<MediaController> list=sessions(); MediaController best=null;
         for(MediaController m:list){
             if(!selected.isEmpty()&&!selected.equals(m.getPackageName()))continue;
@@ -46,12 +49,15 @@ final class DashMedia {
     void command(int which){
         if(current==null)return;
         PlaybackState s=current.getPlaybackState(); if(s==null)return;
-        long required=which<0?PlaybackState.ACTION_SKIP_TO_PREVIOUS:which>0?PlaybackState.ACTION_SKIP_TO_NEXT:playing()?PlaybackState.ACTION_PAUSE:PlaybackState.ACTION_PLAY;
+        boolean advancing=s.getState()==PlaybackState.STATE_PLAYING;
+        long required=which<0?PlaybackState.ACTION_SKIP_TO_PREVIOUS:which>0?PlaybackState.ACTION_SKIP_TO_NEXT:advancing?PlaybackState.ACTION_PAUSE:PlaybackState.ACTION_PLAY;
         if((s.getActions()&required)==0 && !(which==0&&(s.getActions()&PlaybackState.ACTION_PLAY_PAUSE)!=0))return;
-        MediaController.TransportControls t=current.getTransportControls();if(which<0)t.skipToPrevious();else if(which>0)t.skipToNext();else if(playing())t.pause();else t.play();
+        MediaController.TransportControls t=current.getTransportControls();if(which<0)t.skipToPrevious();else if(which>0)t.skipToNext();else if(advancing)t.pause();else t.play();
     }
     long position(){
         PlaybackState s=current==null?null:current.getPlaybackState();if(s==null)return 0;
-        return Math.max(0,s.getPosition()+(playing()?(long)((SystemClock.elapsedRealtime()-s.getLastPositionUpdateTime())*s.getPlaybackSpeed()):0));
+        // Use one consistent session snapshot; playing() would read the session again.
+        boolean advancing=s.getState()==PlaybackState.STATE_PLAYING;
+        return Math.max(0,s.getPosition()+(advancing?(long)((SystemClock.elapsedRealtime()-s.getLastPositionUpdateTime())*s.getPlaybackSpeed()):0));
     }
 }

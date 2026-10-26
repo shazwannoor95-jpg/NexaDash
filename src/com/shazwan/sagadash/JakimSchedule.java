@@ -27,7 +27,12 @@ final class JakimSchedule {
         prefs(c).edit().putString("zone",zone).putString("district",district).apply();
     }
     static void useGps(Context c){prefs(c).edit().putBoolean("auto",true).apply();}
-    static String dateKey(long when){SimpleDateFormat f=new SimpleDateFormat("yyyy-MM-dd",Locale.US);f.setTimeZone(MY);return f.format(new Date(when));}
+    // UI countdown and alarm/cache workers all use this path. Keep formatters thread-local:
+    // SimpleDateFormat is mutable and must never be shared across those threads.
+    private static final ThreadLocal<SimpleDateFormat> DATE_KEYS=new ThreadLocal<SimpleDateFormat>(){
+        @Override protected SimpleDateFormat initialValue(){SimpleDateFormat f=new SimpleDateFormat("yyyy-MM-dd",Locale.US);f.setTimeZone(MY);return f;}
+    };
+    static String dateKey(long when){return DATE_KEYS.get().format(new Date(when));}
     static Date parseDate(String value) throws Exception {
         String[] parts=value.split("-");
         if(parts.length!=3)throw new ParseException("Invalid JAKIM date",0);
@@ -77,8 +82,8 @@ final class JakimSchedule {
     static boolean ready(Context c){return zone(c).isEmpty()||caches.containsKey(zone(c));}
     static Day readyAt(Context c,long when){Cache data=caches.get(zone(c));return data==null?null:data.days.get(dateKey(when));}
     static long readyNext(Context c,long now){
-        if(readyAt(c,now)==null)return 0;
-        for(int d=0;d<2;d++){Day day=readyAt(c,now+d*86400000L);if(day!=null)for(int i=0;i<6;i++)if(i!=1&&day.times[i]>now)return day.times[i];}
+        Day today=readyAt(c,now);if(today==null)return 0;
+        for(int d=0;d<2;d++){Day day=d==0?today:readyAt(c,now+86400000L);if(day!=null)for(int i=0;i<6;i++)if(i!=1&&day.times[i]>now)return day.times[i];}
         return 0;
     }
     static String readyCoverage(String zone){Cache cache=caches.get(zone);return cache==null?"Loading…":cache.days.isEmpty()?"Not downloaded":cache.days.firstKey()+" to "+cache.days.lastKey();}

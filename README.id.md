@@ -1,6 +1,10 @@
-> **Saga Dash personal edition** — Android Studio project for Windows. Start with the
-> [Windows beginner guide](docs/WINDOWS_ANDROID_STUDIO_MS.md) and
-> [current features and limitations](docs/PERSONAL_EDITION.md).
+> **Saga Dash personal edition** — Android Studio project for Windows, with eight lightweight
+> rendered car-image angles (NEXA), configurable native panels, layout editing and static neon.
+> The old interactive mesh/original-video app modes have been removed.
+> Start with the [Windows guide](docs/WINDOWS_ANDROID_STUDIO_MS.md),
+> [signed APK/head-unit installation](docs/HEAD_UNIT_INSTALL_MS.md),
+> [panel/layout instructions](docs/DASHBOARD_CUSTOMIZATION_MS.md) and
+> [current features/limits](docs/PERSONAL_EDITION.md).
 > Package ID: `com.shazwan.sagadash`. The README below describes upstream KlikDash;
 > its release APKs are not this Saga Dash build. Physical TEST9278B testing is pending.
 

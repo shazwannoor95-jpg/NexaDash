@@ -17,7 +17,7 @@ final class SagaShowroom extends FrameLayout {
     final SagaAlphaVideoView video;
     final TextView status;
     MediaPlayer player;
-    boolean prepared,active,packedAlpha;
+    boolean prepared,active,packedAlpha,playWhenPrepared;
     private Surface surface;
     private int position;
 
@@ -34,7 +34,7 @@ final class SagaShowroom extends FrameLayout {
             @Override public void lost(){release();}
             @Override public void frame(){if(prepared&&status.getVisibility()!=GONE)status.setVisibility(GONE);}
             @Override public void error(){
-                release();status.setText("Video rendering is unavailable on this graphics driver. Use View to choose the 3D model.");status.setVisibility(VISIBLE);
+                release();status.setText("Video rendering is unavailable on this graphics driver. Use View to choose Saga image angles.");status.setVisibility(VISIBLE);
             }
         });
         addView(video,new LayoutParams(-1,-1));
@@ -46,7 +46,7 @@ final class SagaShowroom extends FrameLayout {
     static boolean hasImportedVideo(Context context){return file(context).isFile();}
     static boolean hasVideo(Context context){
         if(hasImportedVideo(context))return true;
-        try(AssetFileDescriptor video=context.getResources().openRawResourceFd(R.raw.saga_showroom)){
+        try(AssetFileDescriptor video=context.getResources().openRawResourceFd(R.raw.saga_showroom_alpha)){
             return video!=null&&video.getLength()>0;
         }catch(IOException|Resources.NotFoundException e){return false;}
     }
@@ -104,7 +104,7 @@ final class SagaShowroom extends FrameLayout {
         try{
             String source=getContext().createDeviceProtectedStorageContext().getSharedPreferences("dashboard",0).getString("vehicle_preview_source","transparent");
             boolean imported="imported".equals(source)&&hasImportedVideo(getContext());
-            packedAlpha=!imported&&!"original".equals(source);
+            packedAlpha=!imported;
             surface=video.decoderSurface();current.setSurface(surface);
             current.setVolume(0,0); // No audio focus request, audio output or MediaSession.
             current.setLooping(false);
@@ -113,17 +113,18 @@ final class SagaShowroom extends FrameLayout {
                 if(player!=m||!active)return;prepared=true;m.setVolume(0,0);
                 video.setVideoSize(m.getVideoWidth(),m.getVideoHeight(),packedAlpha);
                 m.seekTo(Math.min(Math.max(1,position),Math.max(1,m.getDuration()-1)));
+                if(playWhenPrepared){playWhenPrepared=false;m.start();}
             });
             current.setOnCompletionListener(m->{if(player==m)position=0;});
             current.setOnErrorListener((m,what,extra)->{
-                if(player==m){release();status.setText("Cannot play this video. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}return true;
+                if(player==m){release();status.setText("Cannot play this video. Use View to choose another video or Saga image angles.");status.setVisibility(VISIBLE);}return true;
             });
             if(imported)current.setDataSource(file(getContext()).getAbsolutePath());
-            else try(AssetFileDescriptor descriptor=getResources().openRawResourceFd(packedAlpha?R.raw.saga_showroom_alpha:R.raw.saga_showroom)){
+            else try(AssetFileDescriptor descriptor=getResources().openRawResourceFd(R.raw.saga_showroom_alpha)){
                 current.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
             }
             current.prepareAsync();
-        }catch(IOException|RuntimeException e){release();status.setText("Video unavailable. Use View to choose another video or the 3D model.");status.setVisibility(VISIBLE);}
+        }catch(IOException|RuntimeException e){release();status.setText("Video unavailable. Use View to choose another video or Saga image angles.");status.setVisibility(VISIBLE);}
     }
     boolean playing(){if(!prepared||player==null)return false;try{return player.isPlaying();}catch(IllegalStateException e){return false;}}
     void toggle(){

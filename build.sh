@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION_NAME=${VERSION_NAME:-1.6.7}
-VERSION_CODE=${VERSION_CODE:-25}
+VERSION_NAME=${VERSION_NAME:-1.6.7-sagadash.2}
+VERSION_CODE=${VERSION_CODE:-26}
 APP_ID=${PKG:-com.shazwan.sagadash}
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}

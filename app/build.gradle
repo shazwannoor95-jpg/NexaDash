@@ -18,8 +18,8 @@ android {
         applicationId 'com.shazwan.sagadash'
         minSdk 24
         targetSdk 29
-        versionCode 25
-        versionName '1.6.7-sagadash'
+        versionCode 26
+        versionName '1.6.7-sagadash.2'
     }
     sourceSets {
         main {
@@ -31,5 +31,10 @@ android {
     }
     compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
     buildTypes { release { minifyEnabled false } }
+    lint {
+        // Personal OEM head-unit APK distributed directly, not through Google Play.
+        // Keep target 29 compatibility; continue checking all other release lint issues.
+        disable 'ExpiredTargetSdkVersion'
+    }
 }
 tasks.named('preBuild').configure { dependsOn prepareManifest }

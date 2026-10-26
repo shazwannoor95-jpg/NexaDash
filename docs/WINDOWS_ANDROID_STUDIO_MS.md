@@ -1,130 +1,127 @@
-# Saga Dash — panduan Android Studio di Windows
+# Saga Dash — Android Studio di Windows
 
-Panduan ini untuk beginner. Sasaran pertama ialah app berjalan dalam emulator. Ujian head unit
-serta signing key release dibuat kemudian. Nama app Saga Dash; Package ID com.shazwan.sagadash.
+Nama app **Saga Dash**, Package ID **com.shazwan.sagadash**. Panduan ini bermula dengan emulator.
+Untuk APK signed dan pemasangan head unit kemudian, ikut [panduan pemasangan](HEAD_UNIT_INSTALL_MS.md).
 
 ## 1. Install Android Studio
 
-1. Buka https://developer.android.com/studio pada komputer Windows.
-2. Download pemasang Android Studio untuk Windows, buka fail .exe dan ikut langkah pemasangan.
-3. Buka Android Studio. Jika ditanya sama ada hendak import setting lama, pilih Do not import.
-4. Dalam Setup Wizard, pilih Standard dan terima lesen SDK yang dipaparkan.
-5. Biarkan SDK dan Android Emulator siap dimuat turun. Sambungan Internet diperlukan untuk setup ini.
+1. Buka https://developer.android.com/studio dan download installer Windows.
+2. Jalankan installer, kemudian buka Android Studio.
+3. Pilih Do not import jika tiada tetapan lama. Dalam Setup Wizard, pilih Standard.
+4. Terima lesen SDK dan tunggu semua download selesai.
 
-Android Studio sudah menyediakan Java sendiri. Tidak perlu install Java secara berasingan.
+Java boleh diuruskan dalam Android Studio; tidak perlu memasang Java secara berasingan dahulu.
 
-## 2. Sediakan folder projek lengkap
+## 2. Buka projek terkini
 
-Gunakan branch [saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
-Pada halaman branch itu, klik butang Code > Download ZIP. Branch main lama tidak mengandungi
-semua perubahan Saga Dash ini. Selepas download:
+Untuk update ini, gunakan folder projek **baharu**. Copy/replace fail ke folder lama boleh meninggalkan
+kelas/asset model yang sudah dibuang. Folder lama boleh disimpan sebagai backup.
 
-1. Download ZIP projek/branch tersebut melalui GitHub.
-2. Dalam File Explorer, klik kanan ZIP > Extract All.
-3. Letakkan projek di folder ringkas, contohnya C:\Projects\SagaDash.
-4. Pastikan folder itu mengandungi settings.gradle, build.gradle, gradlew.bat dan folder app.
-   Jika ZIP menghasilkan folder tambahan di dalamnya, buka folder dalaman yang ada settings.gradle.
-5. Buka Android Studio > Open > pilih folder projek tersebut. Jangan pilih folder app sahaja.
-6. Trust Project jika Android Studio meminta pengesahan untuk projek yang baru dibuka.
-7. Tunggu Gradle Sync. Kali pertama mengambil masa kerana plugin/dependency perlu dimuat turun.
+1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
+2. Klik **Code > Download ZIP**. Branch main lama bukan projek lengkap versi ini.
+3. File Explorer > klik kanan ZIP > **Extract All** ke contoh `C:\Projects\SagaDash-current`.
+4. Cari folder yang terus mengandungi `settings.gradle`, `build.gradle`, `gradlew.bat` dan `app`.
+   ZIP kadang-kadang mempunyai satu folder tambahan di dalamnya; pilih folder dalaman itu.
+5. Android Studio > **File > Open** > pilih folder tadi, kemudian **This Window** jika diminta.
+6. Pilih Trust Project dan tunggu Gradle Sync.
+
+Jangan copy `.idea`, `.gradle`, `build`, atau `local.properties` daripada projek/mesin lain.
+Jika sudah mengubah coding sendiri, simpan perubahan itu dan bandingkan dengan ZIP baharu sebelum
+memindahkannya. Signing key sendiri perlu dibackup berasingan, bukan diganti dengan key orang lain.
 
 ## 3. Tetapkan SDK dan Java
 
-1. Buka Tools > SDK Manager (atau More Actions > SDK Manager pada welcome screen).
-2. Di SDK Platforms, pilih Android 15 / API 35.
-3. Di SDK Tools, tandakan Android SDK Build-Tools, Android SDK Platform-Tools dan Android Emulator.
-4. Jika perlu, tandakan Show Package Details dan pastikan Build-Tools 35.0.0 tersedia.
-5. Klik Apply dan terima lesen.
-6. Buka File > Settings > Build, Execution, Deployment > Build Tools > Gradle.
-7. Di Gradle JDK, pilih JDK bawaan Android Studio / Embedded JDK / GRADLE_LOCAL_JAVA_HOME.
-   Pilih JDK 17 atau 21. Jika JDK bawaan versi lain dan Gradle menolaknya, pilih Download JDK
-   dalam senarai Gradle JDK dan download versi 17; Android Studio akan menguruskannya.
-8. Klik OK, kemudian Sync Project with Gradle Files.
+**SDK binaan** ialah Android 15/API 35. Ini tidak menaik taraf Android head unit; app masih menetapkan
+Android minimum API 24. Keserasian firmware sebenar tetap perlu diuji.
 
-Fail local.properties akan diwujudkan oleh Android Studio mengikut lokasi SDK Windows kau.
-Jangan salin sdk.dir=/workspace/android-sdk daripada mesin cloud.
+1. **File > Settings > Languages & Frameworks > Android SDK**.
+2. Tab SDK Platforms: tandakan **Android 15.0 — API 35 biasa**, tanpa suffix `ext`.
+3. Tab SDK Tools: pastikan Build-Tools, Platform-Tools dan Android Emulator tersedia.
+4. Tandakan Show Package Details, kembangkan Build-Tools dan pilih **35.0.0**.
+5. Klik Apply, terima lesen dan tunggu Finish. Versi SDK lain yang sudah installed boleh dibiarkan.
+6. Di panel kiri Settings, kembangkan **Build, Execution, Deployment > Build Tools > Gradle**.
+   Pilih **Gradle**, bukan Gradle-Android Compiler.
+7. **Distribution: Wrapper**. Di Gradle JDK pilih **JDK 17 atau 21**; `jbr-21` juga sesuai.
+8. Jika tiada, pilih Download JDK > Version 17 > Download. Kemudian Apply > OK.
+9. **File > Sync Project with Gradle Files** dan tunggu selesai.
+
+Project menggunakan AGP 8.7.3 dan Gradle 8.9. Cadangan Upgrade Assistant bukan langkah wajib;
+jangan upgrade/migrate secara automatik semasa mengikuti panduan ini.
+`local.properties` diwujudkan mengikut SDK Windows sendiri. Jangan salin path `/workspace/android-sdk`.
 
 ## 4. Buat emulator
 
-1. Buka Tools > Device Manager > Create Virtual Device.
-2. Untuk permulaan mudah, pilih sebuah telefon Pixel yang tersedia.
-3. Pilih system image x86_64 yang sesuai dengan komputer Intel/AMD, Android 10/API 29 atau lebih baru.
-4. Download image jika belum ada, klik Next kemudian Finish.
-5. Klik butang Play pada emulator dan tunggu Android selesai boot.
+1. **Tools > Device Manager > Create Virtual Device**.
+2. Pilih **Pixel 5 > Next**. Model Pixel baharu mungkin mengehadkan pilihan Android lama.
+3. Pilih **API 31 “S” — Android 12.0**, Services **Google APIs**, image **x86_64** untuk Intel/AMD.
+4. Download image jika diminta, kemudian Finish.
+5. Klik ▶ di sebelah emulator dan tunggu skrin utama Android.
 
-Untuk semak saiz head unit kemudian, buat New Hardware Profile dengan skrin landscape 1024×600,
-7 inci, RAM 2048 MB dan image yang sama. Ini masih simulasi, bukan pengesahan firmware TEST9278B.
-Jika Windows/Android Studio menyatakan virtualisasi belum aktif, ikut diagnostik emulator yang
-dipaparkan. Sesetengah komputer memerlukan VT-x/AMD-V di BIOS dan Windows Hypervisor Platform.
+Untuk semak ruang head unit kemudian, buat New Hardware Profile landscape **1024×600**, 7 inci,
+RAM 2048MB dan image yang sama. Itu masih simulasi, bukan perkakasan TEST9278B.
+Jika emulator meminta virtualisasi, ikut diagnostik Android Studio; VT-x/AMD-V atau Windows
+Hypervisor Platform mungkin perlu diaktifkan pada komputer itu.
 
-## 5. Jalankan Saga Dash
+## 5. Run Saga Dash
 
-1. Pada bar atas Android Studio, pilih konfigurasi app.
-2. Di sebelahnya, pilih emulator yang telah hidup.
-3. Klik Run (segitiga hijau). Tunggu proses build dan pemasangan.
-4. Saga Dash akan dibuka dalam landscape.
-5. Semak Home, Apps, Settings, putaran model kereta dan dialog masa dengan mengetuk jam.
+1. Pada bar atas, pilih konfigurasi **app** dan emulator yang hidup.
+2. Klik ▶ hijau. Tunggu build dan install selesai.
+3. Jika paparan mengiring, guna ikon Rotate pada toolbar emulator untuk menjadikannya landscape.
+4. Semak Home, Apps, Settings, pilihan panel dan Edit layout.
 
-Klik-drag kereta untuk memutarnya. Double-click pada panel kereta untuk reset.
-Pinch memerlukan gesture multitouch emulator; gunakan kawalan multitouch emulator jika tersedia.
-Untuk GPS, gunakan Extended Controls (...) > Location dan hantar koordinat lokasi.
-Data mock emulator mungkin ditolak untuk pengesahan masa GPS; gunakan pilihan pengesahan jam
-peranti dalam dialog Clock untuk semakan UI sahaja. Ini tidak mengesahkan GPS fizikal.
+Default kereta ialah **Saga image angles (lightweight)**: drag menukar lapan sudut, pinch zoom dan
+double-tap reset. Ia bukan model 3D/kamera bebas. Tiada animasi idle atau decoder video untuk mod ini.
+**Original Saga video** dan **Interactive 3D model** lama telah dibuang.
 
-## 6. Permission dan paparan yang dijangka
+Ketuk pilihan paparan kereta ▾ untuk video transparent atau import pilihan sendiri.
+Lihat [panduan kereta/shortcut](VIDEO_AND_SHORTCUTS_MS.md) dan [panel/Edit layout](DASHBOARD_CUSTOMIZATION_MS.md).
 
-- Settings > Location permission: beri lokasi untuk kelajuan dan pemilihan zon GPS.
+## 6. Permission, masa dan media
+
+- Settings > Location permission: beri lokasi untuk GPS dan pemilihan zon solat.
 - Settings > Enable media / notification access: hidupkan Saga Dash jika mahu membaca sesi media.
-- Mainkan media dalam app lain yang menyokong Android MediaSession untuk menguji mini player.
-- Emulator biasa tidak membekalkan radio kereta, Bluetooth audio vendor, DSP atau CAN.
-  Mesej sumber tiada/unsupported untuk komponen itu bukan bukti bahawa fungsi fizikal rosak.
-- Jam/countdown solat menunggu masa yang sah. Ketuk jam untuk melihat sumber masa dan, jika
-  jam peranti memang betul, pilih Device time is correct bagi semakan tanpa satelit.
-- Jadual rasmi SGR01, SGR02, SGR03 dan WLY01 tahun 2026 sudah disertakan. Data baharu diperlukan
-  selepas tempoh cache tamat. Pilihan zon manual juga ada di Prayer location & offline data.
+- Mainkan media dalam app yang menyokong Android MediaSession untuk menguji mini player.
+- Radio, DSP dan Bluetooth audio vendor head unit tidak dibekalkan oleh emulator biasa.
+- Jam/countdown menunggu masa yang sah. Ketuk jam; hanya pilih Device time is correct jika masa
+  peranti memang betul. Data lokasi mock emulator boleh ditolak untuk pengesahan masa GPS.
+- Extended Controls (…) > Location boleh menghantar koordinat untuk semakan peta/GPS UI.
+- Jadual rasmi SGR01/SGR02/SGR03/WLY01 tahun 2026 disertakan. Cache tamat memerlukan data baharu;
+  mod offline tidak bermakna jadual tersedia untuk semua tahun.
 
-## 7. Keluarkan APK debug dahulu
+Peta Navigation preview menggunakan tile Internet apabila dipilih dan GPS tersedia; ia bukan
+navigasi turn-by-turn atau peta offline penuh. Open navigation membuka app navigasi berasingan.
 
-1. Pilih Build > Build Bundle(s) / APK(s) > Build APK(s), atau menu Build APKs yang setara.
-2. Bila selesai, klik Locate pada notifikasi build.
-3. APK debug berada di app\build\outputs\apk\debug\app-debug.apk.
+## 7. APK debug untuk emulator
 
-APK debug ditandatangani secara automatik menggunakan debug key komputer itu. Ia sesuai untuk
-ujian emulator. Signing key release sendiri dan backup-nya akan diterangkan sebelum pemasangan
-jangka panjang. Projek tidak menyertakan private signing key atau kata laluan mesin cloud.
+Pilih **Build > Build APK(s)** atau menu Build Bundle(s)/APK(s) > Build APK(s), kemudian Locate.
+Output: `app\build\outputs\apk\debug\app-debug.apk`.
 
-## 8. Lokasi fail untuk belajar/edit
+Debug key Windows dijana oleh Android Studio. APK ini sesuai untuk ujian. Untuk pemasangan jangka
+panjang, ikut [panduan signing dan head unit](HEAD_UNIT_INSTALL_MS.md). APK cloud dan APK Windows
+boleh mempunyai key berbeza; app dengan Package ID sama hanya boleh di-update dengan key yang sama.
 
-Pilih paparan Project dalam panel kiri jika struktur Android mengelirukan:
+## 8. Lokasi fail
 
-- app\build.gradle: versi SDK, app ID dan tetapan build.
-- AndroidManifest.xml di root: senarai komponen dan permission; ini manifest sumber utama.
-- src\com\shazwan\sagadash\DashboardActivity.java: susun atur dashboard.
-- src\com\shazwan\sagadash\SagaView.java: viewer model 3D dan gesture.
-- assets\vehicle\saga-vvt.mesh: model yang sudah siap dimasukkan dalam APK.
-- TrustedClock.java, PrayerLocation.java, JakimSchedule.java: masa, zon GPS dan jadual.
-- res: teks dan resource Android.
+- `app\build.gradle`: SDK, application ID dan tetapan build.
+- `AndroidManifest.xml` di root: manifest sumber utama.
+- `src\com\shazwan\sagadash\DashboardActivity.java`: dashboard/panel.
+- `res\drawable-nodpi\saga_angles.png`: atlas lapan sudut kereta.
+- `res\raw\saga_showroom_alpha.mp4`: transport video transparent pilihan.
+- `TrustedClock.java`, `PrayerLocation.java`, `JakimSchedule.java`: masa, zon dan jadual solat.
 
-Gradle menghasilkan manifest tanpa atribut package di app\build\generated\studio.
-Edit manifest root, bukan fail generated. Layout folder root dikekalkan supaya skrip build sedia
-ada masih boleh digunakan; Android Studio membaca folder itu melalui sourceSets.
-Tidak perlu install Blender atau Python untuk membina APK daripada asset yang sudah tersedia.
+Jangan edit manifest generated dalam `app\build\generated\studio`. Folder sumber root dikongsi
+dengan shell build melalui sourceSets. Membina APK tidak memerlukan Blender, Python, ONNX atau GPU AI.
 
-## 9. Jika build gagal
+## 9. Jika gagal
 
-- SDK location not found: buka SDK Manager, pastikan SDK sudah dipasang dan sync semula.
-- Failed to find Platform SDK35/Build-Tools: install versi yang diminta melalui SDK Manager.
-- Gradle JDK: pilih JDK bawaan Android Studio yang sesuai, bukan Java8.
-- Dependency download failed: semak Internet/proxy komputer dan cuba Sync semula selepas punca dibaiki.
-  Jangan matikan semakan TLS atau checksum.
-- INSTALL_FAILED_UPDATE_INCOMPATIBLE: APK dengan ID yang sama pernah dipasang menggunakan key lain.
-  Jangan uninstall app berdata penting secara membuta tuli. Pada emulator ujian kosong, salinan lama
-  boleh dibuang sebelum mencuba APK dari komputer sendiri; data salinan itu akan hilang.
+| Ralat | Langkah |
+| --- | --- |
+| Add Configuration sahaja | Pastikan membuka folder dalaman yang ada settings.gradle; tunggu Sync. |
+| SDK location not found | Semak SDK Manager dan sync semula. |
+| Platform 35 / Build-Tools tidak ditemui | Install versi yang diminta melalui SDK Manager. |
+| Gradle JDK tidak sesuai | Pilih JDK 17/21 di Build Tools > Gradle. |
+| Dependency download failed | Semak Internet/proxy dan cuba sync selepas punca dibaiki; kekalkan TLS/checksum. |
+| INSTALL_FAILED_UPDATE_INCOMPATIBLE | Key APK lama dan baharu berbeza. Ikut panduan signing; jangan terus uninstall data penting. |
 
-Untuk bantuan, berikan teks ralat pertama daripada panel Build. Signing key, password dan API key
-jangan dihantar dalam chat atau dimasukkan ke GitHub.
-
-## 10. Video kereta dan shortcut sendiri
-
-Ikut [panduan video dan shortcut](VIDEO_AND_SHORTCUTS_MS.md) untuk import MP4 daripada Windows,
-bertukar antara video/3D dan menetapkan Music, Radio atau DSP dengan tekan lama.
+Untuk bantuan, berikan teks ralat pertama daripada panel Build. Jangan hantar signing key,
+password atau API key ke chat/GitHub.
