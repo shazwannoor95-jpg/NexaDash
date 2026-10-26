@@ -248,3 +248,7 @@ Validation of this update: Gradle `:app:assembleDebug` passed; the final asset a
 286 assertions on the cloud Android 10 emulator, including geometry, rotate/pinch/reset and media
 session controls. Five actual-mesh studio views were reviewed. This does not establish visual
 accuracy to manufacturer CAD or frame-rate performance on the physical head unit.
+
+Actual Android screenshot at 1024×600 (OpenGL lighting, not the studio render):
+
+![Updated model in the Android dashboard](img/saga-curved-android.png)
