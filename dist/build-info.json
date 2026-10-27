@@ -1,15 +1,25 @@
 {
-  "file": "SagaDash-1.6.7-sagadash.2.apk",
+  "file": "SagaDash-1.6.7-sagadash.3.apk",
   "application_id": "com.shazwan.sagadash",
-  "version_name": "1.6.7-sagadash.2",
-  "version_code": 26,
+  "version_name": "1.6.7-sagadash.3",
+  "version_code": 27,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
-  "size_bytes": 5167928,
-  "sha256": "f97e73da626fba591757ae82bd36bd92c3a662617f70191fe77a9e2c390c925c",
+  "size_bytes": 5471119,
+  "sha256": "eba03550f21f81e15a7eab151ecb5dab9a903e5f76112dc61f67115a3954c21c",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Android Studio debug/release assembly; shell APK signature verified; 403 assertions passed on Android 10 x86_64 software emulator.",
-  "hardware_status": "TEST9278B hardware not connected or tested."
+  "validation": "Android Studio debug/release assembly; signed APK verified; 547 assertions passed on Android 10 x86_64 software emulator.",
+  "hardware_status": "TEST9278B hardware not connected or tested.",
+  "default_theme": "Synthwave",
+  "default_animation": "Static",
+  "reduce_motion_default": true,
+  "wallpaper_bitmap_limit_bytes": 2097152,
+  "performance_sample": {
+    "process_pss_mib": 40.0947265625,
+    "cpu_percent_one_virtual_core": 1.6916384726921359,
+    "condition": "Fresh normal process after45sec warm-up; Static Synthwave + Reduce motion, image angles, active SGR02 countdown, no map or media playback; software emulator only.",
+    "evidence": "../docs/performance/synthwave-v3.json"
+  }
 }

@@ -35,6 +35,7 @@ final class DashCustomizationChecks {
                 dashboard.latestFix=null;preferences.edit().putBoolean("lyrics",false).apply();
                 assignments.edit().remove("YouTube app").remove("TizenTube").remove("Radio").apply();
                 DashMedia shared=dashboard.media;
+                compactPanelChecks(dashboard);
 
                 dashboard.leftPane.setMode("car");dashboard.setVehicleVideo(false);
                 check(dashboard.angles!=null&&dashboard.angles.active&&dashboard.showroom==null,"idle car panel uses the active image angle viewer without a video decoder");
@@ -126,6 +127,82 @@ final class DashCustomizationChecks {
             });
         }
         return assertions;
+    }
+    private void compactPanelChecks(DashboardActivity dashboard){
+        String longTitle="A long title that must remain readable without pushing any controls outside the smallest dashboard panel ";
+        String longArtist="A long artist and album description that is ellipsized while the dashboard panel is compact ";
+        String[] controls={"Open TizenTube","Choose app for TizenTube","Previous track","Play or pause","Next track"};
+        for(float unit:new float[]{.8f,1f}){
+            final int[] actions={0};
+            DashSourcePanel panel=new DashSourcePanel(dashboard,unit,"TizenTube",()->actions[0]++,()->actions[0]++,()->actions[0]++,()->actions[0]++,()->actions[0]++);
+            panel.setTrack(longTitle+longTitle,longArtist+longArtist,true,true);
+            measure(panel,Math.round(212*unit),Math.round(145*unit));
+            check(panel.title.getMaxLines()==1&&panel.artist.getMaxLines()==1&&panel.getChildAt(0).getVisibility()==View.GONE,"small source body uses compact single-line metadata at scale "+unit);
+            check(insideTree(panel),"all source metadata and rows fit inside the smallest 240x200-unit outer pane at scale "+unit);
+            for(String description:controls){
+                View control=described(panel,description);
+                check(control!=null&&control.isEnabled()&&control.getWidth()>0&&control.getHeight()>0&&within(control,panel),description+" stays visible and reachable at minimum size, scale "+unit);
+                control.performClick();
+            }
+            check(actions[0]==controls.length,"all five compact source controls retain their actions at scale "+unit);
+            measure(panel,Math.round(600*unit),Math.round(350*unit));
+            check(panel.getChildAt(0).getVisibility()==View.VISIBLE&&panel.getChildAt(3).getVisibility()==View.VISIBLE&&panel.getChildAt(3).getHeight()>0&&panel.title.getMaxLines()==2&&panel.artist.getMaxLines()==2,"enlarging a source panel restores its original source label, explanation and multiline metadata at scale "+unit);
+            check(insideTree(panel)&&longTitle.concat(longTitle).contentEquals(panel.title.getText()),"enlarging preserves complete track metadata and control bounds at scale "+unit);
+            measure(panel,Math.round(212*unit),Math.round(145*unit));
+            check(insideTree(panel)&&panel.title.getMaxLines()==1,"source controls remain bounded after repeated resize at scale "+unit);
+
+            DashDockItem item=new DashDockItem(dashboard,unit,1.3f,"Bluetooth","B",DashboardActivity.BLUE,()->actions[0]++,true);
+            measure(item,Math.round(25*unit),Math.round(56*unit));
+            check(insideTree(item)&&item.icon.getWidth()<=Math.round(25*unit)&&item.icon.getBottom()<=item.caption.getTop(),"130-percent dock icon and caption fit a minimum 280x64-unit eight-item dock at scale "+unit);
+            check(item.caption.getMaxLines()==1&&item.caption.getEllipsize()==android.text.TextUtils.TruncateAt.END,"compact dock labels use one-line ellipsis at scale "+unit);
+            float compactFont=item.icon.getTextSize();item.performClick();
+            check(actions[0]==controls.length+1&&"Bluetooth".contentEquals(item.getContentDescription()),"resizing retains the dock shortcut action and accessible full name at scale "+unit);
+            measure(item,Math.round(125*unit),Math.round(100*unit));
+            check(item.icon.getWidth()==Math.round(46*1.3f*unit)&&item.icon.getHeight()==Math.round(46*1.3f*unit)&&item.caption.getHeight()==Math.round(24*unit)&&item.icon.getTextSize()>compactFont&&insideTree(item),"enlarging the dock restores the requested 130-percent icon and standard caption height at scale "+unit);
+            int iconWidth=item.icon.getWidth(),captionHeight=item.caption.getHeight();
+            item.style(true,170,.65f,true,true);
+            check(item.getBackground() instanceof android.graphics.drawable.StateListDrawable&&item.icon.getWidth()==iconWidth&&item.caption.getHeight()==captionHeight,"reduced-motion glass styling uses immediate native states and preserves dock geometry at scale "+unit);
+            android.graphics.Bitmap idle=background(item),active=null,restored=null;
+            try{
+                item.setSelected(true);active=background(item);
+                check(!idle.sameAs(active),"actual selected-session state renders a visible dock indicator at scale "+unit);
+                item.setSelected(false);restored=background(item);
+                check(idle.sameAs(restored),"clearing selected-session state removes its dock indicator immediately at scale "+unit);
+            }finally{idle.recycle();if(active!=null)active.recycle();if(restored!=null)restored.recycle();}
+            item.style(true,170,.65f,true,false);
+            check(item.getBackground() instanceof android.graphics.drawable.RippleDrawable,"motion-enabled dock styling uses Android's bounded native ripple at scale "+unit);
+            item.style(false,170,.65f,true,true);
+            check(((android.graphics.drawable.GradientDrawable)item.icon.getBackground()).getColor().getDefaultColor()==DashboardActivity.BLUE,"original theme restores the shortcut's original badge color at scale "+unit);
+            DashDockItem normal=new DashDockItem(dashboard,unit,1,"Music","M",DashboardActivity.BLUE,null,false);
+            measure(normal,Math.round(125*unit),Math.round(79*unit));
+            check(normal.icon.getWidth()==Math.round(46*unit)&&normal.caption.getHeight()==Math.round(24*unit)&&insideTree(normal),"normal dock dimensions retain the original 46-unit icon and 24-unit caption at scale "+unit);
+        }
+    }
+    private static android.graphics.Bitmap background(View view){
+        android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(view.getWidth(),view.getHeight(),android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.drawable.Drawable background=view.getBackground();background.setBounds(0,0,view.getWidth(),view.getHeight());background.draw(new android.graphics.Canvas(bitmap));return bitmap;
+    }
+    private static void measure(View view,int width,int height){
+        view.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY));view.layout(0,0,width,height);
+    }
+    private static boolean insideTree(View view){
+        if(!(view instanceof ViewGroup))return true;
+        ViewGroup group=(ViewGroup)view;
+        for(int i=0;i<group.getChildCount();i++){
+            View child=group.getChildAt(i);if(child.getVisibility()==View.GONE)continue;
+            if(child.getLeft()<0||child.getTop()<0||child.getRight()>group.getWidth()||child.getBottom()>group.getHeight()||!insideTree(child))return false;
+        }
+        return true;
+    }
+    private static View described(View view,String description){
+        if(android.text.TextUtils.equals(description,view.getContentDescription()))return view;
+        if(view instanceof ViewGroup){ViewGroup group=(ViewGroup)view;for(int i=0;i<group.getChildCount();i++){View result=described(group.getChildAt(i),description);if(result!=null)return result;}}
+        return null;
+    }
+    private static boolean within(View child,View ancestor){
+        int x=0,y=0;View current=child;
+        while(current!=ancestor){x+=current.getLeft();y+=current.getTop();if(!(current.getParent() instanceof View))return false;current=(View)current.getParent();}
+        return x>=0&&y>=0&&x+child.getWidth()<=ancestor.getWidth()&&y+child.getHeight()<=ancestor.getHeight();
     }
     private static PlaybackState state(int value){return new PlaybackState.Builder().setState(value,65000,value==PlaybackState.STATE_PLAYING?1:0).setActions(PlaybackState.ACTION_PLAY|PlaybackState.ACTION_PAUSE).build();}
     private static boolean containsRenderSurface(View view){

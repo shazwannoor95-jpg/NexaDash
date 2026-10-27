@@ -107,6 +107,9 @@ public final class SagaShowroomChecks {
                 dashboard.setVehicleVideo(true);
             });
             waitPrepared(instrumentation,dashboard);
+            // Callback flow uses the small decoded fixture; the software emulator
+            // drops late full-resolution frames. The helper restores no-loop mode.
+            assertions+=new SagaFrameNoticeChecks().run(instrumentation,dashboard.showroom);
             final Throwable[] failure={null};
             instrumentation.runOnMainSync(()->{
                 try{

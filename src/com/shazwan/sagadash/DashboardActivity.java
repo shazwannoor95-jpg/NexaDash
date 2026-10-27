@@ -39,7 +39,9 @@ public class DashboardActivity extends Activity implements LocationListener {
     DashMediaPanel primaryMedia;
     TextView editButton,footerText;
     int editMode,artToken;
-    boolean blockEditTouch;
+    boolean blockEditTouch,appsLoading;
+    int appsGeneration;
+    AlertDialog appsDialog;
     final Rect editSurfaceBounds=new Rect(),editDockBounds=new Rect();
     String dockBeforeEdit="";
     final float[] dockSizesBefore=new float[8];
@@ -51,6 +53,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     static final String[] DOCK_NAMES={"Music","Bluetooth","Radio","Video","Files","Equalizer","Car Link","DSP"};
     static final String[] DOCK_SYMBOLS={"♫","ᛒ","FM","▶","▣","▥","▱","☷"};
     static final int[] DOCK_COLORS={0xffec4d79,0xff288ff0,0xff9459ec,0xffec7148,0xffe7a52b,0xff6e8199,0xff239366,0xff336bf2};
+    DashAppearance appearance;
     DashMedia media;
     LocationManager locations;
     Location previous;
@@ -90,6 +93,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         float density=getResources().getDisplayMetrics().density;
         scale=Math.min(getResources().getDisplayMetrics().widthPixels/1280f,getResources().getDisplayMetrics().heightPixels/720f)/density;
         tripMetres=dashPrefs().getFloat("trip",0);
+        appearance=new DashAppearance(this,dashPrefs(),io,unit(),this::applyStyle);
         build();
         media=new DashMedia(this,this::refreshMedia);
         locations=(LocationManager)getSystemService(LOCATION_SERVICE);
@@ -102,21 +106,19 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     int px(float n){return Math.max(1,Math.round(n*scale*getResources().getDisplayMetrics().density));}
     TextView text(String s,int size,int color){TextView v=new TextView(this);v.setText(s);v.setTextColor(color);v.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,px(size));v.setGravity(Gravity.CENTER_VERTICAL);v.setFontFeatureSettings("tnum");return v;}
-    GradientDrawable background(int color){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(px(20));d.setStroke(px(1),neon()?0x8061ccff:LINE);return d;}
+    android.graphics.drawable.Drawable background(int color){return appearance.control(color,px(20));}
     LinearLayout column(){LinearLayout l=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);return l;}
     LinearLayout row(){LinearLayout l=new LinearLayout(this);l.setGravity(Gravity.CENTER_VERTICAL);return l;}
     void pad(View v,int n){v.setPadding(px(n),px(n),px(n),px(n));}
     TextView button(String s,Runnable action){TextView v=text(s,17,TEXT);v.setGravity(Gravity.CENTER);v.setBackground(background(PANEL));pad(v,12);v.setMinHeight(px(56));v.setOnClickListener(w->action.run());v.setContentDescription(s);return v;}
     void equal(LinearLayout parent,View child){LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-1,1);p.setMargins(px(5),px(4),px(5),px(4));parent.addView(child,p);}
     LinearLayout iconButton(String label,String symbol,int color,Runnable action){
-        LinearLayout box=column();box.setGravity(Gravity.CENTER);box.setOnClickListener(v->action.run());box.setContentDescription(label);
         float iconScale=Math.max(.7f,Math.min(1.3f,dashPrefs().getFloat("dock_icon_scale_"+label,1)));
-        TextView icon=text(symbol,Math.round(25*iconScale),TEXT);icon.setGravity(Gravity.CENTER);GradientDrawable bg=background(color);bg.setCornerRadius(px(13));icon.setBackground(bg);box.addView(icon,new LinearLayout.LayoutParams(px(46*iconScale),px(46*iconScale)));
-        TextView caption=text(label,13,TEXT);caption.setGravity(Gravity.CENTER);box.addView(caption,new LinearLayout.LayoutParams(-1,px(24)));return box;
+        return new DashDockItem(this,unit(),iconScale,label,symbol,color,action,neon());
     }
-    LinearLayout card(){LinearLayout l=column();l.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));pad(l,14);return l;}
+    LinearLayout card(){LinearLayout l=column();l.setBackground(appearance.panel(PANEL,px(20)));pad(l,14);return l;}
     void build(){
-        root=row();root.setBackground(new DashBackdrop(unit(),neon()));pad(root,14);setContentView(root);
+        root=row();root.setBackground(appearance.backdrop());pad(root,14);setContentView(root);
         LinearLayout nav=column();nav.setGravity(Gravity.CENTER);root.addView(nav,new LinearLayout.LayoutParams(px(96),-1));
         TextView brand=text("Saga\nDash",17,BLUE);brand.setContentDescription("Saga Dash");brand.setGravity(Gravity.CENTER);nav.addView(brand,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
@@ -124,7 +126,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
         editButton=button("Edit layout",this::editLayoutMenu);header.addView(editButton);header.addView(button("Media access  ·  ⚙",this::settings));main.addView(header);clock.setOnClickListener(v->clockDialog());
         date=text("",16,MUTED);main.addView(date,new LinearLayout.LayoutParams(-1,px(27)));
-        prayerBar=row();prayerBar.setBackground(new DashPanelDrawable(0xff0b1c2b,BLUE,px(20),neon()));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
+        prayerBar=row();prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
         buildVehicleContent();
         primaryMedia=newMediaPanel();bindPrimaryMedia();
@@ -138,7 +140,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         layoutSurface.addPanel("shortcuts",shortcuts);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
         footerText=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
-        footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));
+        footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));applyStyle();
     }
     float unit(){return scale*getResources().getDisplayMetrics().density;}
     boolean neon(){return dashPrefs().getBoolean("style_neon",true);}
@@ -186,7 +188,7 @@ public class DashboardActivity extends Activity implements LocationListener {
                 String app=mode.equals("youtube")?"YouTube app":name;
                 sourcePanel=new DashSourcePanel(DashboardActivity.this,unit(),name,()->shortcut(app),()->DashShortcuts.choose(DashboardActivity.this,app),()->media.command(-1),()->media.command(0),()->media.command(1));slot.addView(sourcePanel,new FrameLayout.LayoutParams(-1,-1));
             }
-            if(leftPane!=null)updateVehicleResources();refreshMedia();
+            if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
         }
         void pause(){if(navigation!=null)navigation.pause();}
         void resume(){if(navigation!=null&&visible&&editMode==0)navigation.resume();}
@@ -195,20 +197,21 @@ public class DashboardActivity extends Activity implements LocationListener {
     void buildDock(){
         dock.removeAllViews();String saved=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));LinkedHashSet<String> order=new LinkedHashSet<>();for(String s:saved.split(","))if(Arrays.asList(DOCK_NAMES).contains(s))order.add(s);Collections.addAll(order,DOCK_NAMES);dockOrder=new ArrayList<>(order);
         for(String name:dockOrder){int index=Arrays.asList(DOCK_NAMES).indexOf(name);LinearLayout item=iconButton(name,DOCK_SYMBOLS[index],DOCK_COLORS[index],()->{if(editMode==2)iconSizeDialog(name);else if(editMode==0)shortcut(name);});
-            item.setTag(name);item.setOnLongClickListener(v->{if(editMode==2){v.startDragAndDrop(ClipData.newPlainText("dock",name),new View.DragShadowBuilder(v),name,0);return true;}if(editMode==0)DashShortcuts.choose(this,name);return true;});
+            styleButtons(item);item.setTag(name);item.setOnLongClickListener(v->{if(editMode==2){v.startDragAndDrop(ClipData.newPlainText("dock",name),new View.DragShadowBuilder(v),name,0);return true;}if(editMode==0)DashShortcuts.choose(this,name);return true;});
             item.setOnDragListener((v,event)->{
                 if(editMode!=2||!(event.getLocalState() instanceof String))return false;
                 if(event.getAction()==DragEvent.ACTION_DROP){String moving=(String)event.getLocalState();int from=dockOrder.indexOf(moving),to=dockOrder.indexOf(name);if(from>=0&&to>=0&&from!=to){dockOrder.remove(from);dockOrder.add(to,moving);dashPrefs().edit().putString("dock_order",android.text.TextUtils.join(",",dockOrder)).apply();buildDock();}return true;}
                 return true;
             });item.setContentDescription(name+(editMode==2?". Long press and drag to reorder.":". Long press to choose app."));equal(dock,item);
         }
+        if(media!=null)updateDockSelection(media.current==null?"":media.current.getPackageName(),media.playing());
     }
     void editLayoutMenu(){
         if(editMode!=0){finishEditing(true);return;}
         new AlertDialog.Builder(this).setTitle("Dashboard layout").setItems(new String[]{"Move / resize panels","Reorder dock icons","Reset default layout","Neon outline: "+(neon()?"On":"Off")},(d,i)->{
             if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
             else if(i==2){layoutSurface.resetLayout();android.content.SharedPreferences.Editor reset=dashPrefs().edit().remove("dock_order");for(String name:DOCK_NAMES)reset.remove("dock_icon_scale_"+name);reset.apply();buildDock();leftPane.setMode("car");rightPane.setMode("media");}
-            else{dashPrefs().edit().putBoolean("style_neon",!neon()).apply();applyStyle();}
+            else{boolean enabled=!neon();android.content.SharedPreferences.Editor edit=dashPrefs().edit().putBoolean("style_neon",enabled);if(enabled&&appearance.intensity()==0)edit.putInt("appearance_neon",65);edit.apply();applyStyle();}
         }).setNegativeButton("Close",null).show();
     }
     void iconSizeDialog(String name){
@@ -221,8 +224,24 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(!save){android.content.SharedPreferences.Editor restore=dashPrefs().edit().putString("dock_order",dockBeforeEdit);for(int n=0;n<DOCK_NAMES.length;n++)restore.putFloat("dock_icon_scale_"+DOCK_NAMES[n],dockSizesBefore[n]);restore.apply();}
         editMode=0;buildDock();editButton.setText("Edit layout");footerText.setText("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION");leftPane.resume();rightPane.resume();updateVehicleResources();
     }
-    void applyStyle(){root.setBackground(new DashBackdrop(unit(),neon()));leftPane.box.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));rightPane.box.setBackground(new DashPanelDrawable(PANEL,BLUE,px(20),neon()));prayerBar.setBackground(new DashPanelDrawable(0xff0b1c2b,BLUE,px(20),neon()));styleButtons(root);}
-    void styleButtons(View view){if(view.getBackground() instanceof GradientDrawable)((GradientDrawable)view.getBackground()).setStroke(px(1),neon()?0x8061ccff:LINE);if(view instanceof android.view.ViewGroup){android.view.ViewGroup group=(android.view.ViewGroup)view;for(int i=0;i<group.getChildCount();i++)styleButtons(group.getChildAt(i));}}
+    void applyStyle(){
+        if(appearance==null||root==null)return;root.setBackground(appearance.backdrop());appearance.refresh();
+        if(leftPane!=null)leftPane.box.setBackground(appearance.panel(PANEL,px(20)));
+        if(rightPane!=null)rightPane.box.setBackground(appearance.panel(PANEL,px(20)));
+        if(prayerBar!=null)prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));
+        if(dock!=null)dock.setBackground(appearance.synthwave()?appearance.panel(0x33080b1f,px(18)):null);
+        if(clock!=null){((View)clock.getParent()).setBackground(appearance.synthwave()?appearance.panel(0x22080b1f,px(18)):null);clock.setTypeface(appearance.synthwave()?Typeface.create("monospace",Typeface.BOLD):Typeface.DEFAULT);}
+        if(date!=null)date.setTextColor(appearance.synthwave()?DashAppearance.CYAN:MUTED);
+        styleButtons(root);
+    }
+    void styleButtons(View view){
+        if(view instanceof DashDockItem){((DashDockItem)view).style(appearance.synthwave(),appearance.panelAlpha(),appearance.strength(),neon(),appearance.reduceMotion());return;}
+        android.graphics.drawable.Drawable background=view.getBackground();Integer original=null;
+        if(background instanceof DashAppearance.Control)original=((DashAppearance.Control)background).original;
+        else if(background instanceof GradientDrawable){android.content.res.ColorStateList color=((GradientDrawable)background).getColor();if(color!=null)original=color.getDefaultColor();}
+        if(original!=null)view.setBackground(appearance.control(original,px(20)));
+        if(view instanceof android.view.ViewGroup){android.view.ViewGroup group=(android.view.ViewGroup)view;for(int i=0;i<group.getChildCount();i++)styleButtons(group.getChildAt(i));}
+    }
     void refreshClock(){
         TrustedClock.Reading time=TrustedClock.read(this);long now=time.utc;Date instant=new Date(now);
         setText(clock,clockFormat.format(instant));setText(date,dayFormat.format(instant)+" · "+TrustedClock.label(this));
@@ -315,7 +334,10 @@ public class DashboardActivity extends Activity implements LocationListener {
             if(pane.sourcePanel!=null)pane.sourcePanel.setTrack(t,a,sourceMatches(pane.mode,pkg),playing);
         }
         String key=t+"\n"+a;if(!key.equals(lyricKey)){lyricGeneration++;lyricKey=key;lyrics=new DashLyrics();lyrics.plain=t.isEmpty()?"Play media to show track details":a.isEmpty()?"Artist metadata is needed to find lyrics":"Tap Lyrics in Settings to look up this track";if(dashPrefs().getBoolean("lyrics",false)&&!t.isEmpty()&&!a.isEmpty())fetchLyrics(t,a,key);}
-        updateMediaPosition();
+        updateDockSelection(pkg,playing);updateMediaPosition();
+    }
+    void updateDockSelection(String pkg,boolean playing){
+        if(dock==null)return;for(int i=0;i<dock.getChildCount();i++){View child=dock.getChildAt(i);if(child instanceof DashDockItem&&child.getTag() instanceof String)child.setSelected(playing&&DashShortcuts.matches(this,(String)child.getTag(),pkg));}
     }
     boolean sourceMatches(String mode,String pkg){
         if(pkg.isEmpty())return false;
@@ -333,8 +355,27 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     String appName(String pkg){try{return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg,0)).toString();}catch(Exception e){return pkg;}}
     void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Open Radio");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
-    void settings(){String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time","Dashboard layout"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;}}).show();}
-    void apps(){io.execute(()->{Intent query=new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);List<ResolveInfo> list=getPackageManager().queryIntentActivities(query,0);Collections.sort(list,(a,b)->a.loadLabel(getPackageManager()).toString().compareToIgnoreCase(b.loadLabel(getPackageManager()).toString()));List<String> labels=new ArrayList<>();for(ResolveInfo r:list)labels.add(r.loadLabel(getPackageManager()).toString());handler.post(()->{if(isDestroyed())return;new AlertDialog.Builder(this).setTitle("Installed apps").setItems(labels.toArray(new String[0]),(d,i)->{ResolveInfo r=list.get(i);try{startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(new ComponentName(r.activityInfo.packageName,r.activityInfo.name)));}catch(Exception e){toast("Unable to open app");}}).show();});});}
+    void settings(){closeApps();String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time","Dashboard layout","Appearance"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;}}).show();}
+    void apps(){
+        if(!visible||isFinishing()||isDestroyed()||appsLoading||(appsDialog!=null&&appsDialog.isShowing()))return;
+        appsLoading=true;final int generation=++appsGeneration;
+        io.execute(()->{
+            List<DashShortcuts.App> found=null;
+            try{found=DashShortcuts.installed(this);}catch(RuntimeException ignored){}
+            final List<DashShortcuts.App> list=found;
+            handler.post(()->{
+                appsLoading=false;
+                if(generation!=appsGeneration||!visible||isFinishing()||isDestroyed())return;
+                if(list==null){toast("Unable to load installed apps");return;}
+                AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Installed apps")
+                    .setItems(DashShortcuts.chooserLabels(list),(d,i)->{
+                        if(!DashShortcuts.start(this,DashShortcuts.launch(list.get(i))))toast("Unable to open app");
+                    }).create();
+                appsDialog=dialog;dialog.setOnDismissListener(d->{if(appsDialog==dialog)appsDialog=null;});dialog.show();
+            });
+        });
+    }
+    void closeApps(){appsGeneration++;if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
     void shortcut(String name){DashShortcuts.open(this,name);}
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){
@@ -430,8 +471,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onProviderEnabled(String p){}
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
-    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
-    @Override protected void onPause(){visible=false;if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
-    @Override protected void onDestroy(){if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
+    @Override protected void onPause(){visible=false;closeApps();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
+    @Override protected void onDestroy(){appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }

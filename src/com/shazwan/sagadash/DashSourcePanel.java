@@ -12,19 +12,20 @@ import android.widget.TextView;
 /** Controls for an installed source app; it never embeds or starts a hidden player. */
 final class DashSourcePanel extends LinearLayout {
     final TextView title,artist,play;
-    private final TextView previous,next;
+    private final TextView previous,next,source,explanation;
     private final float unit;
     private final String name;
+    private boolean compact;
 
     DashSourcePanel(Context context,float unitPx,String sourceName,Runnable open,Runnable choose,Runnable previousAction,Runnable toggle,Runnable nextAction){
         super(context);unit=Math.max(.1f,unitPx);name=sourceName==null?"Media":sourceName;setOrientation(VERTICAL);
-        TextView source=label(name.toUpperCase(java.util.Locale.US),12,DashboardActivity.BLUE);
+        source=label(name.toUpperCase(java.util.Locale.US),12,DashboardActivity.BLUE);
         addView(source,new LayoutParams(-1,p(22)));
         title=label("Open app to start playback",23,DashboardActivity.TEXT);title.setMaxLines(2);title.setEllipsize(TextUtils.TruncateAt.END);
         addView(title,new LayoutParams(-1,-2));
         artist=label("Track details appear when available",15,DashboardActivity.MUTED);artist.setMaxLines(2);artist.setEllipsize(TextUtils.TruncateAt.END);
         addView(artist,new LayoutParams(-1,-2));
-        TextView explanation=label("Uses the installed app in its own window",13,DashboardActivity.MUTED);explanation.setMaxLines(2);explanation.setGravity(Gravity.CENTER);
+        explanation=label("Uses the installed app in its own window",13,DashboardActivity.MUTED);explanation.setMaxLines(2);explanation.setGravity(Gravity.CENTER);
         addView(explanation,new LayoutParams(-1,0,1));
 
         LinearLayout apps=new LinearLayout(context);apps.setGravity(Gravity.CENTER_VERTICAL);
@@ -38,6 +39,17 @@ final class DashSourcePanel extends LinearLayout {
         next=control("Next","Next track",nextAction);addControl(transport,next);
         addView(transport,new LayoutParams(-1,p(45)));
         setTrack("","",false,false);
+    }
+
+    @Override protected void onMeasure(int widthSpec,int heightSpec){
+        // A 200-unit panel leaves 145 units after its outer padding and selector.
+        // Keep both control rows reachable; expanded panels retain the original layout.
+        boolean small=MeasureSpec.getMode(heightSpec)!=MeasureSpec.UNSPECIFIED&&MeasureSpec.getSize(heightSpec)<p(210);
+        if(small!=compact){
+            compact=small;source.setVisibility(small?GONE:VISIBLE);explanation.setVisibility(small?GONE:VISIBLE);
+            title.setMaxLines(small?1:2);artist.setMaxLines(small?1:2);
+        }
+        super.onMeasure(widthSpec,heightSpec);
     }
 
     void setTrack(String trackTitle,String trackArtist,boolean matching,boolean playing){

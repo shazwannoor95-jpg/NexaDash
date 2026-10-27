@@ -1,7 +1,7 @@
 # Panel, susunan dan penggunaan sumber — Saga Dash
 
 Pilihan native yang ringan digunakan: tiada WebView dan tiada skrin app pihak ketiga yang dipaksa
-embed. Susunan asal ialah default. Neon/latar futuristik bersifat statik.
+embed. Susunan asal ialah default. Tema Synthwave bermula dengan latar statik dan Reduce motion hidup.
 
 ## Tukar kandungan panel
 
@@ -15,6 +15,9 @@ Ketuk nama panel dengan simbol **▾** di bahagian atas panel kiri atau kanan.
 - Navigation ialah peta GPS native, bukan enjin turn-by-turn. Jubin OpenStreetMap dimuatkan apabila
   panel dipilih, GPS tersedia dan Internet berfungsi. **Open navigation** membuka Waze/Maps/app pilihan.
 - Tiada lokasi direka tanpa GPS. Cache peta terhad dan bukan peta offline penuh; attribution kekal.
+
+Apabila panel sumber dipendekkan, tajuk/panduan tambahan diringkaskan dan metadata menggunakan satu
+baris. Butang Open, Choose app serta Previous/Play/Next dikekalkan supaya masih boleh dicapai.
 
 Launcher Android biasa tidak boleh embed skrin penuh Maps/Waze/TizenTube sesuka hati. Panel ini
 menggunakan preview/kawalan native; app sebenar tetap menggunakan sumbernya sendiri apabila dibuka.
@@ -48,16 +51,34 @@ Gesture sudut kereta dan butang biasa berfungsi di luar mod Edit.
 3. Tap ikon dalam mod ini untuk pilih saiz **70–130%**.
 4. **Done ✓** menyimpan; footer Cancel / Back membatalkan perubahan sesi itu.
 
+70–130% ialah saiz yang diminta. Ikon dikecilkan secara automatik mengikut ruang sebenar setiap slot
+dock, termasuk ruang label. Dock yang kecil boleh memaparkan ikon lebih kecil daripada peratus pilihan
+supaya ikon dan label tidak melimpah keluar.
+
 Di luar mod Edit, tekan lama ikon membuka Choose app. Jika label app OEM seperti BT, CarSettings,
 CarSet, Music, Video, VLC atau ZLINK tidak dapat dipastikan secara unik, pilih app sendiri.
 Tiada andaian bahawa CarSet ialah DSP.
 
 ## Rekaan dan sumber
 
-Neon cyan/violet dan grid/litar gelap dilukis dengan garisan statik. Edit layout > **Neon outline**
-menghidupkan/mematikannya. Tiada blur berat, wallpaper video atau timer animasi ditambah.
+Settings > **Appearance** menyimpan pilihan berikut:
+
+- Theme: Original / Synthwave, tanpa mengubah kedudukan panel atau tindakan butang.
+- Background brightness, Panel transparency dan Neon intensity.
+- Animation mode: Static / Ambient / Cinematic, serta Reduce motion.
+
+Lihat [panduan Synthwave](SYNTHWAVE_MS.md) untuk langkah dan had penggunaan sumber.
+
+Synthwave menggunakan imej latar yang diisi mengikut nisbah asal, lapisan gelap dan panel kaca gelap
+dengan outline cyan/violet. Peta dan permukaan video mengekalkan kandungan sendiri. Original
+mengembalikan latar grid/litar terdahulu. Edit layout > **Neon outline** masih tersedia.
+
+Default **Static + Reduce motion** tidak menjadualkan animasi latar. Ambient/Cinematic hanya bergerak
+apabila dipilih, Reduce motion dimatikan dan dashboard kelihatan; hadnya 10 frame sesaat. Kesan hanya
+cahaya/garisan, bukan pergerakan kereta. Tiada blur masa nyata, WebView atau renderer GL untuk latar.
 
 - Imej sudut menggunakan atlas yang disampel dan dibatasi; tiada animasi idle, mesh atau decoder video.
+- Bitmap latar disampel/dihadkan kepada 2MiB, dimuatkan di worker dan dilepaskan apabila tidak diperlukan.
 - Video pilihan hanya menggunakan decoder/GLES apabila diperlukan; sumber dilepaskan apabila tersembunyi.
 - Formatter jam/tarikh diguna semula dan teks sama tidak ditulis semula setiap saat.
 - Cover album dihadkan kepada 128px. Semua panel berkongsi satu pengawal media.

@@ -27,11 +27,13 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
     private volatile Surface decoderSurface;
     private volatile SurfaceTexture decoderTexture;
     private Listener listener;
-    private boolean framePending,hasFrame;
+    private boolean framePending,hasFrame,frameNoticePosted;
+    private long frameNoticeGeneration;
     private volatile boolean packed;
     private volatile int videoWidth=16,videoHeight=9;
     private int width,height,texture,program,positionAt,coordinateAt,matrixAt,scaleAt,packedAt,imageAt;
     volatile int drawnFrames;
+    volatile int frameNotifications;
 
     SagaAlphaVideoView(Context context){
         super(context);setEGLContextClientVersion(2);
@@ -44,11 +46,16 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
     }
     void setListener(Listener listener){this.listener=listener;}
     Surface decoderSurface(){return decoderSurface;}
+    String frameState(){synchronized(frameLock){return "drawn="+drawnFrames+", notices="+frameNotifications+", hasFrame="+hasFrame+", pending="+framePending+", noticePosted="+frameNoticePosted+", generation="+frameNoticeGeneration+", surface="+(decoderSurface!=null)+", renderSize="+width+"x"+height+", viewSize="+getWidth()+"x"+getHeight();}}
     void setVideoSize(int physicalWidth,int physicalHeight,boolean packedAlpha){
         packed=packedAlpha;videoWidth=Math.max(1,packedAlpha?physicalWidth/2:physicalWidth);
-        videoHeight=Math.max(1,physicalHeight);requestRender();
+        videoHeight=Math.max(1,physicalHeight);
+        // onPrepared calls this after its prepared flag becomes true. Rearm the
+        // one-shot notice even if the decoder delivered an opening frame earlier.
+        synchronized(frameLock){frameNoticePosted=false;frameNoticeGeneration++;}
+        requestRender();
     }
-    void clearFrame(){synchronized(frameLock){framePending=false;hasFrame=false;}requestRender();}
+    void clearFrame(){synchronized(frameLock){framePending=false;hasFrame=false;frameNoticePosted=false;frameNoticeGeneration++;}requestRender();}
     private static FloatBuffer buffer(float[] values){
         FloatBuffer out=ByteBuffer.allocateDirect(values.length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         out.put(values).position(0);return out;
@@ -64,7 +71,7 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
             if(decoderSurface!=null)decoderSurface.release();
             if(decoderTexture!=null)decoderTexture.release();
             decoderSurface=null;decoderTexture=null;drawnFrames=0;
-            synchronized(frameLock){framePending=false;hasFrame=false;}
+            synchronized(frameLock){framePending=false;hasFrame=false;frameNoticePosted=false;frameNoticeGeneration++;}
             int vertex=shader(GLES20.GL_VERTEX_SHADER,
                 "attribute vec2 aPosition;attribute vec2 aCoordinate;uniform vec2 uScale;varying vec2 uv;"+
                 "void main(){gl_Position=vec4(aPosition*uScale,0.0,1.0);uv=aCoordinate;}");
@@ -105,18 +112,19 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
     }
     @Override public void onDrawFrame(GL10 ignored){
         GLES20.glClearColor(0,0,0,0);GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        boolean updated=false;
+        boolean notifyFrame=false;long noticeGeneration=0;
         synchronized(frameLock){
             if(framePending&&decoderTexture!=null){
                 try{
                     decoderTexture.updateTexImage();decoderTexture.getTransformMatrix(matrix);
-                    framePending=false;hasFrame=true;updated=true;
+                    framePending=false;hasFrame=true;
                 }catch(RuntimeException error){
                     framePending=false;hasFrame=false;
                     main.post(()->{if(listener!=null)listener.error();});return;
                 }
             }
             if(!hasFrame||program==0)return;
+            if(!frameNoticePosted){frameNoticePosted=true;notifyFrame=true;noticeGeneration=frameNoticeGeneration;}
         }
         float viewAspect=(float)width/Math.max(1,height),videoAspect=(float)videoWidth/videoHeight;
         float x=viewAspect>videoAspect?videoAspect/viewAspect:1;
@@ -133,7 +141,13 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
         GLES20.glDisableVertexAttribArray(positionAt);GLES20.glDisableVertexAttribArray(coordinateAt);
         drawnFrames++;
-        if(updated)main.post(()->{if(listener!=null)listener.frame();});
+        if(notifyFrame){
+            final long epoch=noticeGeneration;
+            main.post(()->{
+                synchronized(frameLock){if(epoch!=frameNoticeGeneration||!hasFrame)return;}
+                if(listener!=null){frameNotifications++;listener.frame();}
+            });
+        }
     }
     @Override public void surfaceDestroyed(SurfaceHolder holder){
         if(listener!=null)listener.lost();super.surfaceDestroyed(holder);
@@ -143,7 +157,7 @@ final class SagaAlphaVideoView extends GLSurfaceView implements GLSurfaceView.Re
         synchronized(frameLock){
             if(decoderSurface!=null)decoderSurface.release();decoderSurface=null;
             if(decoderTexture!=null)decoderTexture.release();decoderTexture=null;
-            hasFrame=false;framePending=false;
+            hasFrame=false;framePending=false;frameNoticePosted=false;frameNoticeGeneration++;
         }
     }
 }

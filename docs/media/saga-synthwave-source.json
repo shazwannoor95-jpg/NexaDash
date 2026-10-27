@@ -1,0 +1,13 @@
+{
+  "asset": "res/drawable-nodpi/saga_synthwave.webp",
+  "source": "User-supplied Synthwave red Proton Saga NEXA/cyan-moon artwork, adapted to widescreen with image generation.",
+  "resolution": [
+    1672,
+    941
+  ],
+  "encoding": "lossy WebP quality88, opaque",
+  "size_bytes": 291020,
+  "sha256": "a53174d465007f3fdf7e58d512d614a4406fc27b4702273c7d29fa3fd82bee80",
+  "runtime": "sampled RGB565 bitmap capped at2MiB, decoded on existing worker; default static + reduce motion",
+  "preserved": "Existing eight-angle car viewer asset remains unchanged."
+}

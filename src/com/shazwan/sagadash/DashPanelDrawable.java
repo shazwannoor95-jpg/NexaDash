@@ -15,24 +15,27 @@ final class DashPanelDrawable extends Drawable {
             halo=new Paint(Paint.ANTI_ALIAS_FLAG),cyan=new Paint(Paint.ANTI_ALIAS_FLAG),violet=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF area=new RectF();
     private final Path upperAccent=new Path(),lowerAccent=new Path();
-    private final float radius,unit;
+    private final float radius,unit,strength;
     private final boolean neon;
     private final int fillAlpha;
     private int opacity=255;
 
     DashPanelDrawable(int color,int accent,float radius){this(color,accent,radius,true);}
-    DashPanelDrawable(int color,int accent,float radius,boolean neon){
-        this.radius=Math.max(0,radius);unit=Math.max(.65f,this.radius/20f);this.neon=neon;
+    DashPanelDrawable(int color,int accent,float radius,boolean neon){this(color,accent,radius,neon,1);}
+    DashPanelDrawable(int color,int accent,float radius,boolean neon,float strength){
+        this.radius=Math.max(0,radius);unit=Math.max(.65f,this.radius/20f);
+        this.strength=Math.max(0,Math.min(1,strength));this.neon=neon&&this.strength>0;
         fill.setColor(color);fillAlpha=(color>>>24)&255;
-        edge.setColor(neon?accent:0xff243c51);edge.setStyle(Paint.Style.STROKE);edge.setStrokeWidth(Math.max(1,unit));
+        edge.setColor(this.neon?accent:0xff243c51);edge.setStyle(Paint.Style.STROKE);edge.setStrokeWidth(Math.max(1,unit));
         halo.setColor(accent);halo.setStyle(Paint.Style.STROKE);halo.setStrokeWidth(4*unit);
         cyan.setColor(accent);cyan.setStyle(Paint.Style.STROKE);cyan.setStrokeWidth(2*unit);cyan.setStrokeCap(Paint.Cap.ROUND);
-        violet.setColor(0xff9275ef);violet.setStyle(Paint.Style.STROKE);violet.setStrokeWidth(2*unit);violet.setStrokeCap(Paint.Cap.ROUND);
+        violet.setColor(0xff9d4edd);violet.setStyle(Paint.Style.STROKE);violet.setStrokeWidth(2*unit);violet.setStrokeCap(Paint.Cap.ROUND);
         applyOpacity();
     }
     private void applyOpacity(){
-        fill.setAlpha(fillAlpha*opacity/255);edge.setAlpha((neon?104:255)*opacity/255);
-        halo.setAlpha(15*opacity/255);cyan.setAlpha(174*opacity/255);violet.setAlpha(128*opacity/255);
+        fill.setAlpha(fillAlpha*opacity/255);edge.setAlpha(Math.round((neon?55+115*strength:255)*opacity/255f));
+        halo.setAlpha(Math.round(20*strength*opacity/255f));cyan.setAlpha(Math.round(210*strength*opacity/255f));
+        violet.setAlpha(Math.round(160*strength*opacity/255f));
     }
     @Override protected void onBoundsChange(Rect bounds){
         float inset=neon?2*unit:Math.max(.5f,unit/2);

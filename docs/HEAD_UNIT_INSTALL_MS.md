@@ -16,11 +16,11 @@ Windows release key boleh berbeza. Ini bukan ralat pada model head unit.
 
 ## A. Download APK signed yang disediakan
 
-Download [SagaDash-1.6.7-sagadash.2.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.2.apk).
+Download [SagaDash-1.6.7-sagadash.3.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.3.apk).
 Fail ini berada dalam branch edisi Saga Dash, bukan release APK KlikDash upstream.
 
 Simpan fail `.apk` itu pada komputer. Jika pautan raw disekat rangkaian, buka
-[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.2.apk)
+[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.3.apk)
 dan klik **Download raw file**. Jangan rename ZIP kepada APK. Private signing key tidak disertakan
 dalam download/projek. [Checksum dan maklumat build](../dist/build-info.json) disediakan untuk semakan.
 
@@ -54,6 +54,8 @@ Untuk update akan datang, pilih keystore sedia ada dalam wizard—jangan Create 
    menjadikannya default launcher.
 5. Semak paparan landscape, lapan sudut imej kereta, panel dan ikon. Default kereta ialah imej statik,
    bukan Original Saga video atau Interactive 3D model lama.
+   Settings > Appearance membolehkan pertukaran Original/Synthwave. Kekalkan Static dan Reduce motion
+   untuk permulaan ringan; ini tidak mengubah susunan panel atau pilihan app.
 6. Setelah ujian asas memuaskan, **Settings Saga Dash > Set as default launcher** membuka tetapan
    Home Android. Pilih Saga Dash jika mahu menggunakannya sebagai launcher.
 

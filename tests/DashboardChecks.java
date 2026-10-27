@@ -56,7 +56,9 @@ public class DashboardChecks extends Instrumentation {
                 check(absent,"removed launcher feature: "+removed);
             }
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            assertions+=new DashAppsChecks().run(this,dash[0]);
             assertions+=new DashCustomizationChecks().run(this,dash[0]);
+            assertions+=new DashAppearanceChecks().run(this,dash[0]);
             assertions+=new SagaShowroomChecks().run(this,dash[0]);
             assertions+=new SagaAngleChecks().run(this,dash[0]);
             // Regression: a busy timetable cache must not make UI refresh wait for its global monitor.

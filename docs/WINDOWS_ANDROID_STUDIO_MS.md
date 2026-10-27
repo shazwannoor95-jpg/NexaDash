@@ -68,6 +68,8 @@ Hypervisor Platform mungkin perlu diaktifkan pada komputer itu.
 2. Klik ▶ hijau. Tunggu build dan install selesai.
 3. Jika paparan mengiring, guna ikon Rotate pada toolbar emulator untuk menjadikannya landscape.
 4. Semak Home, Apps, Settings, pilihan panel dan Edit layout.
+5. Settings > Appearance: cuba Original/Synthwave. Default Static + Reduce motion tidak menganimasikan
+   latar; susunan dan tindakan butang kekal. Lihat [panduan tema](SYNTHWAVE_MS.md).
 
 Default kereta ialah **Saga image angles (lightweight)**: drag menukar lapan sudut, pinch zoom dan
 double-tap reset. Ia bukan model 3D/kamera bebas. Tiada animasi idle atau decoder video untuk mod ini.
@@ -106,6 +108,7 @@ boleh mempunyai key berbeza; app dengan Package ID sama hanya boleh di-update de
 - `AndroidManifest.xml` di root: manifest sumber utama.
 - `src\com\shazwan\sagadash\DashboardActivity.java`: dashboard/panel.
 - `res\drawable-nodpi\saga_angles.png`: atlas lapan sudut kereta.
+- `res\drawable-nodpi\saga_synthwave.webp`: latar Synthwave; `DashAppearance.java` mengurus tetapan tema.
 - `res\raw\saga_showroom_alpha.mp4`: transport video transparent pilihan.
 - `TrustedClock.java`, `PrayerLocation.java`, `JakimSchedule.java`: masa, zon dan jadual solat.
 

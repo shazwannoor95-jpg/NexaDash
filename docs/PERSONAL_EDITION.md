@@ -2,7 +2,7 @@
 
 English landscape launcher for the owner's red Proton Saga VVT. It keeps the supplied dashboard's
 default positions, a JAKIM prayer strip below the clock, two configurable native panels, app shortcuts
-and optional static neon decoration. Original MIT and third-party notices remain applicable.
+and a configurable Synthwave appearance. Original MIT and third-party notices remain applicable.
 
 ## Current car display
 
@@ -29,9 +29,15 @@ is added, and the decoder is released when the panel/app is left.
   selected navigation app. It is not a turn-by-turn engine or complete offline map.
 - Edit layout moves/resizes panels; a separate dock mode reorders icons and changes icon size.
   Save, cancel and reset-to-default are available. Header/prayer/footer remain in their normal positions.
-- Neon/grid decoration is static. No wallpaper video, background animation timer or blur layer is used.
+  Requested icon sizes are capped to their available dock cells. Short source panels compact their
+  headings/metadata while keeping launch, chooser and playback buttons accessible.
+- Settings > Appearance offers Original/Synthwave, brightness, transparency, neon intensity,
+  Static/Ambient/Cinematic and Reduce motion. Static with Reduce motion is the default and has no
+  background animation timer. Optional light effects are capped at 10fps and stop when inactive.
+  Wallpaper uses one bounded bitmap and native draws, without blur, a custom GL renderer or WebView; the car is not animated.
 
 See [customization instructions](DASHBOARD_CUSTOMIZATION_MS.md),
+[Synthwave appearance](SYNTHWAVE_MS.md),
 [car images/video and shortcuts](VIDEO_AND_SHORTCUTS_MS.md), and
 [transparent-video format notes](TRANSPARENT_VIDEO.md).
 
@@ -94,7 +100,7 @@ The physical car's exact year/trim is not established by the supplied references
 
 ## Resource policy and practical limits
 
-Default car images are static and sampled; optional decoder/GPU resources are demand-created and
+Default car images and wallpaper are static and sampled; optional decoder/GPU resources are demand-created and
 released. Clock/date formatters are reused and unchanged text is not replaced each second. Media
 cover images are capped at 128px. The native map shares a 3MiB memory cache, 12MiB disk cache and one
 worker; hidden maps do not download tiles and no tile download starts without GPS.
@@ -127,8 +133,8 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The final image build passed **403 integration assertions**;
-see [performance and validation evidence](PERFORMANCE.md). Historical mesh/video assertion counts do not
-describe this revised image build.
+fixtures are separate from production data. The current **1.6.7-sagadash.3/code27** build passed
+**547 integration assertions**, including theme state/lifecycle and compact layout regressions.
+See [performance and current validation status](PERFORMANCE.md).
 Physical head-unit checks—GPS, BT/radio metadata, steering keys, reverse camera, audio focus, sleep/wake
 and resource behavior—remain outstanding until that unit is tested.
