@@ -1,12 +1,35 @@
 # Saga Dash resource measurements
 
-The current APK is `dist/SagaDash-1.6.7-sagadash.4.apk` (package `com.shazwan.sagadash`, code 28).
+The current APK is `dist/SagaDash-1.6.7-sagadash.5.apk` (package `com.shazwan.sagadash`, code 29).
 The car preview is eight image angles. Original video and live mesh classes/assets are removed.
 Default Static + Reduce motion has no background animation; Ambient/Cinematic are opt-in, capped at
 10fps and stopped while inactive. The wallpaper uses a bounded bitmap, without a custom GL renderer, blur or WebView.
 Optional video/map work starts only when selected.
 
-## App-panel diagnostics (.4)
+## Glass panels and icon drawer (.5)
+
+The panel geometry and existing feature state are retained. Glass is a static fill gradient and
+rim reflection, without live blur, a new bitmap, decoder or animation loop. It can be disabled in
+Appearance > Glass panels; transparency remains adjustable. Original retains its opaque fill.
+
+Apps uses a recycled native GridView with density-aware columns and real installed activity icons.
+Each retained icon raster is at most96×96pixels. The LRU cache is capped at1MiB, plus visible-cell
+references; package drawables can consume transient memory during loading. Up to24 icon jobs are
+pending on the existing serial worker. No icon work runs while the drawer is closed; closing it
+cancels pending jobs, releases its adapter/cache and rejects late results. Missing icons fall back
+to the system placeholder. There are no new Android permissions or continuous refresh timers.
+
+Android Studio debug/release assembly and signed APK verification passed. **626 integration
+assertions passed** on Android10/API29 software emulation, including native-grid activity discovery,
+icon raster bounds/cache release and glass finish state preservation. Permissions match .4.
+One preceding emulator run timed out waiting for a new decoded-frame notice after clearing the
+optional video fixture; the unchanged APK passed the full rerun. This does not validate smooth
+video playback on the physical head unit.
+
+This is a visual/app-drawer update, **not app UI embedding**. The .3 runtime sample below is
+historical; .5 has no new physical-head-unit RAM/CPU or playback measurement.
+
+## App-panel diagnostics checkpoint (.4)
 
 The .4 update adds an on-demand, read-only **Settings > App panel compatibility** report. It does not
 implement app embedding, run root commands, change system settings or upload the report. Package/app

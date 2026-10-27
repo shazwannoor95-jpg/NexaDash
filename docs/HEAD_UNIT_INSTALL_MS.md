@@ -1,7 +1,8 @@
 # Pasang Saga Dash pada head unit — panduan beginner
 
-Untuk **TEST9278B, 1024×600, RAM 4GB/flash 32GB** yang ditunjukkan dalam screenshot. Android dilabel 12.0;
-API/ABI sebenar dan firmware/perkakasan belum diuji secara fizikal. Ikut langkah ini apabila sudah
+Untuk **TEST9278B, 1024×600, RAM 4GB/flash 32GB** yang ditunjukkan dalam screenshot. Menu awal dilabel 12.0; laporan app pada unit
+kemudian menunjukkan API27 (Android8.1), versi string9.1 dan armeabi-v7a/armeabi. Sambungan ADB
+dan hosting app belum diuji pada perkakasan itu. Ikut langkah ini apabila sudah
 bersedia untuk ujian head unit. Nama app **Saga Dash**, Package ID **com.shazwan.sagadash**.
 
 ## Pilih satu laluan APK
@@ -16,12 +17,12 @@ Windows release key boleh berbeza. Ini bukan ralat pada model head unit.
 
 ## A. Download APK signed yang disediakan
 
-Download [SagaDash-1.6.7-sagadash.4.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.4.apk).
+Download [SagaDash-1.6.7-sagadash.5.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.5.apk).
 Fail ini berada dalam branch edisi Saga Dash, bukan release APK KlikDash upstream.
-Versi .4 menambah [semakan app asal dalam panel](APP_PANELS_MS.md); embedding app belum ditambah.
+Versi .5 menambah panel kaca statik dan grid ikon Apps. Versi .4 menambah [semakan app asal dalam panel](APP_PANELS_MS.md); embedding app belum ditambah.
 
 Simpan fail `.apk` itu pada komputer. Jika pautan raw disekat rangkaian, buka
-[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.4.apk)
+[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.5.apk)
 dan klik **Download raw file**. Jangan rename ZIP kepada APK. Private signing key tidak disertakan
 dalam download/projek. [Checksum dan maklumat build](../dist/build-info.json) disediakan untuk semakan.
 

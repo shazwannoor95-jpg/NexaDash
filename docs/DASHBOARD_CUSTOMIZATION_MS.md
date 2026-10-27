@@ -3,6 +3,21 @@
 Pilihan native yang ringan digunakan: tiada WebView dan tiada skrin app pihak ketiga yang dipaksa
 embed. Susunan asal ialah default. Tema Synthwave bermula dengan latar statik dan Reduce motion hidup.
 
+## Panel kaca dan Apps (.5)
+
+Susunan dashboard dikekalkan. Settings > Appearance > **Glass panels** menghidupkan kemasan kaca
+statik: tint gradient, panel lut sinar pada Synthwave dan pantulan rim. Panel transparency masih
+mengawal kelegapan; Original mengekalkan fill opaque. Tiada blur masa nyata atau timer tambahan.
+
+Butang **Apps** di sidebar membuka grid ikon sebenar + nama app. Scroll untuk melihat sambungan,
+ketuk ikon untuk buka app dan tekan Close/Back untuk tutup drawer. Bilangan kolum ikut saiz/density
+paparan. Ikon dimuatkan secara async bila diperlukan, raster maksimum96×96 dan cache LRU maksimum
+1MiB selain rujukan ikon dalam sel yang kelihatan. Cache/kerja tertunda dibersihkan apabila ditutup.
+Grid ini membuka app asal; ia tidak menambah embedding ke panel kiri/kanan.
+
+[Preview dashboard kaca](img/saga-dash-glass.png) · [Preview grid Apps](img/saga-apps-grid.png).
+Ikon dalam preview ialah app emulator; head unit menggunakan app yang dipasang pada unit itu.
+
 ## Tukar kandungan panel
 
 Ketuk nama panel dengan simbol **▾** di bahagian atas panel kiri atau kanan.

@@ -17,6 +17,19 @@ removed from the app. Optional **Transparent Saga video** and local video import
 video follows a recording, starts paused and is muted. No video MediaSession or audio-focus request
 is added, and the decoder is released when the panel/app is left.
 
+## Glass panels and Apps grid (.5)
+
+Existing panel positions, wallpaper, prayer strip, car view and source choices remain unchanged.
+Glass panels add static vertical tint/reflection gradients and a fine rim. Settings > Appearance >
+**Glass panels** restores the preceding finish when switched off. No live blur, extra wallpaper
+copy, render loop or new Android permission is used. Original retains its opaque fill.
+
+The sidebar **Apps** opens a scrollable native grid of actual installed app icons and names.
+Columns adapt to width/density; cells are reused. Icon rasters are at most96×96pixels and the
+LRU cache is capped at1MiB (visible cell references are additional). Icons load on the existing
+worker when requested and are released when the drawer closes. Missing icons use a placeholder.
+The same safe exported/enabled launcher-activity discovery and duplicate-label descriptions remain.
+
 ## App-panel compatibility (.4)
 
 Settings > **App panel compatibility** collects a read-only report on demand: Android API/ABI,
@@ -89,12 +102,12 @@ been installed or verified on the owner's head unit. Touch/playback/session inte
 
 ## Target hardware
 
-These values were read from the owner's screenshots, not independently queried:
+These values were read from the owner's screenshots, including the .4 on-device compatibility report; no remote hardware access:
 
 | Item | Reported/observed |
 | --- | --- |
 | Head unit / firmware | TEST9278B / TEST9278B_00020_V001; android-trunk-p0 |
-| Android label / patch | 12.0 / February 1, 2020; actual API and ABI not yet queried |
+| Android / ABI | Earlier menu label12.0; on-device .4 report: version string9.1, SDK API27 (Android8.1), armeabi-v7a/armeabi |
 | CPU | Cortex-A7, 1.5GHz × 4 |
 | RAM / flash | 4GB / 32GB |
 | Display | 1024×600 LVDS landscape |
@@ -141,8 +154,9 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The current **1.6.7-sagadash.4/code28** build passed
-**603 integration assertions**, including the read-only compatibility report, actual clipboard copy,
+fixtures are separate from production data. The current **1.6.7-sagadash.5/code29** build passed
+**626 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
+the read-only compatibility report, actual clipboard copy,
 theme state/lifecycle and compact layout regressions.
 See [performance and current validation status](PERFORMANCE.md).
 Physical head-unit checks—GPS, BT/radio metadata, steering keys, reverse camera, audio focus, sleep/wake

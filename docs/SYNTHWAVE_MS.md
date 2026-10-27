@@ -34,3 +34,9 @@ Android baharu. Static tidak menjadualkan frame animasi.
 
 Tiada keputusan emulator yang menjamin kelancaran TEST9278B; lihat [ukuran dan status ujian](PERFORMANCE.md).
 Untuk install atau build Windows, ikut [panduan head unit](HEAD_UNIT_INSTALL_MS.md).
+
+## Kemasan kaca (.5)
+
+Appearance > **Glass panels** menambah gradient/pantulan rim statik pada panel sedia ada.
+Boleh dimatikan untuk kemasan sebelumnya. Susunan, wallpaper dan fungsi panel tidak berubah.
+Tiada live blur, animasi baharu atau salinan bitmap wallpaper bagi setiap panel.

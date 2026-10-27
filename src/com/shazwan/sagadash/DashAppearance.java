@@ -37,6 +37,7 @@ final class DashAppearance {
     boolean synthwave(){return !"original".equals(value("appearance_theme","synthwave"));}
     int brightness(){return value("appearance_brightness",65,0,100);}
     int transparency(){return value("appearance_transparency",25,0,65);}
+    boolean glass(){try{return preferences.getBoolean("appearance_glass",true);}catch(ClassCastException ignored){return true;}}
     int panelAlpha(){return Math.round(255*(100-transparency())/100f);}
     int intensity(){return value("appearance_neon",65,0,100);}
     boolean reduceMotion(){try{return preferences.getBoolean("appearance_reduce_motion",true);}catch(ClassCastException ignored){return true;}}
@@ -80,7 +81,7 @@ final class DashAppearance {
     Drawable backdrop(){return synthwave()?synth:new DashBackdrop(unit,neon());}
     Drawable panel(int original,float radius){
         int color=synthwave()?(panelAlpha()<<24)|(GLASS&0x00ffffff):original;
-        return new DashPanelDrawable(color,accent(),radius,neon(),strength());
+        return new DashPanelDrawable(color,accent(),radius,neon(),strength(),glass());
     }
     Drawable control(int original,float radius){return new Control(original,radius);}
     final class Control extends StateListDrawable {
@@ -97,6 +98,11 @@ final class DashAppearance {
     }
     private GradientDrawable shape(int fill,float radius,boolean selected){
         GradientDrawable drawable=new GradientDrawable();drawable.setColor(fill);drawable.setCornerRadius(radius);
+        if(glass()){
+            int alpha=fill&0xff000000;
+            drawable.setColors(new int[]{alpha|(DashPanelDrawable.tint(fill,0xffb1e7f5,selected?.20f:.12f)&0xffffff),fill});
+            drawable.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
+        }
         int alpha=neon()?Math.round((selected?230:145)*strength()):255;
         int edge=neon()?(alpha<<24)|((selected&&synthwave()?MAGENTA:accent())&0xffffff):DashboardActivity.LINE;
         drawable.setStroke(Math.max(1,Math.round(unit*(selected?2:1))),edge);return drawable;
@@ -104,6 +110,7 @@ final class DashAppearance {
     void show(){
         LinearLayout content=new LinearLayout(activity);content.setOrientation(LinearLayout.VERTICAL);int pad=Math.max(8,Math.round(20*unit));content.setPadding(pad,pad,pad,pad);
         Spinner theme=spinner(content,"Theme",new String[]{"Original","Synthwave"},synthwave()?1:0);
+        CheckBox glass=new CheckBox(activity);glass.setText("Glass panels");glass.setChecked(glass());content.addView(glass);
         SeekBar brightness=slider(content,"Background brightness",brightness(),100);
         SeekBar transparency=slider(content,"Panel transparency",transparency(),65);
         SeekBar neon=slider(content,"Neon intensity",neon()?intensity():0,100);
@@ -113,12 +120,13 @@ final class DashAppearance {
         ScrollView scroll=new ScrollView(activity);scroll.addView(content);
         new AlertDialog.Builder(activity).setTitle("Appearance").setView(scroll).setPositiveButton("Save",(d,w)->{
             preferences.edit().putString("appearance_theme",theme.getSelectedItemPosition()==0?"original":"synthwave")
+                .putBoolean("appearance_glass",glass.isChecked())
                 .putInt("appearance_brightness",brightness.getProgress()).putInt("appearance_transparency",transparency.getProgress())
                 .putInt("appearance_neon",neon.getProgress()).putBoolean("style_neon",neon.getProgress()>0)
                 .putString("appearance_animation",animation.getSelectedItemPosition()==1?"ambient":animation.getSelectedItemPosition()==2?"cinematic":"static")
                 .putBoolean("appearance_reduce_motion",motion.isChecked()).apply();changed.run();
         }).setNeutralButton("Defaults",(d,w)->{
-            SharedPreferences.Editor edit=preferences.edit();for(String key:new String[]{"theme","brightness","transparency","neon","animation","reduce_motion"})edit.remove("appearance_"+key);
+            SharedPreferences.Editor edit=preferences.edit();for(String key:new String[]{"theme","glass","brightness","transparency","neon","animation","reduce_motion"})edit.remove("appearance_"+key);
             edit.putBoolean("style_neon",true).apply();changed.run();
         }).setNegativeButton("Cancel",null).show();
     }

@@ -42,6 +42,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     boolean blockEditTouch,appsLoading;
     int appsGeneration;
     AlertDialog appsDialog;
+    DashAppGrid appsGrid;
     final Rect editSurfaceBounds=new Rect(),editDockBounds=new Rect();
     String dockBeforeEdit="";
     final float[] dockSizesBefore=new float[8];
@@ -368,15 +369,25 @@ public class DashboardActivity extends Activity implements LocationListener {
                 appsLoading=false;
                 if(generation!=appsGeneration||!visible||isFinishing()||isDestroyed())return;
                 if(list==null){toast("Unable to load installed apps");return;}
-                AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Installed apps")
-                    .setItems(DashShortcuts.chooserLabels(list),(d,i)->{
-                        if(!DashShortcuts.start(this,DashShortcuts.launch(list.get(i))))toast("Unable to open app");
-                    }).create();
-                appsDialog=dialog;dialog.setOnDismissListener(d->{if(appsDialog==dialog)appsDialog=null;});dialog.show();
+                DashAppGrid grid=new DashAppGrid(this,list,io,appearance);
+                AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Apps · "+list.size())
+                    .setView(grid).setNegativeButton("Close",null).create();
+                grid.setOnItemClickListener((parent,view,position,id)->{
+                    if(position>=0&&position<list.size()){
+                        if(DashShortcuts.start(this,DashShortcuts.launch(list.get(position))))dialog.dismiss();
+                        else toast("Unable to open app");
+                    }
+                });
+                appsDialog=dialog;appsGrid=grid;
+                dialog.setOnDismissListener(d->{grid.close();if(appsDialog==dialog)appsDialog=null;if(appsGrid==grid)appsGrid=null;});dialog.show();
+                Window window=dialog.getWindow();
+                if(window!=null){window.setBackgroundDrawable(new DashPanelDrawable(0xee0b1c2b,appearance.accent(),px(24),appearance.neon(),appearance.strength(),appearance.glass()));window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);window.setDimAmount(.35f);
+                    android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();
+                    window.setLayout(Math.round(metrics.widthPixels*.96f),Math.round(metrics.heightPixels*.88f));}
             });
         });
     }
-    void closeApps(){appsGeneration++;if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
+    void closeApps(){appsGeneration++;if(appsGrid!=null){appsGrid.close();appsGrid=null;}if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
     void shortcut(String name){DashShortcuts.open(this,name);}
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){

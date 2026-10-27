@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /** Theme lifecycle and state preservation; does not claim physical head-unit performance. */
 final class DashAppearanceChecks {
     private static final String[] KEYS={"appearance_theme","appearance_brightness","appearance_transparency",
-        "appearance_neon","appearance_animation","appearance_reduce_motion","style_neon"};
+        "appearance_neon","appearance_glass","appearance_animation","appearance_reduce_motion","style_neon"};
     int assertions;
     void check(boolean condition,String message){if(!condition)throw new AssertionError(message);assertions++;}
 
@@ -45,6 +45,7 @@ final class DashAppearanceChecks {
                 dashboard.applyStyle();dashboard.appearance.start();
                 check(dashboard.appearance.synthwave(),"new appearance defaults to the requested Synthwave theme");
                 check(dashboard.appearance.brightness()==65&&dashboard.appearance.transparency()==25&&dashboard.appearance.intensity()==65,"default readability controls have bounded conservative values");
+                check(dashboard.appearance.glass(),"glass panels are enabled by default");
                 check(dashboard.appearance.mode().equals("static")&&dashboard.appearance.reduceMotion(),"static and Reduce motion are the default");
                 check(!dashboard.appearance.synth.isAnimating(),"default appearance does not schedule ambient animation");
                 check(dashboard.root.getBackground()==dashboard.appearance.synth,"wallpaper is attached behind the existing root");
@@ -71,6 +72,10 @@ final class DashAppearanceChecks {
                 check(dashboard.appearance.image==decoded[0],"changing opacity, brightness or neon does not decode another wallpaper");
                 check(centerAlpha(dashboard.appearance.panel(DashboardActivity.PANEL,18))<glassAlpha,"increasing panel transparency reduces the rendered fill opacity");
                 snapshot[0].verify(dashboard,zoom);
+                preferences.edit().putBoolean("appearance_glass",false).commit();dashboard.applyStyle();
+                check(!dashboard.appearance.glass()&&dashboard.appearance.image==decoded[0],"glass finish can be disabled without another wallpaper decode");
+                snapshot[0].verify(dashboard,zoom);
+                preferences.edit().putBoolean("appearance_glass",true).commit();dashboard.applyStyle();
 
                 preferences.edit().putString("appearance_animation","cinematic").putBoolean("appearance_reduce_motion",true).commit();
                 dashboard.applyStyle();
