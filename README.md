@@ -1,12 +1,13 @@
 > **Saga Dash personal edition** — Android Studio project for Windows, with eight lightweight
 > rendered car-image angles (NEXA), configurable native panels, layout editing and a Synthwave theme.
 > The old interactive mesh/original-video app modes have been removed.
-> [APK](dist/SagaDash-1.6.7-sagadash.3.apk?raw=true) · [Validation/performance](docs/PERFORMANCE.md).
+> [APK](dist/SagaDash-1.6.7-sagadash.4.apk?raw=true) · [Validation/performance](docs/PERFORMANCE.md).
 > Start with the [Windows guide](docs/WINDOWS_ANDROID_STUDIO_MS.md),
 > [signed APK/head-unit installation](docs/HEAD_UNIT_INSTALL_MS.md),
 > [panel/layout instructions](docs/DASHBOARD_CUSTOMIZATION_MS.md),
 > [Synthwave appearance](docs/SYNTHWAVE_MS.md) and
 > [current features/limits](docs/PERSONAL_EDITION.md).
+> **.4 adds a read-only [app-panel compatibility report](docs/APP_PANELS_MS.md), not app embedding.**
 > Package ID: `com.shazwan.sagadash`. The README below describes upstream KlikDash;
 > its release APKs are not this Saga Dash build. Physical TEST9278B testing is pending.
 

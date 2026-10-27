@@ -17,6 +17,14 @@ removed from the app. Optional **Transparent Saga video** and local video import
 video follows a recording, starts paused and is muted. No video MediaSession or audio-focus request
 is added, and the decoder is released when the panel/app is left.
 
+## App-panel compatibility (.4)
+
+Settings > **App panel compatibility** collects a read-only report on demand: Android API/ABI,
+display/features, existing host permissions and relevant app activity flags. Copy or screenshot it
+for device-specific review. No root commands, app launches, settings changes or automatic uploads
+are performed. This does **not** add embedding; declared PiP/freeform or opt-in flags alone do not
+establish a working host. See [the beginner guide](APP_PANELS_MS.md).
+
 ## Panels and editing
 
 - Left panel: Car preview, Navigation preview, YouTube controls, TizenTube controls, Media player or Radio controls.
@@ -133,8 +141,9 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The current **1.6.7-sagadash.3/code27** build passed
-**547 integration assertions**, including theme state/lifecycle and compact layout regressions.
+fixtures are separate from production data. The current **1.6.7-sagadash.4/code28** build passed
+**603 integration assertions**, including the read-only compatibility report, actual clipboard copy,
+theme state/lifecycle and compact layout regressions.
 See [performance and current validation status](PERFORMANCE.md).
 Physical head-unit checks—GPS, BT/radio metadata, steering keys, reverse camera, audio focus, sleep/wake
 and resource behavior—remain outstanding until that unit is tested.

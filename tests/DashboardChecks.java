@@ -19,6 +19,7 @@ public class DashboardChecks extends Instrumentation {
         try{
             assertions+=new TrustedClockChecks().run();
             assertions+=new DashShortcutsChecks().run(getTargetContext());
+            assertions+=new DashPanelCompatibilityChecks().run(getTargetContext());
             assertions+=new DashLayoutChecks().run(this);
             assertions+=new DashNavigationChecks().run();
             assertions+=new DashMediaChecks().run(this);
@@ -56,6 +57,7 @@ public class DashboardChecks extends Instrumentation {
                 check(absent,"removed launcher feature: "+removed);
             }
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            assertions+=new DashPanelCompatibilityChecks().runUi(this,dash[0]);
             assertions+=new DashAppsChecks().run(this,dash[0]);
             assertions+=new DashCustomizationChecks().run(this,dash[0]);
             assertions+=new DashAppearanceChecks().run(this,dash[0]);

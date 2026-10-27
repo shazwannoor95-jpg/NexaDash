@@ -22,6 +22,10 @@ baris. Butang Open, Choose app serta Previous/Play/Next dikekalkan supaya masih 
 Launcher Android biasa tidak boleh embed skrin penuh Maps/Waze/TizenTube sesuka hati. Panel ini
 menggunakan preview/kawalan native; app sebenar tetap menggunakan sumbernya sendiri apabila dibuka.
 
+Untuk permintaan **app asal terus dalam panel**, versi .4 menyediakan Settings >
+**App panel compatibility**. [Salin laporan head unit](APP_PANELS_MS.md) dahulu; fungsi ini
+belum menambah embedding dan tidak mengubah panel kawalan di atas.
+
 ## Paparan kereta ringan
 
 Default ialah **Saga image angles (lightweight)**: lapan imej sudut daripada rujukan Saga merah,

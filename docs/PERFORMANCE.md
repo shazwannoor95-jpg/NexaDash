@@ -1,12 +1,27 @@
 # Saga Dash resource measurements
 
-The current APK is `dist/SagaDash-1.6.7-sagadash.3.apk` (package `com.shazwan.sagadash`, code 27).
+The current APK is `dist/SagaDash-1.6.7-sagadash.4.apk` (package `com.shazwan.sagadash`, code 28).
 The car preview is eight image angles. Original video and live mesh classes/assets are removed.
 Default Static + Reduce motion has no background animation; Ambient/Cinematic are opt-in, capped at
 10fps and stopped while inactive. The wallpaper uses a bounded bitmap, without a custom GL renderer, blur or WebView.
 Optional video/map work starts only when selected.
 
-## Current validation (.3)
+## App-panel diagnostics (.4)
+
+The .4 update adds an on-demand, read-only **Settings > App panel compatibility** report. It does not
+implement app embedding, run root commands, change system settings or upload the report. Package/app
+inspection runs on the existing worker only when requested; no new idle polling, player or WebView
+is added. Declared PiP/freeform or activity-embedding flags are not proof that hosting will work.
+See [the head-unit report instructions](APP_PANELS_MS.md).
+
+Android Studio debug/release assembly and distributable signature verification passed. **603 integration
+assertions passed** on the Android 10/API29 software emulator, including API-gated manifest reporting,
+app discovery, no launches or assignment changes, cancelled/stale report handling, dialog coalescing
+and the actual Copy report clipboard action. No Android permission was added. The latest
+runtime measurement below belongs to **.3**, not a new .4 measurement or in-panel playback claim.
+Physical head-unit compatibility remains untested.
+
+## Validation checkpoint (.3)
 
 - Android Studio **debug and release assembly passed** with SDK 35/JDK 17, Gradle 8.9 and AGP 8.7.3.
 - The distributable APK signature is verified; package/version are `com.shazwan.sagadash`, code **27**.
@@ -22,7 +37,7 @@ Optional video/map work starts only when selected.
 - No new Android permissions, UI framework, runtime blur or custom GL renderer was added for the theme.
 - Physical TEST9278B behavior and total-device resource use remain unmeasured.
 
-## Current runtime (.3)
+## Latest measured runtime (.3)
 
 Measured on **2026-10-27** using the code27 APK: fresh normal process after instrumentation, 45-second
 warm-up, **Synthwave / Static / Reduce motion**, image angles, idle media, no map/GPS/media playback,
