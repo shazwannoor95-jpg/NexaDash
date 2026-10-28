@@ -1,3 +1,6 @@
+> **Separate native-panel experiment available:** [NexaDash .8 Native Lab APK/source/companion guide](https://github.com/shazwannoor95-jpg/klikdash/blob/nexadash-native-panel-experiment/docs/NATIVE_LAB_MS.md).
+> The Lab installs beside this standard .8 app. It adds cooperative native hosting with patched companions; it is not a stable universal app host or full in-panel Maps/Waze navigation.
+
 <p><img src="design/nexadash-mark.svg" width="96" alt="NexaDash orbit navigation logo"></p>
 
 > **NexaDash** — lightweight Android head-unit dashboard, derived from KlikDash.
