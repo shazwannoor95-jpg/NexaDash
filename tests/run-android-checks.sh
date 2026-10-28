@@ -30,5 +30,7 @@ adb -s "$DEVICE" install --no-incremental -r tools/optin-panel-probe/target/out/
 adb -s "$DEVICE" install --no-incremental -r build/klikdash.apk
 adb -s "$DEVICE" install --no-incremental -r "$TEST_BUILD/checks.apk"
 adb -s "$DEVICE" shell cmd notification allow_listener com.shazwan.nexadash.lab/com.shazwan.sagadash.DashMediaAccess
-adb -s "$DEVICE" shell am instrument -w com.shazwan.sagadash.checks/com.shazwan.sagadash.DashboardChecks | tee "$TEST_BUILD/result.txt"
+CHECK_ARGS=()
+if [ "${NATIVE_ONLY:-0}" = 1 ]; then CHECK_ARGS=(-e nativeOnly true); fi
+adb -s "$DEVICE" shell am instrument "${CHECK_ARGS[@]}" -w com.shazwan.sagadash.checks/com.shazwan.sagadash.DashboardChecks | tee "$TEST_BUILD/result.txt"
 rg -q '^PASS: [1-9][0-9]* assertions' "$TEST_BUILD/result.txt"

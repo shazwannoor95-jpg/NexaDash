@@ -1,10 +1,10 @@
 # NexaDash .8 Native Lab — install dan cuba
 
-**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native4 / code36**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
+**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native5 / code37**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
 
 ## Download
 
-- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native4.apk)
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native5.apk)
 - [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
 
 Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
@@ -21,7 +21,7 @@ APK V58 >100MB, jadi GitHub menyimpannya dalam tiga bahagian 90MB/90MB/baki pada
 
 ## Cara dalam panel kiri / kanan
 
-1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native4**.
+1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native5**.
 2. Tekan pilihan di penjuru atas panel kiri atau kanan → **Native app · experimental**.
 3. Tekan butang pilihan app dalam panel, pilih **YouTube V58 / TizenTube / Demo** yang sepadan dengan companion terpasang.
 4. Tekan **Start**. Tiada auto-launch pada load/resume. Startup dibatalkan selepas 60 saat jika companion/display tidak bersedia; tiada auto-retry. App native diharapkan muncul dalam permukaan panel; status error dipaparkan jika firmware/companion menolak.
@@ -74,3 +74,9 @@ YouTube shortcut opens official installed YouTube outside the dashboard. Long pr
 ## Native4: equal panels
 
 Removed the three upper-right shortcuts. Left/right panels now have equal width and height. First Native4 load resets only the two panel bounds (dock placement retained); users can edit again. Dock DSP becomes official YouTube; Car Link becomes DiAuto (launch only, no projection integration). No automatic DiAuto launch or testing. Uploaded Maps/Waze require API29; API27 needs compatible older ARM32 builds for normal external app launch.
+
+## Native5: panel aspect fit
+
+Native virtual-display raster follows the actual SurfaceView aspect ratio instead of stretching a fixed640x400 image. Longest edge capped at800 pixels; target logical density160. Display resize and touch mapping use the same current dimensions; explicit Start/resource cleanup remains. Apps can reconfigure/restart on size changes; their internal responsive layout and physical OEM behavior are not guaranteed. No DiAuto integration/execution. New Maps26.42 APK still requires API29; Waze5.9 incomplete archive skipped at owner request.
+
+Native5 focused native-panel integration: PASS16 on API29 x86_64, including real cross-UID touch/text, aspect fit, both panel positions and cleanup. Run via `DEVICE=emulator-5554 NATIVE_ONLY=1 tests/run-android-checks.sh` after sourcing Android environment. Physical TEST9278B and third-party app playback remain unverified.

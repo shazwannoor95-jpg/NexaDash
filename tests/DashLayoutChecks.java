@@ -42,9 +42,9 @@ final class DashLayoutChecks {
                 check(surface.isEditing()&&surface.onInterceptTouchEvent(down),"edit mode explicitly intercepts panel movement");down.recycle();
                 gesture(surface,100,100,200,150,false);measure(surface,1000,500);
                 RectF moved=surface.boundsFor("vehicle");
-                same(moved,new RectF(100,56,525.7f,457),"drag moves the whole panel without changing its size");
+                same(moved,new RectF(100,56,595,457),"drag moves the whole panel without changing its size");
                 check(!prefs.contains("panel_layout_v1_vehicle"),"dragging does not repeatedly write preferences");
-                gesture(surface,995,408,500,150,false);measure(surface,1000,500);
+                gesture(surface,995,402,500,150,false);measure(surface,1000,500);
                 RectF resized=surface.boundsFor("media");
                 check(close(resized.width(),260)&&close(resized.height(),200),"bottom right handle respects a usable minimum panel size");
                 check(close(resized.left,media.left)&&close(resized.top,media.top),"resizing anchors the panel's upper left corner");

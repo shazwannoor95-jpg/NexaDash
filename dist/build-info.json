@@ -1,16 +1,16 @@
 {
-  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native4.apk",
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native5.apk",
   "application_id": "com.shazwan.nexadash.lab",
-  "version_name": "1.6.7-nexadash.8-native4",
-  "version_code": 36,
+  "version_name": "1.6.7-nexadash.8-native5",
+  "version_code": 37,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5499791,
-  "sha256": "1e3ca14ac02a45e26fbb1d841f52e92ee2d0b1584068cb76d075f878e9b9ddd2",
+  "sha256": "ab1b3e8db5a42c9778e7d834832f9d679a816a48c625d8e40994ede3cc2ba4f1",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Native4: shell release, Gradle debug/release and test-source compilation checked. No connected-device runtime UI regression. Previous native1 708 assertions are historical.",
+  "validation": "Native5 shell release/Gradle debug+release pass; six fittedSize JVM cases pass; focused native integration PASS16 on API29 x86_64 (both panels, aspect/budget, actual cross-UID touch/text and cleanup); final rebuilt APK also passed focused16. Full suite failed after341 assertions at exact clipboard copy in compatibility-report UI. No full-suite or physical head-unit pass claimed.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -38,10 +38,7 @@
   "display_name": "NexaDash Native Lab",
   "navigation_routing": "Maps/Waze app handoff, or Maps website in browser when Maps is absent; no in-panel routing/voice engine.",
   "experimental_probe": "Separate tiny opted-in host/target APKs under dist/experimental; no system permissions/root/ADB required by the demo. Actual OEM behavior unverified.",
-  "native_display_size": [
-    640,
-    400
-  ],
+  "native_display_size": "Adaptive to measured SurfaceView aspect ratio; longest edge<=800 pixels, density160; same mapping for touch.",
   "native_feature_min_sdk": 26,
   "native_protocol_version": 1,
   "native_start": "Explicit Start only; no automatic native display/service/input worker on load or resume.",
@@ -69,5 +66,7 @@
   "footer": "Invisible after4sec inactivity, touch to reveal; fixed reserved height, no animations/polling; edit instructions stay visible.",
   "youtube_shortcut": "Launches installed official com.google.android.youtube outside dashboard; long press retains web/native companion choices.",
   "layout": "Equal default left/right panels; removed three upper-right shortcuts. One-time migration resets left/right bounds; dock position retained.",
-  "dock": "DSP replaced by official YouTube; Car Link replaced by DiAuto launch shortcut. No DiAuto integration, auto-launch or projection test."
+  "dock": "DSP replaced by official YouTube; Car Link replaced by DiAuto launch shortcut. No DiAuto integration, auto-launch or projection test.",
+  "native_fit_status": "Aspect-preserving host raster, not proof that third-party app UI reflows or navigation/playback works.",
+  "native_focused_assertions": 16
 }

@@ -11,12 +11,18 @@ import java.util.*;
 
 /** Device integration checks; synthetic provider data stays inside this test, never in production cache. */
 public class DashboardChecks extends Instrumentation {
-    int assertions;
+    int assertions;boolean nativeOnly;
     void check(boolean ok,String message){if(!ok)throw new AssertionError(message);assertions++;}
-    @Override public void onCreate(Bundle args){super.onCreate(args);start();}
+    @Override public void onCreate(Bundle args){super.onCreate(args);nativeOnly=args!=null&&"true".equals(args.getString("nativeOnly"));start();}
     @Override public void onStart(){
         Bundle result=new Bundle();MediaSession[] session=new MediaSession[1];DashboardActivity[] dash=new DashboardActivity[1];
         try{
+            if(nativeOnly){
+                dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                assertions+=new DashNativeChecks().run(this,dash[0]);
+                result.putString("stream","PASS: "+assertions+" assertions (focused native-panel display, aspect, input, cleanup)\n");
+                finish(Activity.RESULT_OK,result);return;
+            }
             assertions+=new TrustedClockChecks().run();
             assertions+=new DashShortcutsChecks().run(getTargetContext());
             assertions+=new DashPanelCompatibilityChecks().run(getTargetContext());

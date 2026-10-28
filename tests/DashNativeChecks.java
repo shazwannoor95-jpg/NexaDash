@@ -28,17 +28,21 @@ final class DashNativeChecks {
             check(actual==id,"separate companion Activity really runs on the requested native panel display");
             check(dash.getPackageManager().getApplicationInfo("com.shazwan.embedprobe.target",0).uid!=dash.getApplicationInfo().uid,"host and companion have different UIDs");
             await(i,()->frame[0].surface.getWidth()>0&&frame[0].surface.getHeight()>0,"native surface has measurable panel bounds");
+            check(Math.abs(frame[0].renderWidth/(double)frame[0].renderHeight-frame[0].surface.getWidth()/(double)frame[0].surface.getHeight())<.01,"native raster preserves the measured panel aspect ratio");
+            check(Math.max(frame[0].renderWidth,frame[0].renderHeight)<=800,"native raster longest edge is bounded to800 pixels");
             int before=query(bridge[0],2);final long down=SystemClock.uptimeMillis();
             for(int action:new int[]{MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP}){
-                i.runOnMainSync(()->{MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),action,frame[0].surface.getWidth()*300f/640,frame[0].surface.getHeight()*105f/400,0);event.setSource(InputDevice.SOURCE_TOUCHSCREEN);frame[0].surface.dispatchTouchEvent(event);event.recycle();});SystemClock.sleep(80);
+                i.runOnMainSync(()->{MotionEvent event=MotionEvent.obtain(down,SystemClock.uptimeMillis(),action,frame[0].surface.getWidth()*Math.min(300f,frame[0].renderWidth/2f)/frame[0].renderWidth,frame[0].surface.getHeight()*105f/frame[0].renderHeight,0);event.setSource(InputDevice.SOURCE_TOUCHSCREEN);frame[0].surface.dispatchTouchEvent(event);event.recycle();});SystemClock.sleep(80);
             }
             end=SystemClock.elapsedRealtime()+15000;int after=before;while(after==before&&SystemClock.elapsedRealtime()<end){after=query(bridge[0],2);if(after==before)SystemClock.sleep(100);}
             check(after==before+1,"panel-scaled native touch increments the separate companion's real UI counter");
             android.graphics.Bitmap snapshot=i.getUiAutomation().takeScreenshot();
             if(snapshot!=null){java.io.File image=new java.io.File(i.getTargetContext().getExternalFilesDir(null),"native-lab-demo-left.png");try(java.io.FileOutputStream out=new java.io.FileOutputStream(image)){snapshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}finally{snapshot.recycle();}}
-            final long textDown=SystemClock.uptimeMillis();
-            for(int action:new int[]{MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP}){i.runOnMainSync(()->{MotionEvent event=MotionEvent.obtain(textDown,SystemClock.uptimeMillis(),action,frame[0].surface.getWidth()*300f/640,frame[0].surface.getHeight()*161f/400,0);event.setSource(InputDevice.SOURCE_TOUCHSCREEN);frame[0].surface.dispatchTouchEvent(event);event.recycle();});SystemClock.sleep(80);}
             i.runOnMainSync(()->button(frame[0],"⋯").performClick());i.waitForIdleSync();
+            await(i,()->frame[0].display!=null&&frame[0].renderHeight>=1,"native display remains available after expanding input tools");
+            SystemClock.sleep(1000); // Allow the target Activity's configuration change before focusing its editor.
+            final long textDown=SystemClock.uptimeMillis();
+            for(int action:new int[]{MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP}){i.runOnMainSync(()->{MotionEvent event=MotionEvent.obtain(textDown,SystemClock.uptimeMillis(),action,frame[0].surface.getWidth()*Math.min(300f,frame[0].renderWidth/2f)/frame[0].renderWidth,frame[0].surface.getHeight()*161f/frame[0].renderHeight,0);event.setSource(InputDevice.SOURCE_TOUCHSCREEN);frame[0].surface.dispatchTouchEvent(event);event.recycle();});SystemClock.sleep(80);}
             i.runOnMainSync(()->{frame[0].entry.setText("Nexa native text");button(frame[0],"Send").performClick();});
             end=SystemClock.elapsedRealtime()+15000;String text="";while(!"Nexa native text".equals(text)&&SystemClock.elapsedRealtime()<end){text=queryText(bridge[0]);if(!"Nexa native text".equals(text))SystemClock.sleep(100);}
             check("Nexa native text".equals(text),"host text proxy commits into the focused EditText of the separate companion");

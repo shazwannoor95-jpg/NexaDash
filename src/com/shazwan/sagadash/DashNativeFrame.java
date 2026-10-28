@@ -14,7 +14,8 @@ import java.util.*;
 /** Explicit-start, cooperative native-app experiment. Never hosts arbitrary installed apps. */
 final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callback {
     static final String CONTROL="com.shazwan.embedprobe.permission.CONTROL",TOKEN="com.shazwan.embedprobe.CONTROL";
-    static final int WIDTH=640,HEIGHT=400;
+    static final int MAX_EDGE=800;
+    int renderWidth=640,renderHeight=400;
     static final class Target {
         final String label,pkg,activity,service;
         Target(String l,String p,String a,String s){label=l;pkg=p;activity=a;service=s;}
@@ -46,14 +47,14 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     DashNativeFrame(Activity owner){
         super(owner);this.owner=owner;setOrientation(VERTICAL);
         int pad=Math.max(3,Math.round(4*owner.getResources().getDisplayMetrics().density));
-        status=new TextView(owner);status.setTextSize(11);status.setTextColor(0xffdcefff);status.setMaxLines(3);
+        status=new TextView(owner);status.setTextSize(11);status.setTextColor(0xffdcefff);status.setMaxLines(2);status.setEllipsize(android.text.TextUtils.TruncateAt.END);
         status.setText("Native app lab · install the matching patched companion, then Start. No autoplay.");addView(status,new LayoutParams(-1,-2));
         LinearLayout toolbar=new LinearLayout(owner);
         choose=button("YouTube V58",()->new AlertDialog.Builder(owner).setTitle("Native panel companion")
             .setItems(new String[]{TARGETS[0].label,TARGETS[1].label,TARGETS[2].label},(d,index)->select(index)).setNegativeButton("Cancel",null).show());
         start=button("Start",this::start);stop=button("Stop",this::stop);
         toolbar.addView(choose,new LayoutParams(0,-2,2));toolbar.addView(start,new LayoutParams(0,-2,1));toolbar.addView(stop,new LayoutParams(0,-2,1));addView(toolbar,new LayoutParams(-1,-2));
-        surface=new SurfaceView(owner);surface.setContentDescription("Cooperative native app surface");surface.getHolder().setFixedSize(WIDTH,HEIGHT);surface.getHolder().addCallback(this);
+        surface=new SurfaceView(owner);surface.setContentDescription("Cooperative native app surface");surface.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->fitSurface(r-l,b-t));surface.getHolder().addCallback(this);
         addView(surface,new LayoutParams(-1,0,1));surface.setOnTouchListener((view,event)->{forward(event);return true;});
         LinearLayout tools=new LinearLayout(owner);tools.setOrientation(VERTICAL);tools.setVisibility(GONE);
         Button more=button("⋯",()->tools.setVisibility(tools.getVisibility()==VISIBLE?GONE:VISIBLE));more.setContentDescription("Show native panel input/setup tools");toolbar.addView(more,new LayoutParams(-2,-2));
@@ -64,6 +65,22 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         LinearLayout typing=new LinearLayout(owner);entry=new EditText(owner);entry.setSingleLine(true);entry.setTextSize(12);entry.setHint("Tap text field in app, type here");entry.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(240)});
         typing.addView(entry,new LayoutParams(0,-2,1));typing.addView(button("Send",()->command(5,entry.getText().toString())),new LayoutParams(-2,-2));tools.addView(typing,new LayoutParams(-1,-2));addView(tools,new LayoutParams(-1,-2));
         setPadding(pad,pad,pad,pad);HOSTS.put(token,new WeakReference<>(this));
+    }
+    /** Preserve the measured panel aspect ratio, with a bounded raster and usable logical UI. */
+    static int[] fittedSize(int width,int height){
+        width=Math.max(1,width);height=Math.max(1,height);
+        double factor=Math.min(MAX_EDGE/(double)Math.max(width,height),Math.max(1,320.0/Math.min(width,height)));
+        return new int[]{Math.max(1,(int)Math.round(width*factor)),Math.max(1,(int)Math.round(height*factor))};
+    }
+    private void fitSurface(int width,int height){
+        if(width<=0||height<=0||closed)return;
+        int[] size=fittedSize(width,height);
+        if(size[0]==renderWidth&&size[1]==renderHeight)return;
+        renderWidth=size[0];renderHeight=size[1];
+        try{
+            surface.getHolder().setFixedSize(renderWidth,renderHeight);
+            if(display!=null)display.resize(renderWidth,renderHeight,160);
+        }catch(RuntimeException failure){fail("Native resize failed. Press Start to retry.");}
     }
     private Button button(String label,Runnable run){Button b=new Button(owner);b.setText(label);b.setTextSize(11);int touch=Math.round(32*owner.getResources().getDisplayMetrics().density);b.setMinHeight(touch);b.setMinimumHeight(touch);b.setMinWidth(touch);b.setMinimumWidth(touch);b.setPadding(4,2,4,2);b.setOnClickListener(v->run.run());return b;}
     void select(int index){stop();target=TARGETS[Math.max(0,Math.min(TARGETS.length-1,index))];choose.setText(index==0?"YouTube V58":index==1?"TizenTube":"Demo");note("Selected "+target.label+". Start when its matching companion is installed.");}
@@ -94,13 +111,15 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     private void launchIfReady(){
         if(!wanted||!protocolVerified||remote==null||display!=null||!surface.getHolder().getSurface().isValid()||closed)return;
         try{
+            fitSurface(surface.getWidth(),surface.getHeight());
+            if(!wanted)return; // A failed resize already stopped and cleaned up this run.
             DisplayManager manager=(DisplayManager)owner.getSystemService(Context.DISPLAY_SERVICE);
-            display=manager.createVirtualDisplay("NexaDash native lab",WIDTH,HEIGHT,160,surface.getHolder().getSurface(),DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY);
+            display=manager.createVirtualDisplay("NexaDash native lab",renderWidth,renderHeight,160,surface.getHolder().getSurface(),DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY);
             if(display==null)throw new IllegalStateException("No virtual display");
             int id=display.getDisplay().getDisplayId();proxyLaunched=true;main.removeCallbacks(startupTimeout);
             owner.startActivity(new Intent(owner,DashNativeProxy.class).putExtra("native_token",token).putExtra("native_display",id)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK),ActivityOptions.makeBasic().setLaunchDisplayId(id).toBundle());
-            note("Native "+target.label+" · requested display "+id+". Setup/dialog/keyboard support is experimental.");
+            status.setMaxLines(1);note("Native "+target.label+" · requested display "+id+". Setup/dialog/keyboard support is experimental.");
         }catch(RuntimeException failure){fail("Display launch failed: "+failure.getClass().getSimpleName());}
     }
     void launchTarget(Activity proxy,int id){
@@ -114,7 +133,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         synchronized(events){
             if(events.size()>8&&event.getActionMasked()==MotionEvent.ACTION_MOVE)return;
             if(events.size()>=32){for(MotionEvent queued:events)queued.recycle();events.clear();MotionEvent cancel=MotionEvent.obtain(event);cancel.setAction(MotionEvent.ACTION_CANCEL);events.add(cancel);}
-            MotionEvent copy=MotionEvent.obtain(event);Matrix scale=new Matrix();scale.setScale(WIDTH/(float)Math.max(1,surface.getWidth()),HEIGHT/(float)Math.max(1,surface.getHeight()));copy.transform(scale);events.add(copy);
+            MotionEvent copy=MotionEvent.obtain(event);Matrix scale=new Matrix();scale.setScale(renderWidth/(float)Math.max(1,surface.getWidth()),renderHeight/(float)Math.max(1,surface.getHeight()));copy.transform(scale);events.add(copy);
         }
         input.removeCallbacks(drain);input.post(drain);
     }
@@ -140,7 +159,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         synchronized(events){for(MotionEvent event:events)event.recycle();events.clear();}
         if(input!=null)input.removeCallbacksAndMessages(null);input=null;
         if(inputThread!=null)inputThread.quit();inputThread=null;
-        note("Stopped · no native display or input worker active. Press Start to reopen.");
+        status.setMaxLines(2);note("Stopped · no native display or input worker active. Press Start to reopen.");
     }
     void resume(){active=true;}
     void pause(){active=false;stop();}

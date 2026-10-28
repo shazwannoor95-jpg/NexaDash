@@ -1,8 +1,10 @@
+Native5: cooperative native display follows actual panel aspect ratio (800px longest-edge cap); touch mapping uses current raster size. Demo has prior emulator coverage; V58 lifecycle/playback and ARM TizenTube remain experimental. No native navigation companion delivered.
+
 Native4: equal left/right panels; upper-right shortcut row removed. Bottom dock: official YouTube replaces DSP; DiAuto replaces Car Link (launch shortcut only). No DiAuto integration or execution performed.
 
 Native3: official YouTube app shortcut; footer auto-hides after four seconds and reappears on dashboard touch. Maps/Waze still open outside the dashboard.
 
-Native Lab current build: **1.6.7-nexadash.8-native4**. YouTube web now collapses search/help while browsing and uses compact controls. Builds and test-source compilation checked; native2 runtime/head-unit playback pending. [Download / setup](docs/NATIVE_LAB_MS.md).
+Native Lab current build: **1.6.7-nexadash.8-native5**. YouTube web now collapses search/help while browsing and uses compact controls. Builds and test-source compilation checked; native2 runtime/head-unit playback pending. [Download / setup](docs/NATIVE_LAB_MS.md).
 
 > **Experimental branch: NexaDash .8 Native Lab**, application ID `com.shazwan.nexadash.lab`.
 > Installs beside the standard .8 app. [Lab APK](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk?raw=true) · [Install/Android Studio/companion guide](docs/NATIVE_LAB_MS.md).
