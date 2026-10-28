@@ -1,0 +1,27 @@
+{
+  "file": "YouTube-V58-native1.apk",
+  "package": "com.gold.android.youtube",
+  "version": "21.26.364",
+  "min_sdk": 29,
+  "size_bytes": 223382323,
+  "sha256": "db26c77ff9e470caddc36ec919008b748852106d0f329dba2652ba380f20567f",
+  "parts": [
+    {
+      "file": "YouTube-V58-native1.apk.part1",
+      "bytes": 94371840,
+      "sha256": "0f4fa1b2bdc52d28d486ff23d3158bedc2de2c418777dbd351dd39187b7963d6"
+    },
+    {
+      "file": "YouTube-V58-native1.apk.part2",
+      "bytes": 94371840,
+      "sha256": "ea1832062b307d52b3a9bd34b0a40829698bac16c32810b108cb980e299fdd4a"
+    },
+    {
+      "file": "YouTube-V58-native1.apk.part3",
+      "bytes": 34638643,
+      "sha256": "40decf941855db201487771ba3b3dd99f49e562dfe725d6b620e32ffdf4ef4e6"
+    }
+  ],
+  "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
+  "status": "Experimental cooperative companion; not a video-playback or physical API27 compatibility certification."
+}
