@@ -1,12 +1,24 @@
 # Saga Dash resource measurements
 
-The current APK is `dist/SagaDash-1.6.7-sagadash.5.apk` (package `com.shazwan.sagadash`, code 29).
+The current APK is `dist/SagaDash-1.6.7-sagadash.6.apk` (package `com.shazwan.sagadash`, code 30).
 The car preview is eight image angles. Original video and live mesh classes/assets are removed.
 Default Static + Reduce motion has no background animation; Ambient/Cinematic are opt-in, capped at
 10fps and stopped while inactive. The wallpaper uses a bounded bitmap, without a custom GL renderer, blur or WebView.
 Optional video/map work starts only when selected.
 
-## Glass panels and icon drawer (.5)
+## Settings grid and version identification (.6)
+
+Settings uses recycled native cells and shared system icons, with no new worker, bitmap cache,
+network access, renderer or polling. All earlier action indices are retained. Footer/drawer versions
+are read from the installed package once and cached, not queried every tick. Drawer/adapter references
+are released on close/pause. Apps retains the existing bounded .5 icon cache. No new Android permission
+is added. Android Studio debug/release assembly and APK signature verification passed. **653 integration
+assertions passed** on the Android10/API29 emulator, including stable settings action routing,
+closing/pausing, repeated menu taps, version labels and About status.
+Original-app panel hosting remains unimplemented; no playback or physical-head-unit
+performance measurement is claimed for this build.
+
+## Glass panels and icon drawer checkpoint (.5)
 
 The panel geometry and existing feature state are retained. Glass is a static fill gradient and
 rim reflection, without live blur, a new bitmap, decoder or animation loop. It can be disabled in

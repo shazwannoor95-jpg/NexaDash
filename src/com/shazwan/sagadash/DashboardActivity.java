@@ -43,6 +43,9 @@ public class DashboardActivity extends Activity implements LocationListener {
     int appsGeneration;
     AlertDialog appsDialog;
     DashAppGrid appsGrid;
+    AlertDialog settingsDialog,aboutDialog;
+    DashSettingsGrid settingsGrid;
+    private String installedVersion;
     final Rect editSurfaceBounds=new Rect(),editDockBounds=new Rect();
     String dockBeforeEdit="";
     final float[] dockSizesBefore=new float[8];
@@ -141,7 +144,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
         layoutSurface.addPanel("shortcuts",shortcuts);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
-        footerText=text("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION",14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
+        footerText=text(footerLabel(),14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
         footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));applyStyle();
     }
     float unit(){return scale*getResources().getDisplayMetrics().density;}
@@ -224,7 +227,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void finishEditing(boolean save){
         if(editMode==0)return;if(layoutSurface.isEditing()){if(save)layoutSurface.setEditing(false);else layoutSurface.cancelEditing();}
         if(!save){android.content.SharedPreferences.Editor restore=dashPrefs().edit().putString("dock_order",dockBeforeEdit);for(int n=0;n<DOCK_NAMES.length;n++)restore.putFloat("dock_icon_scale_"+DOCK_NAMES[n],dockSizesBefore[n]);restore.apply();}
-        editMode=0;buildDock();editButton.setText("Edit layout");footerText.setText("Vehicle settings                                          SAGA DASH  /  PERSONAL EDITION");leftPane.resume();rightPane.resume();updateVehicleResources();
+        editMode=0;buildDock();editButton.setText("Edit layout");footerText.setText(footerLabel());leftPane.resume();rightPane.resume();updateVehicleResources();
     }
     void applyStyle(){
         if(appearance==null||root==null)return;root.setBackground(appearance.backdrop());appearance.refresh();
@@ -357,8 +360,41 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     String appName(String pkg){try{return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg,0)).toString();}catch(Exception e){return pkg;}}
     void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Open Radio");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
-    void settings(){closeApps();String[] items={"Prayer zone & timetable","Enable media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility"};new AlertDialog.Builder(this).setTitle("Dashboard settings").setItems(items,(d,i)->{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:if(panelCompatibility==null)panelCompatibility=new DashPanelCompatibility();panelCompatibility.show(this,io);break;}}).show();}
+    String versionName(){
+        if(installedVersion==null)try{installedVersion=getPackageManager().getPackageInfo(getPackageName(),0).versionName;}
+        catch(PackageManager.NameNotFoundException ignored){installedVersion="unknown";}
+        return installedVersion;
+    }
+    String footerLabel(){return "Vehicle settings     ·     Saga Dash v"+versionName();}
+    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About Saga Dash"};}
+    void settings(){
+        closeApps();
+        if(!visible||isFinishing()||isDestroyed()||(settingsDialog!=null&&settingsDialog.isShowing()))return;
+        DashSettingsGrid grid=new DashSettingsGrid(this,appearance,settingsLabels(),index->{closeSettings();settingsAction(index);});
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Dashboard settings · v"+versionName())
+            .setView(grid).setNegativeButton("Close",null).create();
+        settingsDialog=dialog;settingsGrid=grid;
+        dialog.setOnDismissListener(d->{grid.close();if(settingsDialog==dialog)settingsDialog=null;if(settingsGrid==grid)settingsGrid=null;});dialog.show();
+        Window window=dialog.getWindow();
+        if(window!=null){window.setBackgroundDrawable(new DashPanelDrawable(0xee0b1c2b,appearance.accent(),px(24),appearance.neon(),appearance.strength(),appearance.glass()));
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);window.setDimAmount(.35f);
+            android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();window.setLayout(Math.round(metrics.widthPixels*.96f),Math.round(metrics.heightPixels*.88f));}
+    }
+    void closeSettings(){if(settingsGrid!=null){settingsGrid.close();settingsGrid=null;}if(settingsDialog!=null){settingsDialog.dismiss();settingsDialog=null;}}
+    void showPanelCompatibility(){if(panelCompatibility==null)panelCompatibility=new DashPanelCompatibility();panelCompatibility.show(this,io);}
+    void settingsAction(int i){
+        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;}}
+        catch(ActivityNotFoundException|SecurityException unavailable){toast("This setting is unavailable on this device");}
+    }
+    void showAbout(){
+        if(aboutDialog!=null&&aboutDialog.isShowing())return;
+        aboutDialog=new AlertDialog.Builder(this).setTitle("About Saga Dash")
+            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nSource panels currently provide media controls and a native map preview; original app UI hosting is not implemented.")
+            .setPositiveButton("Close",null).create();
+        final AlertDialog shown=aboutDialog;shown.setOnDismissListener(d->{if(aboutDialog==shown)aboutDialog=null;});shown.show();
+    }
     void apps(){
+        closeSettings();
         if(!visible||isFinishing()||isDestroyed()||appsLoading||(appsDialog!=null&&appsDialog.isShowing()))return;
         appsLoading=true;final int generation=++appsGeneration;
         io.execute(()->{
@@ -370,7 +406,7 @@ public class DashboardActivity extends Activity implements LocationListener {
                 if(generation!=appsGeneration||!visible||isFinishing()||isDestroyed())return;
                 if(list==null){toast("Unable to load installed apps");return;}
                 DashAppGrid grid=new DashAppGrid(this,list,io,appearance);
-                AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Apps · "+list.size())
+                AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Apps · "+list.size()+" · v"+versionName())
                     .setView(grid).setNegativeButton("Close",null).create();
                 grid.setOnItemClickListener((parent,view,position,id)->{
                     if(position>=0&&position<list.size()){
@@ -484,7 +520,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
     @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
-    @Override protected void onPause(){visible=false;closeApps();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
-    @Override protected void onDestroy(){if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onPause(){visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
+    @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }

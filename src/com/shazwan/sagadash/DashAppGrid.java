@@ -52,9 +52,10 @@ final class DashAppGrid extends GridView implements AutoCloseable {
         setContentDescription("Installed apps icon grid");
     }
     static int columnsFor(int width,float density){return Math.max(1,Math.min(6,(int)(width/Math.max(1,160*density))));}
-    @Override protected void onSizeChanged(int w,int h,int oldw,int oldh){
-        super.onSizeChanged(w,h,oldw,oldh);int columns=columnsFor(w-getPaddingLeft()-getPaddingRight(),getResources().getDisplayMetrics().density);
+    @Override protected void onMeasure(int widthSpec,int heightSpec){
+        int columns=columnsFor(MeasureSpec.getSize(widthSpec)-getPaddingLeft()-getPaddingRight(),getResources().getDisplayMetrics().density);
         if(columns!=getNumColumns())setNumColumns(columns);
+        super.onMeasure(widthSpec,heightSpec);
     }
     private int dp(float value){return Math.max(1,Math.round(value*getResources().getDisplayMetrics().density));}
     private String key(DashShortcuts.App app){return app.component.flattenToString();}

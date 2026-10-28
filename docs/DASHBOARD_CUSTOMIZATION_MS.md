@@ -3,6 +3,14 @@
 Pilihan native yang ringan digunakan: tiada WebView dan tiada skrin app pihak ketiga yang dipaksa
 embed. Susunan asal ialah default. Tema Synthwave bermula dengan latar statik dan Reduce motion hidup.
 
+## Semak versi dan Settings (.6)
+
+Footer, Apps dan Dashboard settings kini menunjukkan nombor versi. **Settings** membuka grid ikon
+yang mengekalkan semua tindakan terdahulu, dengan tile **About Saga Dash** untuk versi dan status
+fungsi. Menu lebih mendalam seperti pilihan zon/Appearance masih menggunakan kawalan native yang
+sesuai. Jika Apps masih bertajuk “Installed apps” dan berbentuk senarai, kod sebelum .5 sedang
+berjalan; [buka source ZIP baharu di Android Studio](CORRECT_BUILD_MS.md).
+
 ## Panel kaca dan Apps (.5)
 
 Susunan dashboard dikekalkan. Settings > Appearance > **Glass panels** menghidupkan kemasan kaca

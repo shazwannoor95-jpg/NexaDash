@@ -59,6 +59,7 @@ public class DashboardChecks extends Instrumentation {
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             assertions+=new DashPanelCompatibilityChecks().runUi(this,dash[0]);
             assertions+=new DashAppsChecks().run(this,dash[0]);
+            assertions+=new DashSettingsGridChecks().run(this,dash[0]);
             assertions+=new DashCustomizationChecks().run(this,dash[0]);
             assertions+=new DashAppearanceChecks().run(this,dash[0]);
             assertions+=new SagaShowroomChecks().run(this,dash[0]);

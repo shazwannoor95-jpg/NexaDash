@@ -17,6 +17,14 @@ removed from the app. Optional **Transparent Saga video** and local video import
 video follows a recording, starts paused and is muted. No video MediaSession or audio-focus request
 is added, and the decoder is released when the panel/app is left.
 
+## Version identification and Settings grid (.6)
+
+Dashboard settings uses a native icon grid with the same fourteen actions, plus About Saga Dash.
+Footer and both drawer titles show the installed package version. The native system icons add no
+package scan, icon worker or cache. Closing/pausing releases the settings drawer. Opening an unavailable
+OEM settings action reports the unavailable state rather than crashing. This does not add app hosting.
+See [the fresh-project troubleshooting steps](CORRECT_BUILD_MS.md).
+
 ## Glass panels and Apps grid (.5)
 
 Existing panel positions, wallpaper, prayer strip, car view and source choices remain unchanged.
@@ -154,8 +162,8 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The current **1.6.7-sagadash.5/code29** build passed
-**626 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
+fixtures are separate from production data. The current **1.6.7-sagadash.6/code30** build passed
+**653 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
 the read-only compatibility report, actual clipboard copy,
 theme state/lifecycle and compact layout regressions.
 See [performance and current validation status](PERFORMANCE.md).

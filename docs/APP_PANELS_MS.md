@@ -71,3 +71,15 @@ RAM untuk dashboard bersama YouTube/TizenTube/Maps atau dua app aktif. Lihat
 
 Selepas laporan head unit diperoleh, barulah laluan app asal boleh dipilih dan diuji. Jangan anggap
 APK .4 sudah melaksanakan embedding atau menjamin kelancaran pada head unit sebenar.
+
+## Alternatif tanpa ADB
+
+PiP boleh dicuba pada app yang menyokongnya: Android Settings > Apps > Special app access >
+Picture-in-picture > YouTube/Maps > Allow. Untuk YouTube, mainkan video kemudian tekan Home dan
+buka Saga Dash. Kelayakan akaun/region/video dan firmware masih menentukan sama ada tingkap muncul.
+Maps memerlukan navigasi aktif untuk mod PiP. Laporan unit mengisytiharkan PiP, dan activity YouTube
+serta Maps mempunyai flag PiP, tetapi laluan ini belum diuji pada unit fizikal oleh pembangun.
+
+Android8.1 biasanya menyediakan satu tingkap PiP sistem yang boleh dialihkan, bukan dua app yang
+dikunci ke panel. Radio FM OEM dalam laporan tidak mengisytiharkan PiP. Player native/web terbina
+dalam ialah pilihan pembangunan berasingan, bukan paparan app asal; ia belum ditambah dalam .6.

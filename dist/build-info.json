@@ -1,16 +1,16 @@
 {
-  "file": "SagaDash-1.6.7-sagadash.5.apk",
+  "file": "SagaDash-1.6.7-sagadash.6.apk",
   "application_id": "com.shazwan.sagadash",
-  "version_name": "1.6.7-sagadash.5",
-  "version_code": 29,
+  "version_name": "1.6.7-sagadash.6",
+  "version_code": 30,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5479311,
-  "sha256": "333f7b601e83510861f0e10b77964347b9600a5d64f5b7fad6100a3eab7810eb",
+  "sha256": "e76a2fc216b6e026f876ea36281214fa8c30edaae7b054aa6baad66449a858f7",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Android Studio debug/release assembly and signed APK verified; 626 assertions passed on Android10/API29 x86_64 software emulator, including icon raster/cache release, grid discovery, glass theme state preservation and existing dashboard checks.",
+  "validation": "Android Studio debug/release assembly and signed APK verification passed; 653 assertions passed on Android10/API29 x86_64 software emulation, including first-pass grid columns, native settings action routing, lifecycle, version labels/About and existing dashboard checks.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -24,12 +24,12 @@
     "version_name": "1.6.7-sagadash.3",
     "limitation": "Prior idle-dashboard measurement; no new .4 playback or hosting benchmark."
   },
-  "app_panel_status": "Static glass finish and native installed-app icon grid; original third-party app UI embedding remains unimplemented.",
+  "app_panel_status": "Apps and Dashboard settings use native icon grids with installed-build labels. Original third-party app UI hosting remains unimplemented. External PiP is app/account/firmware-dependent and not an in-panel host.",
   "glass_panels_default": true,
   "icon_cache_limit_bytes": 1048576,
   "icon_raster_max_pixels": [
     96,
     96
   ],
-  "integration_assertions": 626
+  "integration_assertions": 653
 }

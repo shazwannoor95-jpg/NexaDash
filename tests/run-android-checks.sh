@@ -17,7 +17,7 @@ cat > "$TEST_BUILD/AndroidManifest.xml" <<'MANIFEST'
 </manifest>
 MANIFEST
 "$BT/aapt2" link -o "$TEST_BUILD/base.apk" -I "$JAR" --manifest "$TEST_BUILD/AndroidManifest.xml"
-javac --release 8 -encoding UTF-8 -classpath "$JAR:build/classes" -d "$TEST_BUILD/classes" tests/DashboardChecks.java tests/PrayerGpsChecks.java tests/SagaAngleChecks.java tests/TrustedClockChecks.java tests/DashShortcutsChecks.java tests/SagaShowroomChecks.java tests/SagaFrameNoticeChecks.java tests/DashAppearanceChecks.java tests/DashLayoutChecks.java tests/DashNavigationChecks.java tests/DashCustomizationChecks.java tests/DashMediaChecks.java tests/DashAppsChecks.java tests/DashPanelCompatibilityChecks.java
+javac --release 8 -encoding UTF-8 -classpath "$JAR:build/classes" -d "$TEST_BUILD/classes" tests/DashboardChecks.java tests/PrayerGpsChecks.java tests/SagaAngleChecks.java tests/TrustedClockChecks.java tests/DashShortcutsChecks.java tests/SagaShowroomChecks.java tests/SagaFrameNoticeChecks.java tests/DashAppearanceChecks.java tests/DashLayoutChecks.java tests/DashNavigationChecks.java tests/DashCustomizationChecks.java tests/DashMediaChecks.java tests/DashAppsChecks.java tests/DashPanelCompatibilityChecks.java tests/DashSettingsGridChecks.java
 "$BT/d8" --min-api 24 --lib "$JAR" --classpath build/classes --output "$TEST_BUILD/dex" "$TEST_BUILD/classes/com/shazwan/sagadash/"*.class
 (cd "$TEST_BUILD/dex" && zip -q "$TEST_BUILD/base.apk" classes.dex)
 "$BT/zipalign" -f 4 "$TEST_BUILD/base.apk" "$TEST_BUILD/aligned.apk"

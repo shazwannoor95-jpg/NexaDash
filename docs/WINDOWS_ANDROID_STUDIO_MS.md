@@ -14,12 +14,15 @@ Java boleh diuruskan dalam Android Studio; tidak perlu memasang Java secara bera
 
 ## 2. Buka projek terkini
 
+Jika Apps masih menunjukkan senarai “Installed apps”, ikut [langkah folder baharu dan semak versi](CORRECT_BUILD_MS.md).
+Versi .6 menunjukkan nombor build pada footer dan tajuk menu; Apps serta Dashboard settings ialah grid ikon.
+
 Untuk update ini, gunakan folder projek **baharu**. Copy/replace fail ke folder lama boleh meninggalkan
 kelas/asset model yang sudah dibuang. Folder lama boleh disimpan sebagai backup.
 
 1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
-2. Klik **Code > Download ZIP**. Branch main lama bukan projek lengkap versi ini.
-3. File Explorer > klik kanan ZIP > **Extract All** ke contoh `C:\Projects\SagaDash-current`.
+2. Klik **Code > Download ZIP**, atau [download ZIP branch ini terus](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
+3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\SagaDash-v6`.
 4. Cari folder yang terus mengandungi `settings.gradle`, `build.gradle`, `gradlew.bat` dan `app`.
    ZIP kadang-kadang mempunyai satu folder tambahan di dalamnya; pilih folder dalaman itu.
 5. Android Studio > **File > Open** > pilih folder tadi, kemudian **This Window** jika diminta.
@@ -51,6 +54,8 @@ jangan upgrade/migrate secara automatik semasa mengikuti panduan ini.
 
 ## 4. Buat emulator
 
+Kalau emulator API31 atau API32 kau sudah berfungsi, terus guna emulator itu; tak perlu buat semula.
+
 1. **Tools > Device Manager > Create Virtual Device**.
 2. Pilih **Pixel 5 > Next**. Model Pixel baharu mungkin mengehadkan pilihan Android lama.
 3. Pilih **API 31 “S” — Android 12.0**, Services **Google APIs**, image **x86_64** untuk Intel/AMD.
@@ -67,7 +72,8 @@ Hypervisor Platform mungkin perlu diaktifkan pada komputer itu.
 1. Pada bar atas, pilih konfigurasi **app** dan emulator yang hidup.
 2. Klik ▶ hijau. Tunggu build dan install selesai.
 3. Jika paparan mengiring, guna ikon Rotate pada toolbar emulator untuk menjadikannya landscape.
-4. Semak Home, Apps, Settings, pilihan panel dan Edit layout.
+4. Sahkan footer menunjukkan **1.6.7-sagadash.6**. Apps dan Dashboard settings patut menunjukkan grid ikon.
+   Semak Home, pilihan panel dan Edit layout.
 5. Settings > Appearance: cuba Original/Synthwave. Default Static + Reduce motion tidak menganimasikan
    latar; susunan dan tindakan butang kekal. Lihat [panduan tema](SYNTHWAVE_MS.md).
 
