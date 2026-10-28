@@ -1,16 +1,16 @@
 {
-  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk",
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native2.apk",
   "application_id": "com.shazwan.nexadash.lab",
-  "version_name": "1.6.7-nexadash.8-native1",
-  "version_code": 33,
+  "version_name": "1.6.7-nexadash.8-native2",
+  "version_code": 34,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5499791,
-  "sha256": "281f465459624ee4d7729b8f6433b825ee8170439688c784f686f0c708155d4d",
+  "sha256": "3d64b8e2c44ec133fc7033458bff22a33dbd1eaccefe0510bee7af03eb9d3f60",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "708 integration assertions passed on API29 x86_64 emulator, including real cross-UID display/input/text proxy in dashboard panels and cleanup. Shell + Gradle app debug/release/panelprobe assembly and debug re-sign task passed; APK signatures/alignment/CRC verified.",
+  "validation": "Native2: shell release and Gradle debug/release builds; integration test sources compile. No connected emulator/device available for runtime regression. Previous native1 passed708 integration assertions; those results are historical.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -31,7 +31,7 @@
     96,
     96
   ],
-  "integration_assertions": 708,
+  "integration_assertions": null,
   "youtube_live_streaming_status": "Not verified: execution network blocks YouTube (CONNECT tunnel403). Actual local HTML5 video playback is tested; head-unit WebView/network/account compatibility remains untested.",
   "default_webview": "Not created in the default dashboard, or on resuming a saved web panel until Start is tapped.",
   "active_inline_player_limit": 1,
@@ -64,5 +64,6 @@
     "branch": "nexadash-native-companions",
     "status": "Static validation only; ARM hardware rendering/playback not verified."
   },
-  "native_startup_timeout_ms": 60000
+  "native_startup_timeout_ms": 60000,
+  "web_panel_fit": "Search/help rows collapse on open; Search toggles them back. 32dp controls; WebView text zoom100 and fitted viewport. Physical YouTube playback remains unverified."
 }

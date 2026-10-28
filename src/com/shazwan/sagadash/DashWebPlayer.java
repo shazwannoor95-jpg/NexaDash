@@ -32,15 +32,15 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
         query.setTextSize(13);query.setTextColor(DashboardActivity.TEXT);query.setHintTextColor(DashboardActivity.MUTED);
         query.setHint("YouTube link or search");query.setImeOptions(EditorInfo.IME_ACTION_GO);
         query.setOnEditorActionListener((v,action,event)->{if(action==EditorInfo.IME_ACTION_GO){open(query.getText().toString());return true;}return false;});
-        search.addView(query,new LayoutParams(0,dp(42),1));search.addView(button("Go",()->open(query.getText().toString())),new LayoutParams(dp(44),dp(42)));addView(search);
+        search.addView(query,new LayoutParams(0,dp(32),1));search.addView(button("Go",()->open(query.getText().toString())),new LayoutParams(dp(44),dp(32)));addView(search);
         body=new FrameLayout(activity);body.setBackgroundColor(Color.BLACK);addView(body,new LayoutParams(-1,0,1));
         start=button("Start YouTube web\nPlays here · Internet required",()->open(query.getText().toString()));start.setTextSize(14);body.addView(start,new FrameLayout.LayoutParams(-1,-1));
         status=new TextView(activity);status.setTextSize(11);status.setTextColor(DashboardActivity.MUTED);status.setText("Website player · tap video to play");status.setMaxLines(2);addView(status,new LayoutParams(-1,-2));
         LinearLayout controls=new LinearLayout(activity);
-        controls.addView(button("Back",()->{if(web!=null&&web.canGoBack())web.goBack();}),new LayoutParams(0,dp(35),1));
-        controls.addView(button("Search",()->{boolean show=searchRow.getVisibility()!=VISIBLE;searchRow.setVisibility(show?VISIBLE:GONE);status.setVisibility(show?VISIBLE:GONE);}),new LayoutParams(0,dp(35),1));
-        controls.addView(button("Home",()->open("")),new LayoutParams(0,dp(35),1));
-        controls.addView(button("Stop",()->{releaseWeb();status.setText("Stopped · tap Start to load again");}),new LayoutParams(0,dp(35),1));addView(controls);
+        controls.addView(button("Back",()->{if(web!=null&&web.canGoBack())web.goBack();}),new LayoutParams(0,dp(32),1));
+        controls.addView(button("Search",()->{boolean show=searchRow.getVisibility()!=VISIBLE;searchRow.setVisibility(show?VISIBLE:GONE);status.setVisibility(show?VISIBLE:GONE);}),new LayoutParams(0,dp(32),1));
+        controls.addView(button("Home",()->open("")),new LayoutParams(0,dp(32),1));
+        controls.addView(button("Stop",()->{releaseWeb();status.setText("Stopped · tap Start to load again");}),new LayoutParams(0,dp(32),1));addView(controls);
     }
     private int dp(float value){return Math.max(1,Math.round(value*getResources().getDisplayMetrics().density));}
     private TextView button(String text,Runnable action){TextView b=new TextView(activity);b.setText(text);b.setTextColor(DashboardActivity.TEXT);b.setTextSize(13);b.setGravity(Gravity.CENTER);b.setContentDescription(text);android.graphics.drawable.GradientDrawable tile=new android.graphics.drawable.GradientDrawable();tile.setColor(DashboardActivity.PANEL);tile.setCornerRadius(dp(12));tile.setStroke(dp(1),DashboardActivity.LINE);b.setBackground(tile);b.setOnClickListener(v->action.run());return b;}
@@ -61,8 +61,9 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
         if(!active||closed)return;
         android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         if(keyboard!=null)keyboard.hideSoftInputFromWindow(query.getWindowToken(),0);query.clearFocus();
-        searchRow.setVisibility(VISIBLE);status.setVisibility(VISIBLE);
         if(ensureWeb()==null)return;
+        // Keep the browsing surface usable even in the small default dashboard panel.
+        searchRow.setVisibility(GONE);status.setVisibility(GONE);
         status.setText("Loading YouTube · tap video to play");web.loadUrl(address(value));
     }
     @SuppressLint("SetJavaScriptEnabled") WebView ensureWeb(){
@@ -72,6 +73,8 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
             WebSettings settings=created.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);
             settings.setAllowFileAccess(false);settings.setAllowContentAccess(false);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
             settings.setMediaPlaybackRequiresUserGesture(true);settings.setUseWideViewPort(true);settings.setLoadWithOverviewMode(true);
+            // Dashboard labels may follow accessibility font scaling; the website has its own viewport.
+            settings.setTextZoom(100);created.setInitialScale(0);
             settings.setGeolocationEnabled(false);CookieManager.getInstance().setAcceptThirdPartyCookies(created,false);
             created.setWebViewClient(Build.VERSION.SDK_INT>=26?new ModernClient():new Client());
             created.setWebChromeClient(new WebChromeClient(){

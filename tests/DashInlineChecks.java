@@ -45,6 +45,10 @@ final class DashInlineChecks {
                 WebSettings settings=browser.getSettings();
                 check(settings.getJavaScriptEnabled()&&settings.getMediaPlaybackRequiresUserGesture(),"website scripts work but media requires a user gesture");
                 check(!settings.getAllowFileAccess()&&!settings.getAllowContentAccess()&&settings.getMixedContentMode()==WebSettings.MIXED_CONTENT_NEVER_ALLOW,"web player cannot read file/content URIs or mixed content");
+                web[0].open("");
+                check(web[0].query.getParent() instanceof android.view.View && ((android.view.View)web[0].query.getParent()).getVisibility()==android.view.View.GONE && web[0].status.getVisibility()==android.view.View.GONE,"opening YouTube reserves panel height for browsing instead of search/help rows");
+                check(settings.getTextZoom()==100&&settings.getUseWideViewPort()&&settings.getLoadWithOverviewMode(),"website uses a fitted viewport independent of dashboard font scaling");
+                browser.stopLoading();
                 browser.loadDataWithBaseURL("https://example.invalid/","<html><meta name='viewport' content='width=device-width,initial-scale=1'><body style='margin:0;background:black'><button style='position:absolute;left:0;top:0;width:100%;height:48px;z-index:2' onclick='document.getElementById(\"v\").play()'>Play test fixture</button><video id='v' playsinline style='width:100%;height:100%' src='data:video/mp4;base64,"+SagaShowroomChecks.FIXTURE+"'></video></body></html>","text/html","UTF-8",null);
                 dashboard.visible=visible[0];
             });

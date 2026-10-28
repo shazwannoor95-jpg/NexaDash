@@ -1,10 +1,10 @@
 # NexaDash .8 Native Lab — install dan cuba
 
-**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native1 / code33**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
+**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native2 / code34**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
 
 ## Download
 
-- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk)
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native2.apk)
 - [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
 
 Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
@@ -21,7 +21,7 @@ APK V58 >100MB, jadi GitHub menyimpannya dalam tiga bahagian 90MB/90MB/baki pada
 
 ## Cara dalam panel kiri / kanan
 
-1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native1**.
+1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native2**.
 2. Tekan pilihan di penjuru atas panel kiri atau kanan → **Native app · experimental**.
 3. Tekan butang pilihan app dalam panel, pilih **YouTube V58 / TizenTube / Demo** yang sepadan dengan companion terpasang.
 4. Tekan **Start**. Tiada auto-launch pada load/resume. Startup dibatalkan selepas 60 saat jika companion/display tidak bersedia; tiada auto-retry. App native diharapkan muncul dalam permukaan panel; status error dipaparkan jika firmware/companion menolak.
@@ -62,3 +62,7 @@ Source: [native frame](../src/com/shazwan/sagadash/DashNativeFrame.java), [proxy
 ![Demo companion native dalam panel dashboard](img/native-lab-demo-left.png)
 
 ![YouTube V58 native dalam NexaDash Lab pada emulator API29; masih loading, bukan bukti playback](img/native-lab-youtube.png)
+
+## Native2: YouTube web panel fit
+
+Search/help rows collapse when opening YouTube; tap Search to show them again. Controls use 32dp height and website text zoom stays at 100%. No extra polling, browser instance or animation. Live YouTube playback on the physical head unit remains unverified.
