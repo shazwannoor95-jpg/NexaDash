@@ -26,13 +26,13 @@ final class DashDockItem extends LinearLayout {
     DashDockItem(Context context,float unitPx,float requestedScale,String name,String symbol,int color,Runnable action,boolean neon){
         super(context);unit=Math.max(.1f,unitPx);setOrientation(VERTICAL);setGravity(Gravity.CENTER);
         float scale=Float.isNaN(requestedScale)||Float.isInfinite(requestedScale)?1:Math.max(.7f,Math.min(1.3f,requestedScale));
-        requestedSize=p(46*scale);requestedText=p(Math.round(25*scale));iconColor=color;
+        requestedSize=p(36*scale);requestedText=p(Math.round(21*scale));iconColor=color;
         setContentDescription(name);setOnClickListener(v->{if(action!=null)action.run();});
         icon=label(symbol,requestedText);GradientDrawable background=new GradientDrawable();background.setColor(color);
         background.setCornerRadius(p(13));background.setStroke(p(1),neon?0x8061ccff:DashboardActivity.LINE);icon.setBackground(background);
         addView(icon,new LayoutParams(requestedSize,requestedSize));
         caption=label(name,p(13));caption.setMaxLines(1);caption.setEllipsize(TextUtils.TruncateAt.END);
-        addView(caption,new LayoutParams(-1,p(24)));
+        addView(caption,new LayoutParams(-1,p(20)));
     }
 
     /** Changes only drawables; shortcut dimensions, ordering and actions remain intact. */
@@ -91,8 +91,8 @@ final class DashDockItem extends LinearLayout {
 
     @Override protected void onMeasure(int widthSpec,int heightSpec){
         int width=MeasureSpec.getMode(widthSpec)==MeasureSpec.UNSPECIFIED?requestedSize:Math.max(0,MeasureSpec.getSize(widthSpec)-getPaddingLeft()-getPaddingRight());
-        int height=MeasureSpec.getMode(heightSpec)==MeasureSpec.UNSPECIFIED?requestedSize+p(24):Math.max(0,MeasureSpec.getSize(heightSpec)-getPaddingTop()-getPaddingBottom());
-        int captionHeight=Math.min(p(24),height),size=Math.min(requestedSize,Math.min(width,Math.max(0,height-captionHeight)));
+        int height=MeasureSpec.getMode(heightSpec)==MeasureSpec.UNSPECIFIED?requestedSize+p(20):Math.max(0,MeasureSpec.getSize(heightSpec)-getPaddingTop()-getPaddingBottom());
+        int captionHeight=Math.min(p(20),height),size=Math.min(requestedSize,Math.min(width,Math.max(0,height-captionHeight)));
         LayoutParams iconBounds=(LayoutParams)icon.getLayoutParams();iconBounds.width=size;iconBounds.height=size;
         ((LayoutParams)caption.getLayoutParams()).height=captionHeight;
         int font=Math.max(1,Math.round(requestedText*(float)size/requestedSize));

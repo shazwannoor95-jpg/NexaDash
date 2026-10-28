@@ -130,15 +130,17 @@ public class DashboardActivity extends Activity implements LocationListener {
         LinearLayout identity=column();identity.setGravity(Gravity.CENTER);identity.setContentDescription("NexaDash");ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);identity.addView(logo,new LinearLayout.LayoutParams(px(36),px(36)));TextView brand=text("NexaDash",14,BLUE);brand.setGravity(Gravity.CENTER);identity.addView(brand,new LinearLayout.LayoutParams(-1,px(28)));nav.addView(identity,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
         main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);
-        LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
+        LinearLayout header=row();clock=text("",38,TEXT);clock.setSingleLine(true);clock.setIncludeFontPadding(false);clock.setPadding(px(10),0,px(8),0);
+        if(Build.VERSION.SDK_INT>=26)clock.setAutoSizeTextTypeUniformWithConfiguration(px(18),px(38),1,android.util.TypedValue.COMPLEX_UNIT_PX);
+        header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
         editButton=button("Edit layout",this::editLayoutMenu);header.addView(editButton);header.addView(button("Media access  ·  ⚙",this::settings));main.addView(header);clock.setOnClickListener(v->clockDialog());
         date=text("",16,MUTED);main.addView(date,new LinearLayout.LayoutParams(-1,px(27)));
         prayerBar=row();prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
         buildVehicleContent();
         primaryMedia=newMediaPanel();bindPrimaryMedia();
-        if(!dashPrefs().getBoolean("equal_panels_v2",false)){
-            dashPrefs().edit().remove("panel_layout_v1_vehicle").remove("panel_layout_v1_media").remove("panel_layout_v1_shortcuts").putBoolean("equal_panels_v2",true).apply();
+        if(!dashPrefs().getBoolean("compact_dock_v3",false)){
+            dashPrefs().edit().remove("panel_layout_v1_vehicle").remove("panel_layout_v1_media").remove("panel_layout_v1_shortcuts").remove("panel_layout_v1_dock").putBoolean("compact_dock_v3",true).apply();
         }
         layoutSurface=new DashLayoutSurface(this,dashPrefs(),unit());main.addView(layoutSurface,new LinearLayout.LayoutParams(-1,0,1));
         leftPane=new Pane("vehicle",dashPrefs().getString("pane_vehicle","car"));
@@ -146,7 +148,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         layoutSurface.addPanel("vehicle",leftPane.box);layoutSurface.addPanel("media",rightPane.box);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
         footerText=text(footerLabel(),14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
-        footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));applyStyle();
+        footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));footerText.setVisibility(View.GONE);applyStyle();
     }
     float unit(){return scale*getResources().getDisplayMetrics().density;}
     boolean neon(){return dashPrefs().getBoolean("style_neon",true);}
@@ -239,7 +241,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void editLayoutMenu(){
         if(editMode!=0){finishEditing(true);return;}
         new AlertDialog.Builder(this).setTitle("Dashboard layout").setItems(new String[]{"Move / resize panels","Reorder dock icons","Reset default layout","Neon outline: "+(neon()?"On":"Off")},(d,i)->{
-            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();if(leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
+            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;revealFooter();layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();if(leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
             else if(i==2){layoutSurface.resetLayout();android.content.SharedPreferences.Editor reset=dashPrefs().edit().remove("dock_order");for(String name:DOCK_NAMES)reset.remove("dock_icon_scale_"+name);reset.apply();buildDock();leftPane.setMode("car");rightPane.setMode("media");}
             else{boolean enabled=!neon();android.content.SharedPreferences.Editor edit=dashPrefs().edit().putBoolean("style_neon",enabled);if(enabled&&appearance.intensity()==0)edit.putInt("appearance_neon",65);edit.apply();applyStyle();}
         }).setNegativeButton("Close",null).show();
@@ -252,7 +254,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void finishEditing(boolean save){
         if(editMode==0)return;if(layoutSurface.isEditing()){if(save)layoutSurface.setEditing(false);else layoutSurface.cancelEditing();}
         if(!save){android.content.SharedPreferences.Editor restore=dashPrefs().edit().putString("dock_order",dockBeforeEdit);for(int n=0;n<DOCK_NAMES.length;n++)restore.putFloat("dock_icon_scale_"+DOCK_NAMES[n],dockSizesBefore[n]);restore.apply();}
-        editMode=0;buildDock();editButton.setText("Edit layout");footerText.setText(footerLabel());leftPane.resume();rightPane.resume();updateVehicleResources();
+        editMode=0;revealFooter();buildDock();editButton.setText("Edit layout");footerText.setText(footerLabel());leftPane.resume();rightPane.resume();updateVehicleResources();
     }
     void applyStyle(){
         if(appearance==null||root==null)return;root.setBackground(appearance.backdrop());appearance.refresh();
@@ -391,7 +393,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         return installedVersion;
     }
     String footerLabel(){return "Native Lab · Vehicle settings     ·     NexaDash v"+versionName();}
-    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash"};}
+    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash","Vehicle settings"};}
     void settings(){
         closeApps();
         if(!visible||isFinishing()||isDestroyed()||(settingsDialog!=null&&settingsDialog.isShowing()))return;
@@ -408,7 +410,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void closeSettings(){if(settingsGrid!=null){settingsGrid.close();settingsGrid=null;}if(settingsDialog!=null){settingsDialog.dismiss();settingsDialog=null;}}
     void showPanelCompatibility(){if(panelCompatibility==null)panelCompatibility=new DashPanelCompatibility();panelCompatibility.show(this,io);}
     void settingsAction(int i){
-        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;}}
+        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;case 15:shortcut("Vehicle settings");break;}}
         catch(ActivityNotFoundException|SecurityException unavailable){toast("This setting is unavailable on this device");}
     }
     void showAbout(){
@@ -535,11 +537,11 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(!ScreenLock.hasPin(lockPrefs()))ScreenLock.create(this,pin->{ScreenLock.setPin(lockPrefs(),pin);toast("PIN saved. Open Screen lock again to lock.");});
         else new AlertDialog.Builder(this).setTitle("Screen lock").setItems(new String[]{"Lock now","Remove PIN"},(d,i)->{if(i==0){ScreenLock.setLocked(lockPrefs(),true);toast("Locked · Tap the screen to unlock");}else ScreenLock.verify(this,lockPrefs(),()->ScreenLock.clear(lockPrefs()),()->{});}).show();
     }
-    final Runnable hideFooter=()->{if(footerText!=null&&editMode==0)footerText.setVisibility(View.INVISIBLE);};
+    final Runnable hideFooter=()->{if(footerText!=null&&editMode==0)footerText.setVisibility(View.GONE);};
     void revealFooter(){
         if(footerText==null)return;
-        footerText.setVisibility(View.VISIBLE);handler.removeCallbacks(hideFooter);
-        if(editMode==0)handler.postDelayed(hideFooter,4000);
+        handler.removeCallbacks(hideFooter);
+        footerText.setVisibility(editMode==0?View.GONE:View.VISIBLE);
     }
     @Override public boolean dispatchTouchEvent(MotionEvent e){
         if(ScreenLock.locked(lockPrefs())){if(e.getAction()==MotionEvent.ACTION_UP)ScreenLock.verify(this,lockPrefs(),()->ScreenLock.setLocked(lockPrefs(),false),()->{});return true;}

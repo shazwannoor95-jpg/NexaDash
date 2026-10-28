@@ -158,7 +158,7 @@ final class DashCustomizationChecks {
             float compactFont=item.icon.getTextSize();item.performClick();
             check(actions[0]==controls.length+1&&"Bluetooth".contentEquals(item.getContentDescription()),"resizing retains the dock shortcut action and accessible full name at scale "+unit);
             measure(item,Math.round(125*unit),Math.round(100*unit));
-            check(item.icon.getWidth()==Math.round(46*1.3f*unit)&&item.icon.getHeight()==Math.round(46*1.3f*unit)&&item.caption.getHeight()==Math.round(24*unit)&&item.icon.getTextSize()>compactFont&&insideTree(item),"enlarging the dock restores the requested 130-percent icon and standard caption height at scale "+unit);
+            check(item.icon.getWidth()==Math.round(36*1.3f*unit)&&item.icon.getHeight()==Math.round(36*1.3f*unit)&&item.caption.getHeight()==Math.round(20*unit)&&item.icon.getTextSize()>compactFont&&insideTree(item),"enlarging the dock restores the requested 130-percent icon and standard caption height at scale "+unit);
             int iconWidth=item.icon.getWidth(),captionHeight=item.caption.getHeight();
             item.style(true,170,.65f,true,true);
             check(item.getBackground() instanceof android.graphics.drawable.StateListDrawable&&item.icon.getWidth()==iconWidth&&item.caption.getHeight()==captionHeight,"reduced-motion glass styling uses immediate native states and preserves dock geometry at scale "+unit);
@@ -175,7 +175,7 @@ final class DashCustomizationChecks {
             check(((android.graphics.drawable.GradientDrawable)item.icon.getBackground()).getColor().getDefaultColor()==DashboardActivity.BLUE,"original theme restores the shortcut's original badge color at scale "+unit);
             DashDockItem normal=new DashDockItem(dashboard,unit,1,"Music","M",DashboardActivity.BLUE,null,false);
             measure(normal,Math.round(125*unit),Math.round(79*unit));
-            check(normal.icon.getWidth()==Math.round(46*unit)&&normal.caption.getHeight()==Math.round(24*unit)&&insideTree(normal),"normal dock dimensions retain the original 46-unit icon and 24-unit caption at scale "+unit);
+            check(normal.icon.getWidth()==Math.round(36*unit)&&normal.caption.getHeight()==Math.round(20*unit)&&insideTree(normal),"normal dock dimensions retain the original 36-unit icon and 20-unit caption at scale "+unit);
         }
     }
     private static android.graphics.Bitmap background(View view){
