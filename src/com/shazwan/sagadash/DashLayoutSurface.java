@@ -129,7 +129,7 @@ final class DashLayoutSurface extends ViewGroup {
     }
 
     private RectF defaults(String key,int width,int height){
-        float gap=10*unit,dock=Math.min(height,64*unit),content=height-dock;
+        float gap=10*unit,dock=Math.min(height,54*unit),content=height-dock;
         float left=Math.max(0,(width-gap)*.5f),right=Math.min(width,left+gap);
         float shortcut=Math.min(content,115*unit),margin=Math.min(content/2,6*unit);
         if(key.equals("vehicle"))return new RectF(0,margin,left,Math.max(margin,content-margin));
@@ -139,7 +139,7 @@ final class DashLayoutSurface extends ViewGroup {
         return new RectF(0,0,width,height);
     }
     private float minimumWidth(Panel panel){return (panel.key.equals("dock")||panel.key.equals("shortcuts")?280:panel.key.equals("media")?260:240)*unit;}
-    private float minimumHeight(Panel panel){return (panel.key.equals("dock")?56:panel.key.equals("shortcuts")?80:panel.key.equals("media")?200:200)*unit;}
+    private float minimumHeight(Panel panel){return (panel.key.equals("dock")?48:panel.key.equals("shortcuts")?80:panel.key.equals("media")?200:200)*unit;}
     private RectF resolve(Panel panel,int width,int height){
         if(panel.custom==null)return defaults(panel.key,width,height);
         RectF rect=new RectF(panel.custom.left*width,panel.custom.top*height,panel.custom.right*width,panel.custom.bottom*height);

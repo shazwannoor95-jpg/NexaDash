@@ -1,10 +1,10 @@
 # NexaDash .8 Native Lab — install dan cuba
 
-**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native6 / code38**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
+**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native7 / code39**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
 
 ## Download
 
-- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native6.apk)
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native7.apk)
 - [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
 
 Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
@@ -21,7 +21,7 @@ APK V58 >100MB, jadi GitHub menyimpannya dalam tiga bahagian 90MB/90MB/baki pada
 
 ## Cara dalam panel kiri / kanan
 
-1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native6**.
+1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native7**.
 2. Tekan pilihan di penjuru atas panel kiri atau kanan → **Native app · experimental**.
 3. Tekan butang pilihan app dalam panel, pilih **YouTube V58 / TizenTube / Demo** yang sepadan dengan companion terpasang.
 4. Tekan **Start**. Tiada auto-launch pada load/resume. Startup dibatalkan selepas 60 saat jika companion/display tidak bersedia; tiada auto-retry. App native diharapkan muncul dalam permukaan panel; status error dipaparkan jika firmware/companion menolak.
@@ -86,3 +86,9 @@ Native5 focused native-panel integration: PASS16 on API29 x86_64, including real
 Dock height87→64 design units, icons46→36 and captions24→20. Footer no longer reserves44 units in normal mode; edit instructions still appear while editing. Vehicle settings moved to Settings. Both equal panels expand into recovered space, dock stays at bottom. First Native6 launch resets left/right/dock geometry only; content assignments, icon order and chosen sizes retained. Clock uses one line, horizontal inset and API26+ native auto-size to avoid clipping. No new worker/animation/network loop.
 
 Native6 verification: PASS36 focused layout integration on API29 x86_64 (drag/resize/persistence, equal panels, dock bottom, no footer gap and clock width/height fit). Run `DEVICE=emulator-5554 LAYOUT_ONLY=1 tests/run-android-checks.sh`. APK signature/alignment checked; full-suite and physical head-unit validation not claimed.
+
+## Native7: frameless lower dock
+
+Removed outer dock panel and individual shortcut idle fills/outlines. Colored icon badges, labels and state underline remain. Dock64→54 design units, badges36→30, captions20→17; bottom root/main insets reduced to4 each. Equal panels gain the recovered height. Geometry resets once for left/right/dock; icon order/scales and content choices retained. No extra animation/worker.
+
+Native7 verification: PASS37 focused layout checks on API29 x86_64, including absent outer dock background, expanded equal panels, dock bottom, drag/resize/persistence and clock width/height fit.

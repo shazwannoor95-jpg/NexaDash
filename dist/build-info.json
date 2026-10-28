@@ -1,16 +1,16 @@
 {
-  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native6.apk",
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native7.apk",
   "application_id": "com.shazwan.nexadash.lab",
-  "version_name": "1.6.7-nexadash.8-native6",
-  "version_code": 38,
+  "version_name": "1.6.7-nexadash.8-native7",
+  "version_code": 39,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5499791,
-  "sha256": "28593e1bbab2ff9e4ee141831bba2eeb7e1ad77980067a5bca1db9e422acd099",
+  "sha256": "1f286079c44cad231348e717ce216489eab9a1058ad32f20784dc06300f3ef25",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Native6: shell release, offline Gradle debug/release pass; focused API29 x86_64 layout integration PASS36 (drag/resize/persistence, equal expanded panels, bottom compact dock, no hidden-footer gap, actual clock width/height fit). Test sources compile. No full-suite or physical head-unit pass claimed; native5 full suite failed at clipboard report after341 assertions.",
+  "validation": "Native7 shell release and offline Gradle debug/release pass; focused API29 x86_64 layout integration PASS37 (dock frame removed, compact bottom dock, equal expanded panels, drag/resize/persistence and clock fit). Test sources compile; signature/alignment checked. No full-suite or physical head-unit pass claimed.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -65,12 +65,12 @@
   "web_panel_fit": "Search/help rows collapse on open; Search toggles them back. 32dp controls; WebView text zoom100 and fitted viewport. Physical YouTube playback remains unverified.",
   "footer": "GONE in normal mode, no reserved height. Edit instructions visible only while editing. Vehicle settings available in Settings.",
   "youtube_shortcut": "Launches installed official com.google.android.youtube outside dashboard; long press retains web/native companion choices.",
-  "layout": "Default dock64 design units instead87; both equal panels use remaining height; first native6 launch resets panel/dock bounds. Content assignments and dock order/scales retained.",
-  "dock": "36-unit icons instead46, 20-unit captions instead24; official YouTube and DiAuto shortcuts retained.",
+  "layout": "Dock54 design units, 4-unit bottom insets; equal panels expand into recovered space; one-time reset of left/right/dock geometry. Icon order/scales and pane content retained.",
+  "dock": "Outer dock background removed; per-shortcut idle background fills/outlines removed. Colored30-unit badges,17-unit captions and selected/pressed underline retained. Official YouTube and DiAuto launch shortcuts unchanged.",
   "native_fit_status": "Aspect-preserving host raster, not proof that third-party app UI reflows or navigation/playback works.",
-  "layout_focused_assertions": 36,
   "previous_native_focused_assertions": {
     "version": "native5",
     "assertions": 16
-  }
+  },
+  "layout_focused_assertions": 37
 }

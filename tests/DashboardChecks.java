@@ -25,6 +25,7 @@ public class DashboardChecks extends Instrumentation {
                     android.graphics.RectF left=dash[0].layoutSurface.boundsFor("vehicle"),right=dash[0].layoutSurface.boundsFor("media"),dock=dash[0].layoutSurface.boundsFor("dock");
                     check(Math.abs(left.height()-right.height())<1&&Math.abs(left.width()-right.width())<1,"expanded panels remain equal");
                     check(dock.top>=left.bottom&&dock.bottom==dash[0].layoutSurface.getHeight(),"compact dock sits below panels at the bottom");
+                    check(dash[0].dock.getBackground()==null,"dock has no outer panel frame");
                     check(dash[0].footerText.getVisibility()==android.view.View.GONE,"hidden footer reserves no layout space");
                     android.widget.TextView clock=dash[0].clock;
                     check(clock.getWidth()>0&&clock.getPaint().measureText(clock.getText().toString())<=clock.getWidth()-clock.getPaddingLeft()-clock.getPaddingRight(),"clock text fits available horizontal space");

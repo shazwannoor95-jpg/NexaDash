@@ -125,11 +125,11 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     LinearLayout card(){LinearLayout l=column();l.setBackground(appearance.panel(PANEL,px(20)));pad(l,14);return l;}
     void build(){
-        root=row();root.setBackground(appearance.backdrop());pad(root,14);setContentView(root);
+        root=row();root.setBackground(appearance.backdrop());pad(root,14);root.setPadding(root.getPaddingLeft(),root.getPaddingTop(),root.getPaddingRight(),px(4));setContentView(root);
         LinearLayout nav=column();nav.setGravity(Gravity.CENTER);root.addView(nav,new LinearLayout.LayoutParams(px(96),-1));
         LinearLayout identity=column();identity.setGravity(Gravity.CENTER);identity.setContentDescription("NexaDash");ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);identity.addView(logo,new LinearLayout.LayoutParams(px(36),px(36)));TextView brand=text("NexaDash",14,BLUE);brand.setGravity(Gravity.CENTER);identity.addView(brand,new LinearLayout.LayoutParams(-1,px(28)));nav.addView(identity,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
-        main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);
+        main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);main.setPadding(main.getPaddingLeft(),main.getPaddingTop(),main.getPaddingRight(),px(4));
         LinearLayout header=row();clock=text("",38,TEXT);clock.setSingleLine(true);clock.setIncludeFontPadding(false);clock.setPadding(px(10),0,px(8),0);
         if(Build.VERSION.SDK_INT>=26)clock.setAutoSizeTextTypeUniformWithConfiguration(px(18),px(38),1,android.util.TypedValue.COMPLEX_UNIT_PX);
         header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
@@ -139,8 +139,8 @@ public class DashboardActivity extends Activity implements LocationListener {
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
         buildVehicleContent();
         primaryMedia=newMediaPanel();bindPrimaryMedia();
-        if(!dashPrefs().getBoolean("compact_dock_v3",false)){
-            dashPrefs().edit().remove("panel_layout_v1_vehicle").remove("panel_layout_v1_media").remove("panel_layout_v1_shortcuts").remove("panel_layout_v1_dock").putBoolean("compact_dock_v3",true).apply();
+        if(!dashPrefs().getBoolean("bare_dock_v4",false)){
+            dashPrefs().edit().remove("panel_layout_v1_vehicle").remove("panel_layout_v1_media").remove("panel_layout_v1_shortcuts").remove("panel_layout_v1_dock").putBoolean("bare_dock_v4",true).apply();
         }
         layoutSurface=new DashLayoutSurface(this,dashPrefs(),unit());main.addView(layoutSurface,new LinearLayout.LayoutParams(-1,0,1));
         leftPane=new Pane("vehicle",dashPrefs().getString("pane_vehicle","car"));
@@ -261,7 +261,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(leftPane!=null)leftPane.box.setBackground(appearance.panel(PANEL,px(20)));
         if(rightPane!=null)rightPane.box.setBackground(appearance.panel(PANEL,px(20)));
         if(prayerBar!=null)prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));
-        if(dock!=null)dock.setBackground(appearance.synthwave()?appearance.panel(0x33080b1f,px(18)):null);
+        if(dock!=null)dock.setBackground(null);
         if(clock!=null){((View)clock.getParent()).setBackground(appearance.synthwave()?appearance.panel(0x22080b1f,px(18)):null);clock.setTypeface(appearance.synthwave()?Typeface.create("monospace",Typeface.BOLD):Typeface.DEFAULT);}
         if(date!=null)date.setTextColor(appearance.synthwave()?DashAppearance.CYAN:MUTED);
         styleButtons(root);

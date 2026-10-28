@@ -26,13 +26,13 @@ final class DashDockItem extends LinearLayout {
     DashDockItem(Context context,float unitPx,float requestedScale,String name,String symbol,int color,Runnable action,boolean neon){
         super(context);unit=Math.max(.1f,unitPx);setOrientation(VERTICAL);setGravity(Gravity.CENTER);
         float scale=Float.isNaN(requestedScale)||Float.isInfinite(requestedScale)?1:Math.max(.7f,Math.min(1.3f,requestedScale));
-        requestedSize=p(36*scale);requestedText=p(Math.round(21*scale));iconColor=color;
+        requestedSize=p(30*scale);requestedText=p(Math.round(18*scale));iconColor=color;
         setContentDescription(name);setOnClickListener(v->{if(action!=null)action.run();});
         icon=label(symbol,requestedText);GradientDrawable background=new GradientDrawable();background.setColor(color);
         background.setCornerRadius(p(13));background.setStroke(p(1),neon?0x8061ccff:DashboardActivity.LINE);icon.setBackground(background);
         addView(icon,new LayoutParams(requestedSize,requestedSize));
         caption=label(name,p(13));caption.setMaxLines(1);caption.setEllipsize(TextUtils.TruncateAt.END);
-        addView(caption,new LayoutParams(-1,p(20)));
+        addView(caption,new LayoutParams(-1,p(17)));
     }
 
     /** Changes only drawables; shortcut dimensions, ordering and actions remain intact. */
@@ -71,13 +71,8 @@ final class DashDockItem extends LinearLayout {
         }
         @Override public void draw(Canvas canvas){
             area.set(getBounds());area.inset(unit,unit);if(area.width()<=0||area.height()<=0)return;
-            paint.setStyle(Paint.Style.FILL);paint.setColor(0x00141a35);
-            paint.setAlpha(Math.round((synth?alpha*.28f:0)+highlight*32)*opacity/255);canvas.drawRoundRect(area,p(14),p(14),paint);
-            if(synth||highlight>0){
-                paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(Math.max(1,unit));paint.setColor(0xff5ceaff);
-                paint.setAlpha(Math.round((neon?(24+highlight*70)*strength:highlight*48)*opacity/255));canvas.drawRoundRect(area,p(14),p(14),paint);
-            }
-            if(selected){
+            // No idle tile fill or border: keep only the icon badge and state underline.
+            if(selected||highlight>0){
                 float y=area.bottom-Math.max(1,2*unit),left=area.left+area.width()*.2f,middle=area.centerX(),right=area.right-area.width()*.2f;
                 paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(Math.max(1,2*unit));
                 paint.setColor(0xff5ceaff);paint.setAlpha(opacity);canvas.drawLine(left,y,middle,y,paint);
@@ -91,8 +86,8 @@ final class DashDockItem extends LinearLayout {
 
     @Override protected void onMeasure(int widthSpec,int heightSpec){
         int width=MeasureSpec.getMode(widthSpec)==MeasureSpec.UNSPECIFIED?requestedSize:Math.max(0,MeasureSpec.getSize(widthSpec)-getPaddingLeft()-getPaddingRight());
-        int height=MeasureSpec.getMode(heightSpec)==MeasureSpec.UNSPECIFIED?requestedSize+p(20):Math.max(0,MeasureSpec.getSize(heightSpec)-getPaddingTop()-getPaddingBottom());
-        int captionHeight=Math.min(p(20),height),size=Math.min(requestedSize,Math.min(width,Math.max(0,height-captionHeight)));
+        int height=MeasureSpec.getMode(heightSpec)==MeasureSpec.UNSPECIFIED?requestedSize+p(17):Math.max(0,MeasureSpec.getSize(heightSpec)-getPaddingTop()-getPaddingBottom());
+        int captionHeight=Math.min(p(17),height),size=Math.min(requestedSize,Math.min(width,Math.max(0,height-captionHeight)));
         LayoutParams iconBounds=(LayoutParams)icon.getLayoutParams();iconBounds.width=size;iconBounds.height=size;
         ((LayoutParams)caption.getLayoutParams()).height=captionHeight;
         int font=Math.max(1,Math.round(requestedText*(float)size/requestedSize));
