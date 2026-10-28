@@ -56,7 +56,7 @@
     "min_sdk": 29,
     "branch": "nexadash-v58-companion",
     "playback": "unverified",
-    "lifecycle": "Previous standalone prototype logged a V58 Primes Activity-destruction error."
+    "lifecycle": "Observed V58 Primes Activity-destruction errors in standalone and Lab tests; not crash-free certified."
   },
   "native_companion_cobalt": {
     "min_sdk": 24,
