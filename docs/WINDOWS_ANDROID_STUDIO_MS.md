@@ -15,14 +15,15 @@ Java boleh diuruskan dalam Android Studio; tidak perlu memasang Java secara bera
 ## 2. Buka projek terkini
 
 Jika Apps masih menunjukkan senarai “Installed apps”, ikut [langkah folder baharu dan semak versi](CORRECT_BUILD_MS.md).
-Versi .6 menunjukkan nombor build pada footer dan tajuk menu; Apps serta Dashboard settings ialah grid ikon.
+Versi .7 menunjukkan nombor build pada footer/tajuk menu; Apps serta Dashboard settings ialah grid ikon.
+[Pemain dalam panel](INLINE_PLAYBACK_MS.md) ialah pilihan baharu, bukan hosting app asal.
 
 Untuk update ini, gunakan folder projek **baharu**. Copy/replace fail ke folder lama boleh meninggalkan
 kelas/asset model yang sudah dibuang. Folder lama boleh disimpan sebagai backup.
 
 1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
 2. Klik **Code > Download ZIP**, atau [download ZIP branch ini terus](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
-3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\SagaDash-v6`.
+3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\SagaDash-v7`.
 4. Cari folder yang terus mengandungi `settings.gradle`, `build.gradle`, `gradlew.bat` dan `app`.
    ZIP kadang-kadang mempunyai satu folder tambahan di dalamnya; pilih folder dalaman itu.
 5. Android Studio > **File > Open** > pilih folder tadi, kemudian **This Window** jika diminta.
@@ -72,7 +73,7 @@ Hypervisor Platform mungkin perlu diaktifkan pada komputer itu.
 1. Pada bar atas, pilih konfigurasi **app** dan emulator yang hidup.
 2. Klik ▶ hijau. Tunggu build dan install selesai.
 3. Jika paparan mengiring, guna ikon Rotate pada toolbar emulator untuk menjadikannya landscape.
-4. Sahkan footer menunjukkan **1.6.7-sagadash.6**. Apps dan Dashboard settings patut menunjukkan grid ikon.
+4. Sahkan footer menunjukkan **1.6.7-sagadash.7**. Apps dan Dashboard settings patut menunjukkan grid ikon.
    Semak Home, pilihan panel dan Edit layout.
 5. Settings > Appearance: cuba Original/Synthwave. Default Static + Reduce motion tidak menganimasikan
    latar; susunan dan tindakan butang kekal. Lihat [panduan tema](SYNTHWAVE_MS.md).

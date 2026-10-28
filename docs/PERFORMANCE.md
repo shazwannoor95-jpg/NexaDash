@@ -1,12 +1,37 @@
 # Saga Dash resource measurements
 
-The current APK is `dist/SagaDash-1.6.7-sagadash.6.apk` (package `com.shazwan.sagadash`, code 30).
+The current APK is `dist/SagaDash-1.6.7-sagadash.7.apk` (package `com.shazwan.sagadash`, code 31).
 The car preview is eight image angles. Original video and live mesh classes/assets are removed.
 Default Static + Reduce motion has no background animation; Ambient/Cinematic are opt-in, capped at
 10fps and stopped while inactive. The wallpaper uses a bounded bitmap, without a custom GL renderer, blur or WebView.
 Optional video/map work starts only when selected.
 
-## Settings grid and version identification (.6)
+## Optional in-panel playback (.7)
+
+The new local-file player uses a native SurfaceView/MediaPlayer, content URIs without copying,
+background source I/O, audio focus,1080p/2MP limits and an active-playback-only1Hz progress callback.
+The optional YouTube website creates one WebView when requested, not on an idle saved-mode resume.
+No app activity is hosted. One video/web panel is selected at a time; native car video is suppressed
+while it is selected. Changing panels, editing, pausing or closing releases player/website resources.
+Renderer processes may remain in Android's pool after WebView destruction; zero residual RAM is not
+claimed. Native data-source jobs and late callbacks are generation-gated. No new permission is added.
+
+YouTube connectivity is blocked by the execution proxy (CONNECT403), so live service playback is
+not validated. Tests actually play a local HTML5 H.264/AAC fixture after a real touch in the WebView
+and a native content-URI fixture, plus pause/resume/error/teardown. This is not a head-unit codec
+benchmark or streaming guarantee. Older system WebViews, account/video restrictions and Internet
+conditions may prevent YouTube website playback; it remains beta.
+
+Android Studio debug/release assembly and APK signature verification passed. **683 integration
+assertions passed** on the software emulator, including native and HTML5 fixture playback, user gesture,
+URL policy, error recovery and hidden/closed resource release. A separate manual smoke test selected
+the owner-provided720p clip through Android File Picker and rendered it in the panel; this is not
+a framerate or physical-decoder benchmark. No new Android permission was added.
+
+[Playback instructions and remaining navigation/FM scope](INLINE_PLAYBACK_MS.md).
+The .3 idle measurements below are historical and do not describe .7 playback.
+
+## Settings grid and version identification checkpoint (.6)
 
 Settings uses recycled native cells and shared system icons, with no new worker, bitmap cache,
 network access, renderer or polling. All earlier action indices are retained. Footer/drawer versions

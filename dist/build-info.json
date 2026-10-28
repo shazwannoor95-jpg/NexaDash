@@ -1,16 +1,16 @@
 {
-  "file": "SagaDash-1.6.7-sagadash.6.apk",
+  "file": "SagaDash-1.6.7-sagadash.7.apk",
   "application_id": "com.shazwan.sagadash",
-  "version_name": "1.6.7-sagadash.6",
-  "version_code": 30,
+  "version_name": "1.6.7-sagadash.7",
+  "version_code": 31,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
-  "size_bytes": 5479311,
-  "sha256": "e76a2fc216b6e026f876ea36281214fa8c30edaae7b054aa6baad66449a858f7",
+  "size_bytes": 5491599,
+  "sha256": "837d57f7fba734840bb56012456d964a98ea696061db59ab0e02bbafcb5c2838",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Android Studio debug/release assembly and signed APK verification passed; 653 assertions passed on Android10/API29 x86_64 software emulation, including first-pass grid columns, native settings action routing, lifecycle, version labels/About and existing dashboard checks.",
+  "validation": "Android Studio debug/release assembly and signature verification passed; 683 assertions passed on Android10/API29 x86_64 software emulator. New checks actually play local HTML5 and native content-URI video, plus user-gesture policy, URL restrictions, single-player transfer, error recovery and pause/decoder/browser release.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -24,12 +24,15 @@
     "version_name": "1.6.7-sagadash.3",
     "limitation": "Prior idle-dashboard measurement; no new .4 playback or hosting benchmark."
   },
-  "app_panel_status": "Apps and Dashboard settings use native icon grids with installed-build labels. Original third-party app UI hosting remains unimplemented. External PiP is app/account/firmware-dependent and not an in-panel host.",
+  "app_panel_status": "Native local video and optional YouTube website (beta) play in panels; original app UI hosting is unimplemented. OEM FM and destination search/full turn-by-turn guidance remain unimplemented.",
   "glass_panels_default": true,
   "icon_cache_limit_bytes": 1048576,
   "icon_raster_max_pixels": [
     96,
     96
   ],
-  "integration_assertions": 653
+  "integration_assertions": 683,
+  "youtube_live_streaming_status": "Not verified: execution network blocks YouTube (CONNECT tunnel403). Actual local HTML5 video playback is tested; head-unit WebView/network/account compatibility remains untested.",
+  "default_webview": "Not created in the default dashboard, or on resuming a saved web panel until Start is tapped.",
+  "active_inline_player_limit": 1
 }

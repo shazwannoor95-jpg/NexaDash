@@ -1,13 +1,14 @@
 > **Saga Dash personal edition** — Android Studio project for Windows, with eight lightweight
 > rendered car-image angles (NEXA), configurable native panels, layout editing and a Synthwave theme.
 > The old interactive mesh/original-video app modes have been removed.
-> [APK](dist/SagaDash-1.6.7-sagadash.6.apk?raw=true) · [Validation/performance](docs/PERFORMANCE.md).
+> [APK](dist/SagaDash-1.6.7-sagadash.7.apk?raw=true) · [Validation/performance](docs/PERFORMANCE.md).
 > Start with the [Windows guide](docs/WINDOWS_ANDROID_STUDIO_MS.md),
 > [signed APK/head-unit installation](docs/HEAD_UNIT_INSTALL_MS.md),
 > [panel/layout instructions](docs/DASHBOARD_CUSTOMIZATION_MS.md),
 > [Synthwave appearance](docs/SYNTHWAVE_MS.md) and
 > [current features/limits](docs/PERSONAL_EDITION.md).
-> **.6 adds an icon grid for Dashboard settings and visible build versions.**
+> **.7 adds [in-panel local video and optional YouTube web (beta)](docs/INLINE_PLAYBACK_MS.md), without ADB.**
+> Settings/Apps icon grids and visible build versions from .6 are retained.
 > Apps has used an icon grid since .5. If it still shows “Installed apps”, follow the
 > [fresh Android Studio project steps](docs/CORRECT_BUILD_MS.md). Dashboard positions stay unchanged.
 > **.4 added a read-only [app-panel compatibility report](docs/APP_PANELS_MS.md), not app embedding.**

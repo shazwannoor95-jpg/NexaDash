@@ -37,6 +37,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     DashLayoutSurface layoutSurface;
     Pane leftPane,rightPane;
     DashMediaPanel primaryMedia;
+    static final int PICK_PANEL_VIDEO=4816;
+    String pendingVideoPane="";
     TextView editButton,footerText;
     int editMode,artToken;
     boolean blockEditTouch,appsLoading;
@@ -140,7 +142,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         rightPane=new Pane("media",dashPrefs().getString("pane_media","media"));
         layoutSurface.addPanel("vehicle",leftPane.box);layoutSurface.addPanel("media",rightPane.box);
         LinearLayout shortcuts=row();
-        TextView youtube=button("▶\nYouTube",this::launchVideo);youtube.setOnLongClickListener(v->{DashShortcuts.choose(this,"YouTube");return true;});equal(shortcuts,youtube);
+        TextView youtube=button("▶\nYouTube web",()->leftPane.setMode("youtube_web"));youtube.setContentDescription("YouTube web in left panel. Long press for installed-app options.");youtube.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("YouTube options").setItems(new String[]{"Open YouTube / TizenTube app","Choose installed app"},(d,i)->{if(i==0)launchVideo();else DashShortcuts.choose(this,"YouTube");}).show();return true;});equal(shortcuts,youtube);
         TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
         layoutSurface.addPanel("shortcuts",shortcuts);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
@@ -168,26 +170,36 @@ public class DashboardActivity extends Activity implements LocationListener {
     final class Pane {
         final String key;final LinearLayout box;final FrameLayout slot;final TextView selector;
         String mode;DashNavigationView navigation;DashMediaPanel mediaPanel;DashSourcePanel sourcePanel;
+        DashWebPlayer webPlayer;DashFilePlayer filePlayer;
         Pane(String key,String initial){
             this.key=key;box=card();LinearLayout head=row();TextView caption=text(key.equals("vehicle")?"LEFT PANEL":"RIGHT PANEL",11,MUTED);head.addView(caption,new LinearLayout.LayoutParams(0,-1,1));
             selector=text("Switch ▾",14,BLUE);selector.setGravity(Gravity.CENTER);selector.setOnClickListener(v->menu());selector.setContentDescription("Switch "+key+" panel");head.addView(selector,new LinearLayout.LayoutParams(px(142),-1));box.addView(head,new LinearLayout.LayoutParams(-1,px(27)));
             slot=new FrameLayout(DashboardActivity.this);box.addView(slot,new LinearLayout.LayoutParams(-1,0,1));setMode(initial);
         }
         void menu(){
-            String[] labels=key.equals("vehicle")?new String[]{"Car preview","Navigation preview","YouTube controls","TizenTube controls","Media player","Radio controls"}:new String[]{"Media player","Navigation preview","Radio controls","YouTube controls","TizenTube controls"};
-            String[] values=key.equals("vehicle")?new String[]{"car","navigation","youtube","tizentube","media","radio"}:new String[]{"media","navigation","radio","youtube","tizentube"};
+            String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","Navigation preview","YouTube app controls","TizenTube app controls","Media controls","Radio app controls"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","Navigation preview","Radio app controls","YouTube app controls","TizenTube app controls"};
+            String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","navigation","radio","youtube","tizentube"};
             new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(labels,(d,i)->setMode(values[i])).setNegativeButton("Cancel",null).show();
         }
         void setMode(String requested){
-            String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio").contains(requested)?requested:"media";
+            String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio","youtube_web","video_file").contains(requested)?requested:"media";
             if(valid.equals("car")&&!key.equals("vehicle"))valid="media";
+            Pane other=key.equals("vehicle")?rightPane:leftPane;
+            if(inlineMode(valid)&&other!=null&&inlineMode(other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
             if(navigation!=null){navigation.close();navigation=null;}
+            if(webPlayer!=null){webPlayer.close();webPlayer=null;}
+            if(filePlayer!=null){filePlayer.close();filePlayer=null;}
             if("car".equals(mode))releaseVehicleResources();
             slot.removeAllViews();mode=valid;mediaPanel=null;sourcePanel=null;dashPrefs().edit().putString("pane_"+key,mode).apply();
-            String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Navigation":mode.equals("media")?"Media player":mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";selector.setText(caption+" ▾");
+            String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Map preview":mode.equals("media")?"Media controls":mode.equals("youtube_web")?"YouTube web":mode.equals("video_file")?"Video file":mode.equals("youtube")?"YT app controls":mode.equals("tizentube")?"TizenTube controls":"Radio controls";selector.setText(caption+" ▾");
             if(mode.equals("car")){detach(vehicleContent);slot.addView(vehicleContent,new FrameLayout.LayoutParams(-1,-1));}
             else if(mode.equals("media")){mediaPanel=key.equals("media")?primaryMedia:newMediaPanel();detach(mediaPanel);slot.addView(mediaPanel,new FrameLayout.LayoutParams(-1,-1));}
             else if(mode.equals("navigation")){navigation=new DashNavigationView(DashboardActivity.this,()->shortcut("Navigation"));slot.addView(navigation,new FrameLayout.LayoutParams(-1,-1));if(latestFix!=null)navigation.setLocation(latestFix);if(visible&&editMode==0)navigation.resume();}
+            else if(mode.equals("youtube_web")){webPlayer=new DashWebPlayer(DashboardActivity.this);slot.addView(webPlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0){webPlayer.resume();webPlayer.open("");}}
+            else if(mode.equals("video_file")){
+                String saved=dashPrefs().getString("panel_video_uri","");Uri uri=saved.startsWith("content://")?Uri.parse(saved):null;
+                filePlayer=new DashFilePlayer(DashboardActivity.this,io,uri,()->pickPanelVideo(this));slot.addView(filePlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0)filePlayer.resume();
+            }
             else{
                 String name=mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";
                 String app=mode.equals("youtube")?"YouTube app":name;
@@ -195,8 +207,20 @@ public class DashboardActivity extends Activity implements LocationListener {
             }
             if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
         }
-        void pause(){if(navigation!=null)navigation.pause();}
-        void resume(){if(navigation!=null&&visible&&editMode==0)navigation.resume();}
+        void pause(){if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
+        void resume(){if(visible&&editMode==0){if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();}}
+        void close(){if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
+    }
+    static boolean inlineMode(String mode){return "youtube_web".equals(mode)||"video_file".equals(mode);}
+    boolean inlineSelected(){return leftPane!=null&&inlineMode(leftPane.mode)||rightPane!=null&&inlineMode(rightPane.mode);}
+    void pickPanelVideo(Pane pane){
+        pendingVideoPane=pane.key;dashPrefs().edit().putString("panel_video_target",pane.key).apply();
+        try{startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("video/*").addCategory(Intent.CATEGORY_OPENABLE)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION),PICK_PANEL_VIDEO);}
+        catch(ActivityNotFoundException|SecurityException unavailable){
+            try{startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*").addCategory(Intent.CATEGORY_OPENABLE).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),PICK_PANEL_VIDEO);}
+            catch(ActivityNotFoundException|SecurityException missing){toast("No video file picker is available on this device");}
+        }
     }
     static void detach(View view){if(view.getParent() instanceof android.view.ViewGroup)((android.view.ViewGroup)view.getParent()).removeView(view);}
     void buildDock(){
@@ -389,7 +413,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void showAbout(){
         if(aboutDialog!=null&&aboutDialog.isShowing())return;
         aboutDialog=new AlertDialog.Builder(this).setTitle("About Saga Dash")
-            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nSource panels currently provide media controls and a native map preview; original app UI hosting is not implemented.")
+            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nYouTube web and local video can play in a panel. App-source modes remain media controls. The map is a preview; full turn-by-turn guidance is not implemented; original app UI hosting is not implemented.")
             .setPositiveButton("Close",null).create();
         final AlertDialog shown=aboutDialog;shown.setOnDismissListener(d->{if(aboutDialog==shown)aboutDialog=null;});shown.show();
     }
@@ -428,6 +452,21 @@ public class DashboardActivity extends Activity implements LocationListener {
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);
+        if(request==PICK_PANEL_VIDEO){
+            if(result==RESULT_OK&&data!=null&&data.getData()!=null){
+                Uri uri=data.getData();
+                if(!"content".equals(uri.getScheme())){toast("Choose a video from the Android file picker");return;}
+                int read=data.getFlags()&Intent.FLAG_GRANT_READ_URI_PERMISSION;
+                if(read!=0)try{getContentResolver().takePersistableUriPermission(uri,read);}catch(SecurityException ignored){}
+                String target=dashPrefs().getString("panel_video_target",pendingVideoPane);Pane pane="media".equals(target)?rightPane:leftPane;
+                if(pane!=null&&pane.filePlayer!=null){
+                    String old=dashPrefs().getString("panel_video_uri","");
+                    dashPrefs().edit().putString("panel_video_uri",uri.toString()).remove("panel_video_target").apply();pane.filePlayer.setSource(uri);
+                    if(old.startsWith("content://")&&!old.equals(uri.toString()))try{getContentResolver().releasePersistableUriPermission(Uri.parse(old),Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(SecurityException ignored){}
+                }
+            }
+            pendingVideoPane="";return;
+        }
         if(request==SagaShowroom.PICK_CAR_VIDEO){
             if(result==RESULT_OK&&data!=null&&data.getData()!=null){
                 final Uri uri=data.getData();toast("Importing car video…");
@@ -459,22 +498,22 @@ public class DashboardActivity extends Activity implements LocationListener {
     void updateVehicleResources(){
         if(vehicleStage==null)return;
         if(!carVisible()){releaseVehicleResources();return;}
-        if(!vehicleVideo)releaseShowroom();
+        if(!vehicleVideo||inlineSelected())releaseShowroom();
         boolean images=showroom==null;
         angles.setVisibility(images?View.VISIBLE:View.GONE);if(images)angles.resume();else angles.pause();
         if(showroom!=null)showroom.resume();updateVehicleLabels();
     }
     void ensureShowroom(boolean autoPlay){
-        if(!carVisible()||!vehicleVideo)return;
+        if(!carVisible()||!vehicleVideo||inlineSelected())return;
         angles.pause();angles.setVisibility(View.GONE);
         if(showroom==null){showroom=new SagaShowroom(this);vehicleStage.addView(showroom,new FrameLayout.LayoutParams(-1,-1));}
         showroom.playWhenPrepared=autoPlay;showroom.resume();if(autoPlay&&showroom.prepared&&!showroom.playing())showroom.toggle();updateVehicleLabels();
     }
-    void startVehicleVideo(){if(editMode==0&&vehicleVideo)ensureShowroom(true);}
+    void startVehicleVideo(){if(inlineSelected()){toast("Close the video panel before playing the car preview");return;}if(editMode==0&&vehicleVideo)ensureShowroom(true);}
     void updateVehicleLabels(){
         boolean cutout=vehicleVideo&&"transparent".equals(dashPrefs().getString("vehicle_preview_source","transparent"));
         setText(vehicleMode,vehicleVideo?(cutout?"Cutout ▾":"Video ▾"):"Angles ▾");vehicleMode.setContentDescription("Choose vehicle view");
-        setText(vehicleHint,vehicleVideo?(showroom==null?"Tap the car to play video":"Video preview · Tap to play / pause"):"Drag: 8 image angles · Pinch: zoom · Double-tap: reset");
+        setText(vehicleHint,vehicleVideo?(inlineSelected()?"Video panel active · car uses an image preview":showroom==null?"Tap the car to play video":"Video preview · Tap to play / pause"):"Drag: 8 image angles · Pinch: zoom · Double-tap: reset");
     }
     void selectVehicleVideo(String source){
         dashPrefs().edit().putString("vehicle_preview_source","imported".equals(source)?"imported":"transparent").apply();releaseShowroom();setVehicleVideo(true);
@@ -521,6 +560,6 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
     @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
     @Override protected void onPause(){visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
-    @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);if(leftPane.navigation!=null)leftPane.navigation.close();if(rightPane.navigation!=null)rightPane.navigation.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }

@@ -81,5 +81,5 @@ Maps memerlukan navigasi aktif untuk mod PiP. Laporan unit mengisytiharkan PiP, 
 serta Maps mempunyai flag PiP, tetapi laluan ini belum diuji pada unit fizikal oleh pembangun.
 
 Android8.1 biasanya menyediakan satu tingkap PiP sistem yang boleh dialihkan, bukan dua app yang
-dikunci ke panel. Radio FM OEM dalam laporan tidak mengisytiharkan PiP. Player native/web terbina
-dalam ialah pilihan pembangunan berasingan, bukan paparan app asal; ia belum ditambah dalam .6.
+dikunci ke panel. Radio FM OEM dalam laporan tidak mengisytiharkan PiP. [Player video native/YouTube web beta dalam .7](INLINE_PLAYBACK_MS.md) ialah pilihan berasingan,
+bukan paparan app asal. Radio FM dan navigasi lengkap belum ditambah.

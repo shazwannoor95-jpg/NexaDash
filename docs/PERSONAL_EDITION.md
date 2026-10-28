@@ -17,6 +17,20 @@ removed from the app. Optional **Transparent Saga video** and local video import
 video follows a recording, starts paused and is muted. No video MediaSession or audio-focus request
 is added, and the decoder is released when the panel/app is left.
 
+## Real in-panel players (.7)
+
+Optional **Video file · in panel** uses a native SurfaceView/MediaPlayer with content-URI selection,
+play/pause, seeking, audio focus and no file copy. Native video is capped at1080p/2MP;720p H.264
+is recommended for this head unit. **YouTube web · in panel (beta)** uses the actual mobile website
+inside one lazily created WebView, with native search/link entry and no installed activity hosting.
+Website permissions, file access, unsafe navigation and mixed content are restricted.
+Only one video/web panel is selected; closing/backgrounding/editing releases playback resources.
+Returning requires Start/Play. Car preview uses images while a video/web panel is selected.
+No new Android permission is added. Live YouTube streaming is unverified because the execution
+network blocks that site; actual local HTML5 and native content-URI playback are tested.
+Search/directions, turn-by-turn voice and OEM Radio FM integration remain outstanding.
+See [the no-ADB playback guide](INLINE_PLAYBACK_MS.md).
+
 ## Version identification and Settings grid (.6)
 
 Dashboard settings uses a native icon grid with the same fourteen actions, plus About Saga Dash.
@@ -53,7 +67,7 @@ establish a working host. See [the beginner guide](APP_PANELS_MS.md).
 - Native media panels share one Android media-session observer. Actual playback stays in the source app.
   Metadata, cover, previous/play-pause/next and optional lyrics depend on what the source publishes.
 - YouTube/TizenTube/Radio panels offer source controls and an Open action. They do not embed arbitrary
-  third-party activities or WebViews. A normal launcher cannot force Maps/Waze/TizenTube into its panel.
+  third-party activities. The separate YouTube web mode is explicitly a website player. A normal launcher cannot force Maps/Waze/TizenTube into its panel.
 - Navigation is a native GPS map preview with OpenStreetMap attribution and an action opening the
   selected navigation app. It is not a turn-by-turn engine or complete offline map.
 - Edit layout moves/resizes panels; a separate dock mode reorders icons and changes icon size.
@@ -162,8 +176,8 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The current **1.6.7-sagadash.6/code30** build passed
-**653 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
+fixtures are separate from production data. The current **1.6.7-sagadash.7/code31** build passed
+**683 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
 the read-only compatibility report, actual clipboard copy,
 theme state/lifecycle and compact layout regressions.
 See [performance and current validation status](PERFORMANCE.md).

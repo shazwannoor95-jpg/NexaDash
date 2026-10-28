@@ -1,7 +1,15 @@
 # Panel, susunan dan penggunaan sumber — Saga Dash
 
-Pilihan native yang ringan digunakan: tiada WebView dan tiada skrin app pihak ketiga yang dipaksa
-embed. Susunan asal ialah default. Tema Synthwave bermula dengan latar statik dan Reduce motion hidup.
+Default menggunakan pilihan native ringan; WebView hanya untuk mod YouTube web pilihan dalam .7.
+Tiada skrin app pihak ketiga dipaksa embed. Susunan asal ialah default. Tema Synthwave bermula dengan latar statik dan Reduce motion hidup.
+
+## Player dalam panel (.7)
+
+Selector panel kiri/kanan menawarkan **YouTube web · in panel (beta)** dan **Video file · in panel**.
+Ini pemain sebenar dalam launcher; mod app controls yang lama masih membuka app asal.
+Satu pemain video/web pada satu masa, dilepaskan apabila app/panel ditutup. Shortcut YouTube web
+membuka laman dalam panel kiri; tekan lama untuk pilihan app asal.
+Lihat [cara pilih fail, cari video dan had WebView](INLINE_PLAYBACK_MS.md).
 
 ## Semak versi dan Settings (.6)
 

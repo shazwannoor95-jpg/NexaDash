@@ -61,6 +61,7 @@ public class DashboardChecks extends Instrumentation {
             assertions+=new DashAppsChecks().run(this,dash[0]);
             assertions+=new DashSettingsGridChecks().run(this,dash[0]);
             assertions+=new DashCustomizationChecks().run(this,dash[0]);
+            assertions+=new DashInlineChecks().run(this,dash[0]);
             assertions+=new DashAppearanceChecks().run(this,dash[0]);
             assertions+=new SagaShowroomChecks().run(this,dash[0]);
             assertions+=new SagaAngleChecks().run(this,dash[0]);
