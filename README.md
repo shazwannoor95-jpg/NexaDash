@@ -6,7 +6,7 @@ This branch contains the owner's modified V58 APK split into <100MiB files becau
 
 **Minimum Android10 / API29 is unchanged. API27 will refuse installation.** NexaDash Native Lab itself can install on older Android, but does not lower a companion app's SDK floor. For an API27 firmware experiment use its Demo companion or the separately marked ARM TizenTube candidate.
 
-Install ONLY alongside the matching cloud-signed NexaDash Native Lab APK. An original SamMods V58 installation has a different signing certificate; use a clean test emulator rather than deleting saved personal data. V58's MicroG dependency/setup still applies. No personal account is needed for the UI test. Playback has not been verified, and dialog/keyboard/lifecycle behavior remains experimental. The earlier standalone host test logged a V58/Primes lifecycle error during Activity destruction; the Lab is not certified crash-free.
+Install ONLY alongside the matching cloud-signed NexaDash Native Lab APK. An original SamMods V58 installation has a different signing certificate; use a clean test emulator rather than deleting saved personal data. V58's MicroG dependency/setup still applies. No personal account is needed for the UI test. Playback has not been verified, and dialog/keyboard/lifecycle behavior remains experimental. Standalone and NexaDash Lab tests logged a V58/Primes lifecycle error during Activity destruction; the Lab is not certified crash-free.
 
 The native app appears only after selecting **Native app · experimental** in a NexaDash Lab panel and pressing **Start**. Unmodified V58 does not provide this bridge.
 
