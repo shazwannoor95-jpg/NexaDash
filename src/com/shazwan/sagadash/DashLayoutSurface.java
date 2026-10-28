@@ -130,11 +130,11 @@ final class DashLayoutSurface extends ViewGroup {
 
     private RectF defaults(String key,int width,int height){
         float gap=10*unit,dock=Math.min(height,87*unit),content=height-dock;
-        float left=Math.max(0,(width-gap)*.43f),right=Math.min(width,left+gap);
+        float left=Math.max(0,(width-gap)*.5f),right=Math.min(width,left+gap);
         float shortcut=Math.min(content,115*unit),margin=Math.min(content/2,6*unit);
         if(key.equals("vehicle"))return new RectF(0,margin,left,Math.max(margin,content-margin));
         if(key.equals("shortcuts"))return new RectF(right,0,width,shortcut);
-        if(key.equals("media"))return new RectF(right,shortcut,width,content);
+        if(key.equals("media"))return new RectF(right,margin,width,Math.max(margin,content-margin));
         if(key.equals("dock"))return new RectF(0,content,width,height);
         return new RectF(0,0,width,height);
     }

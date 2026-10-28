@@ -32,9 +32,9 @@ final class DashLayoutChecks {
                 same(bounded,new RectF(0,0,100,80),"small surfaces remain bounded even below the normal minimum size");
                 DashLayoutSurface surface=surface(context,prefs,1000,500);
                 RectF vehicle=surface.boundsFor("vehicle"),shortcuts=surface.boundsFor("shortcuts"),media=surface.boundsFor("media"),dock=surface.boundsFor("dock");
-                same(vehicle,new RectF(0,6,425.7f,407),"default vehicle position retains original weighted layout");
-                same(shortcuts,new RectF(435.7f,0,1000,115),"default shortcuts retain upper right location");
-                same(media,new RectF(435.7f,115,1000,413),"default media retains lower right location");
+                same(vehicle,new RectF(0,6,495,407),"default left panel occupies half the content");
+                same(shortcuts,new RectF(505,0,1000,115),"default shortcuts retain upper right location");
+                same(media,new RectF(505,6,1000,407),"default right panel matches left size and vertical alignment");
                 same(dock,new RectF(0,413,1000,500),"default dock remains below the panels");
                 MotionEvent down=event(MotionEvent.ACTION_DOWN,100,100);
                 check(!surface.onInterceptTouchEvent(down)&&!surface.onTouchEvent(down),"normal mode leaves video, car and child touch gestures alone");down.recycle();

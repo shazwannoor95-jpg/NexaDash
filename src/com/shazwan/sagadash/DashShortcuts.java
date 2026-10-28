@@ -33,6 +33,7 @@ final class DashShortcuts {
             case "YouTube app":return new String[]{"com.google.android.youtube","com.google.android.youtube.tv"};
             case "TizenTube":return new String[]{"io.gh.reisxd.tizentube.cobalt"};
             case "Navigation":return new String[]{"com.waze","com.google.android.apps.maps"};
+            case "DiAuto":return new String[]{"com.andrerinas.headunitrevived"};
             case "Car Link":return new String[]{"com.zjinnova.zlink","com.zjinnova.zlink5"};
             case "Vehicle settings":return new String[]{"com.android.car.setting"};
             default:return new String[0];

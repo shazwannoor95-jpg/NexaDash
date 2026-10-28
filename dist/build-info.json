@@ -1,16 +1,16 @@
 {
-  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native3.apk",
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native4.apk",
   "application_id": "com.shazwan.nexadash.lab",
-  "version_name": "1.6.7-nexadash.8-native3",
-  "version_code": 35,
+  "version_name": "1.6.7-nexadash.8-native4",
+  "version_code": 36,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5499791,
-  "sha256": "44994310946795cbd084d17235557811be544c02d639c9f3df15417217b2c123",
+  "sha256": "1e3ca14ac02a45e26fbb1d841f52e92ee2d0b1584068cb76d075f878e9b9ddd2",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Native3: shell release and Gradle debug/release builds; test-source compilation. Runtime UI/head-unit regression not run: no device connected. Previous native1 passed708 assertions.",
+  "validation": "Native4: shell release, Gradle debug/release and test-source compilation checked. No connected-device runtime UI regression. Previous native1 708 assertions are historical.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -67,5 +67,7 @@
   "native_startup_timeout_ms": 60000,
   "web_panel_fit": "Search/help rows collapse on open; Search toggles them back. 32dp controls; WebView text zoom100 and fitted viewport. Physical YouTube playback remains unverified.",
   "footer": "Invisible after4sec inactivity, touch to reveal; fixed reserved height, no animations/polling; edit instructions stay visible.",
-  "youtube_shortcut": "Launches installed official com.google.android.youtube outside dashboard; long press retains web/native companion choices."
+  "youtube_shortcut": "Launches installed official com.google.android.youtube outside dashboard; long press retains web/native companion choices.",
+  "layout": "Equal default left/right panels; removed three upper-right shortcuts. One-time migration resets left/right bounds; dock position retained.",
+  "dock": "DSP replaced by official YouTube; Car Link replaced by DiAuto launch shortcut. No DiAuto integration, auto-launch or projection test."
 }

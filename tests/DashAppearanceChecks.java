@@ -129,7 +129,7 @@ final class DashAppearanceChecks {
     private final class Snapshot {
         final Object root,left,right,leftChild,rightChild,viewer,session,leftNavigation,rightNavigation;
         final String leftMode,rightMode,trackTitle,trackArtist,zone,dockOrder;
-        final RectF[] bounds=new RectF[4];final String[] keys={"vehicle","shortcuts","media","dock"};
+        final RectF[] bounds=new RectF[3];final String[] keys={"vehicle","media","dock"};
         final int frame,surfaces;final float magnification;final double trip;
         Snapshot(DashboardActivity dashboard,Field zoom) throws Exception {
             root=dashboard.root;left=dashboard.leftPane;right=dashboard.rightPane;

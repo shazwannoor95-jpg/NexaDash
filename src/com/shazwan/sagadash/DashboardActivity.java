@@ -56,8 +56,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     Location latestFix;
     final SimpleDateFormat clockFormat=new SimpleDateFormat("HH:mm",Locale.US);
     final SimpleDateFormat dayFormat=new SimpleDateFormat("EEEE, dd MMM yyyy  ·  'Malaysia'",Locale.US);
-    static final String[] DOCK_NAMES={"Music","Bluetooth","Radio","Video","Files","Equalizer","Car Link","DSP"};
-    static final String[] DOCK_SYMBOLS={"♫","ᛒ","FM","▶","▣","▥","▱","☷"};
+    static final String[] DOCK_NAMES={"Music","Bluetooth","Radio","Video","Files","Equalizer","DiAuto","YouTube"};
+    static final String[] DOCK_SYMBOLS={"♫","ᛒ","FM","▶","▣","▥","▱","▶"};
     static final int[] DOCK_COLORS={0xffec4d79,0xff288ff0,0xff9459ec,0xffec7148,0xffe7a52b,0xff6e8199,0xff239366,0xff336bf2};
     DashAppearance appearance;
     DashPanelCompatibility panelCompatibility;
@@ -137,14 +137,13 @@ public class DashboardActivity extends Activity implements LocationListener {
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
         buildVehicleContent();
         primaryMedia=newMediaPanel();bindPrimaryMedia();
+        if(!dashPrefs().getBoolean("equal_panels_v2",false)){
+            dashPrefs().edit().remove("panel_layout_v1_vehicle").remove("panel_layout_v1_media").remove("panel_layout_v1_shortcuts").putBoolean("equal_panels_v2",true).apply();
+        }
         layoutSurface=new DashLayoutSurface(this,dashPrefs(),unit());main.addView(layoutSurface,new LinearLayout.LayoutParams(-1,0,1));
         leftPane=new Pane("vehicle",dashPrefs().getString("pane_vehicle","car"));
         rightPane=new Pane("media",dashPrefs().getString("pane_media","media"));
         layoutSurface.addPanel("vehicle",leftPane.box);layoutSurface.addPanel("media",rightPane.box);
-        LinearLayout shortcuts=row();
-        TextView youtube=button("▶\nYouTube",this::launchOfficialYouTube);youtube.setContentDescription("Open the installed official YouTube app. Long press for panel options.");youtube.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("YouTube options").setItems(new String[]{"YouTube web · in panel","Native app · experimental","Choose installed app"},(d,i)->{if(i==0)leftPane.setMode("youtube_web");else if(i==1)leftPane.setMode("native_app");else DashShortcuts.choose(this,"YouTube");}).show();return true;});equal(shortcuts,youtube);
-        TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
-        layoutSurface.addPanel("shortcuts",shortcuts);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
         footerText=text(footerLabel(),14,MUTED);pad(footerText,10);footerText.setBackground(background(0xff0c1b29));
         footerText.setOnClickListener(v->{if(editMode!=0)finishEditing(false);else shortcut("Vehicle settings");});footerText.setOnLongClickListener(v->{if(editMode==0)DashShortcuts.choose(this,"Vehicle settings");return true;});main.addView(footerText,new LinearLayout.LayoutParams(-1,px(44)));applyStyle();
@@ -226,7 +225,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     static void detach(View view){if(view.getParent() instanceof android.view.ViewGroup)((android.view.ViewGroup)view.getParent()).removeView(view);}
     void buildDock(){
-        dock.removeAllViews();String saved=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));LinkedHashSet<String> order=new LinkedHashSet<>();for(String s:saved.split(","))if(Arrays.asList(DOCK_NAMES).contains(s))order.add(s);Collections.addAll(order,DOCK_NAMES);dockOrder=new ArrayList<>(order);
+        dock.removeAllViews();String saved=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));LinkedHashSet<String> order=new LinkedHashSet<>();for(String s:saved.split(",")){if(s.equals("Car Link"))s="DiAuto";else if(s.equals("DSP"))s="YouTube";if(Arrays.asList(DOCK_NAMES).contains(s))order.add(s);}Collections.addAll(order,DOCK_NAMES);dockOrder=new ArrayList<>(order);
         for(String name:dockOrder){int index=Arrays.asList(DOCK_NAMES).indexOf(name);LinearLayout item=iconButton(name,DOCK_SYMBOLS[index],DOCK_COLORS[index],()->{if(editMode==2)iconSizeDialog(name);else if(editMode==0)shortcut(name);});
             styleButtons(item);item.setTag(name);item.setOnLongClickListener(v->{if(editMode==2){v.startDragAndDrop(ClipData.newPlainText("dock",name),new View.DragShadowBuilder(v),name,0);return true;}if(editMode==0)DashShortcuts.choose(this,name);return true;});
             item.setOnDragListener((v,event)->{
@@ -450,7 +449,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         });
     }
     void closeApps(){appsGeneration++;if(appsGrid!=null){appsGrid.close();appsGrid=null;}if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
-    void shortcut(String name){if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
+    void shortcut(String name){if(name.equals("YouTube")){launchOfficialYouTube();return;}if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
     void launchOfficialYouTube(){
         Intent launch=getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
         if(launch==null||!DashShortcuts.start(this,launch))toast("Official YouTube is not installed or cannot be opened on this device.");
