@@ -52,7 +52,7 @@ Carian destinasi dan directions .8 dikekalkan: **Navigation â†’ alamat/tempat â†
 
 - **708 assertions** pada emulator Android10/API29: app asal .8, native display cross-UID di panel kiri/kanan, sentuhan berskala ke counter sebenar companion, input text proxy ke EditText app berasingan, explicit-start/no-autoresume, one-player limit serta cleanup.
 - Build shell dan Gradle debug/release + panelprobe berjaya. APK signature/ZIP alignment/CRC diperiksa. Debug re-sign task diuji dan certificate pasangan dibandingkan.
-- YouTube V58 prototaip terdahulu merender UI native dan skrin Search melalui sentuhan. Ini **bukan bukti video streaming berjaya**. Live YouTube playback masih belum disahkan; persekitaran ujian menunjukkan masalah sambungan.
+- Ujian manual Lab ini juga merender UI YouTube V58 sebenar dalam panel kiri (screenshot bawah); prototaip terdahulu turut membuka skrin Search melalui sentuhan. Ini **bukan bukti video streaming berjaya**. Live YouTube playback masih belum disahkan; persekitaran ujian menunjukkan masalah sambungan.
 - Terdapat log error lifecycle **Primes** dalam proses V58 semasa teardown pada prototaip terdahulu dan teardown ujian Lab. Companion bukan crash-free yang disahkan. Window dialog, IME, back handling dan lifecycle semua app belum lengkap. Lab mengasingkan proses target dan melepaskan sumber miliknya; ia tidak memaksa-stop semua service/background playback milik companion.
 - Main Lab tidak meminta MANAGE_ACTIVITY_TASKS, INJECT_EVENTS atau system hosting permission. Ia hanya menerima companion yang opt-in, mempunyai service signature-protected, protocol sesuai dan signing key sama. Tiada auto-patch APK asal, bypass DRM/secure-window/login atau root command.
 - Tiada ukuran RAM/CPU head unit fizikal. Default tidak memulakan native display, binding atau input worker sebelum Start; relay input mempunyai queue terhad. Ini tidak menjamin penggunaan rendah oleh YouTube/Cobalt/MicroG sendiri.
@@ -60,3 +60,5 @@ Carian destinasi dan directions .8 dikekalkan: **Navigation â†’ alamat/tempat â†
 Source: [native frame](../src/com/shazwan/sagadash/DashNativeFrame.java), [proxy](../src/com/shazwan/sagadash/DashNativeProxy.java), [tests](../tests/DashNativeChecks.java), [V58 patch](../tools/v58-panel-lab), [Cobalt patch](../tools/native-companion). Cobalt asal dan notis/lesen pihak ketiga dikekalkan dalam companion; ia bukan keluaran rasmi Google/Cobalt dan bukan APK standard .8.
 
 ![Demo companion native dalam panel dashboard](img/native-lab-demo-left.png)
+
+![YouTube V58 native dalam NexaDash Lab pada emulator API29; masih loading, bukan bukti playback](img/native-lab-youtube.png)
