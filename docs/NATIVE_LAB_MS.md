@@ -1,10 +1,10 @@
 # NexaDash .8 Native Lab — install dan cuba
 
-**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native7 / code39**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
+**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native8 / code40**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
 
 ## Download
 
-- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native7.apk)
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk)
 - [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
 
 Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
@@ -21,7 +21,7 @@ APK V58 >100MB, jadi GitHub menyimpannya dalam tiga bahagian 90MB/90MB/baki pada
 
 ## Cara dalam panel kiri / kanan
 
-1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native7**.
+1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native8**.
 2. Tekan pilihan di penjuru atas panel kiri atau kanan → **Native app · experimental**.
 3. Tekan butang pilihan app dalam panel, pilih **YouTube V58 / TizenTube / Demo** yang sepadan dengan companion terpasang.
 4. Tekan **Start**. Tiada auto-launch pada load/resume. Startup dibatalkan selepas 60 saat jika companion/display tidak bersedia; tiada auto-retry. App native diharapkan muncul dalam permukaan panel; status error dipaparkan jika firmware/companion menolak.
@@ -92,3 +92,9 @@ Native6 verification: PASS36 focused layout integration on API29 x86_64 (drag/re
 Removed outer dock panel and individual shortcut idle fills/outlines. Colored icon badges, labels and state underline remain. Dock64→54 design units, badges36→30, captions20→17; bottom root/main insets reduced to4 each. Equal panels gain the recovered height. Geometry resets once for left/right/dock; icon order/scales and content choices retained. No extra animation/worker.
 
 Native7 verification: PASS37 focused layout checks on API29 x86_64, including absent outer dock background, expanded equal panels, dock bottom, drag/resize/persistence and clock width/height fit.
+
+## Native8: separate header capsules
+
+Clock is a compact standalone glass capsule; center space is transparent. Edit layout and Media access use separate pills with explicit gaps. Frameless bottom dock and enlarged equal panels retained. No layout migration or additional background work.
+
+Native8 verification: PASS37 focused API29 x86_64 layout checks; release/debug build, signature and alignment checks pass.

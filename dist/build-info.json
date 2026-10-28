@@ -1,16 +1,16 @@
 {
-  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native7.apk",
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk",
   "application_id": "com.shazwan.nexadash.lab",
-  "version_name": "1.6.7-nexadash.8-native7",
-  "version_code": 39,
+  "version_name": "1.6.7-nexadash.8-native8",
+  "version_code": 40,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5499791,
-  "sha256": "1f286079c44cad231348e717ce216489eab9a1058ad32f20784dc06300f3ef25",
+  "sha256": "ec3f1ca6abd0b56b91580e5ed04baf707454125e86636f5c97cf48557379d1b2",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Native7 shell release and offline Gradle debug/release pass; focused API29 x86_64 layout integration PASS37 (dock frame removed, compact bottom dock, equal expanded panels, drag/resize/persistence and clock fit). Test sources compile; signature/alignment checked. No full-suite or physical head-unit pass claimed.",
+  "validation": "Native8 shell release and offline Gradle debug/release pass; focused API29 x86_64 layout integration PASS37, including clock width/height fit, equal panels, frameless bottom dock, drag/resize and persistence. APK signature/alignment verified; no full-suite or physical head-unit pass claimed.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -72,5 +72,6 @@
     "version": "native5",
     "assertions": 16
   },
+  "header": "Standalone164-unit clock capsule, transparent flexible center, separated Edit layout and Media access pills with10-unit gaps; no shared header panel. Frameless dock and panel geometry unchanged.",
   "layout_focused_assertions": 37
 }

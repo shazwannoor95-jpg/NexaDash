@@ -132,8 +132,10 @@ public class DashboardActivity extends Activity implements LocationListener {
         main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);main.setPadding(main.getPaddingLeft(),main.getPaddingTop(),main.getPaddingRight(),px(4));
         LinearLayout header=row();clock=text("",38,TEXT);clock.setSingleLine(true);clock.setIncludeFontPadding(false);clock.setPadding(px(10),0,px(8),0);
         if(Build.VERSION.SDK_INT>=26)clock.setAutoSizeTextTypeUniformWithConfiguration(px(18),px(38),1,android.util.TypedValue.COMPLEX_UNIT_PX);
-        header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
-        editButton=button("Edit layout",this::editLayoutMenu);header.addView(editButton);header.addView(button("Media access  ·  ⚙",this::settings));main.addView(header);clock.setOnClickListener(v->clockDialog());
+        clock.setGravity(Gravity.CENTER);header.addView(clock,new LinearLayout.LayoutParams(px(164),px(55)));
+        header.addView(new View(this),new LinearLayout.LayoutParams(0,1,1));
+        editButton=button("Edit layout",this::editLayoutMenu);LinearLayout.LayoutParams editBounds=new LinearLayout.LayoutParams(-2,px(55));editBounds.setMargins(px(10),0,px(10),0);header.addView(editButton,editBounds);
+        TextView access=button("Media access  ·  ⚙",this::settings);header.addView(access,new LinearLayout.LayoutParams(-2,px(55)));main.addView(header);clock.setOnClickListener(v->clockDialog());
         date=text("",16,MUTED);main.addView(date,new LinearLayout.LayoutParams(-1,px(27)));
         prayerBar=row();prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));prayerBar.setOnClickListener(v->prayerDialog());main.addView(prayerBar,new LinearLayout.LayoutParams(-1,px(66)));
         next=text("",13,BLUE);main.addView(next,new LinearLayout.LayoutParams(-1,px(23)));
@@ -262,7 +264,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(rightPane!=null)rightPane.box.setBackground(appearance.panel(PANEL,px(20)));
         if(prayerBar!=null)prayerBar.setBackground(appearance.panel(0xff0b1c2b,px(20)));
         if(dock!=null)dock.setBackground(null);
-        if(clock!=null){((View)clock.getParent()).setBackground(appearance.synthwave()?appearance.panel(0x22080b1f,px(18)):null);clock.setTypeface(appearance.synthwave()?Typeface.create("monospace",Typeface.BOLD):Typeface.DEFAULT);}
+        if(clock!=null){((View)clock.getParent()).setBackground(null);clock.setBackground(appearance.synthwave()?appearance.panel(0x44080b1f,px(18)):background(PANEL));clock.setTypeface(appearance.synthwave()?Typeface.create("monospace",Typeface.BOLD):Typeface.DEFAULT);}
         if(date!=null)date.setTextColor(appearance.synthwave()?DashAppearance.CYAN:MUTED);
         styleButtons(root);
     }
