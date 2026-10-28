@@ -23,16 +23,17 @@ public class DashboardChecks extends Instrumentation {
             assertions+=new DashLayoutChecks().run(this);
             assertions+=new DashNavigationChecks().run();
             assertions+=new DashMediaChecks().run(this);
-            final String applicationId="com.shazwan.sagadash";
+            final String applicationId="com.shazwan.nexadash.lab";
+            final String namespace="com.shazwan.sagadash";
             check(getTargetContext().getPackageName().equals(applicationId),"personal application ID");
-            check(DashboardActivity.class.getName().equals(applicationId+".DashboardActivity")
-                    &&R.class.getName().equals(applicationId+".R"),"Java and resource namespace migrated");
+            check(DashboardActivity.class.getName().equals(namespace+".DashboardActivity")
+                    &&R.class.getName().equals(namespace+".R"),"Java and resource namespace migrated");
             check(getTargetContext().getApplicationInfo().dataDir.endsWith("/"+applicationId),"personal private data directory");
             android.content.pm.PackageInfo installed=getTargetContext().getPackageManager().getPackageInfo(applicationId,
                     android.content.pm.PackageManager.GET_ACTIVITIES|android.content.pm.PackageManager.GET_SERVICES);
             boolean componentsMigrated=true;
-            for(android.content.pm.ActivityInfo component:installed.activities)componentsMigrated&=component.name.startsWith(applicationId+".");
-            for(android.content.pm.ServiceInfo component:installed.services)componentsMigrated&=component.name.startsWith(applicationId+".");
+            for(android.content.pm.ActivityInfo component:installed.activities)componentsMigrated&=component.name.startsWith(namespace+".");
+            for(android.content.pm.ServiceInfo component:installed.services)componentsMigrated&=component.name.startsWith(namespace+".");
             check(componentsMigrated,"all registered activity/service classes use personal namespace");
             assertions+=new PrayerGpsChecks().run(getTargetContext());
             JSONObject day=new JSONObject("{\"date\":\"25-Oct-2026\",\"fajr\":\"05:48:00\",\"syuruk\":\"07:00:00\",\"dhuhr\":\"13:10:00\",\"asr\":\"16:25:00\",\"maghrib\":\"19:12:00\",\"isha\":\"20:23:00\"}");
@@ -92,6 +93,7 @@ public class DashboardChecks extends Instrumentation {
             runOnMainSync(()->{check(dash[0].title.getText().toString().equals("Dashboard test track"),"session metadata displayed");check(dash[0].play.getText().toString().equals("Pause"),"playing state displayed");check(((android.graphics.drawable.BitmapDrawable)dash[0].artwork.getDrawable()).getBitmap().getWidth()<=128,"album artwork is bounded before display");dash[0].media.command(0);});
             for(int n=0;n<30;n++){SystemClock.sleep(100);if(!dash[0].media.playing())break;}
             runOnMainSync(()->check(!dash[0].media.playing(),"pause routed to selected session"));
+            assertions+=new DashNativeChecks().run(this,dash[0]);
             result.putString("stream","PASS: "+assertions+" assertions (JAKIM parser, lyrics, dashboard, real MediaSession controls)\n");
             finish(Activity.RESULT_OK,result);
         }catch(Throwable e){result.putString("stream","FAIL after "+assertions+" assertions: "+e.toString()+"\n");finish(Activity.RESULT_CANCELED,result);}

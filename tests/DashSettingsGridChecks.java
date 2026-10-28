@@ -92,8 +92,8 @@ final class DashSettingsGridChecks {
                 check(message!=null&&message.getText().toString().contains("Version: "+version)
                         &&message.getText().toString().contains(dashboard.getPackageName()),
                     "About identifies the installed version and application ID");
-                check(message.getText().toString().contains("original app UI hosting is not implemented"),
-                    "About states the unresolved app-hosting limitation");
+                check(message.getText().toString().contains("does not embed arbitrary original apps"),
+                    "About states the cooperative-only hosting limitation");
                 dashboard.aboutDialog.dismiss();
             });
             // Dialog dismissal posts its onDismiss listener after dismiss() returns.

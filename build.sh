@@ -7,9 +7,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8}
-VERSION_CODE=${VERSION_CODE:-32}
-APP_ID=${PKG:-com.shazwan.sagadash}
+VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8-native1}
+VERSION_CODE=${VERSION_CODE:-33}
+APP_ID=${PKG:-com.shazwan.nexadash.lab}
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}
 BT=$SDK/build-tools/36.0.0
@@ -35,7 +35,7 @@ if [ "$MODE" = "release" ] || [ ! -s assets/quran-en.txt ]; then rm -f build/ass
 DEBUG_FLAG=""; [ "$MODE" != "release" ] && [ "${DEBUGGABLE:-0}" = "1" ] && DEBUG_FLAG="--debug-mode"
 # PKG=com.shazwan.sagadash.demo ./build.sh release: salinan dengan nama paket lain (mis. rekam tutorial "pasang pertama kali"
 # tanpa menghapus KlikDash yang terpasang).
-[ -n "${PKG:-}" ] && DEBUG_FLAG="$DEBUG_FLAG --rename-manifest-package $PKG"
+DEBUG_FLAG="$DEBUG_FLAG --rename-manifest-package $APP_ID"
 "$BT/aapt2" link -o build/base.apk -I "$JAR" --manifest AndroidManifest.xml -A build/assets -0 ttf $DEBUG_FLAG \
     --min-sdk-version 24 --target-sdk-version 29 --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" \
     --java build/gen build/res.zip

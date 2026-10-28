@@ -15,11 +15,11 @@ android {
     namespace 'com.shazwan.sagadash'
     compileSdk 35
     defaultConfig {
-        applicationId 'com.shazwan.sagadash'
+        applicationId 'com.shazwan.nexadash.lab'
         minSdk 24
         targetSdk 29
-        versionCode 32
-        versionName '1.6.7-nexadash.8'
+        versionCode 33
+        versionName '1.6.7-nexadash.8-native1'
     }
     sourceSets {
         main {
@@ -38,3 +38,27 @@ android {
     }
 }
 tasks.named('preBuild').configure { dependsOn prepareManifest }
+
+// Re-sign an already patched companion with this computer's Studio debug key.
+// No private key is copied into the repository; APK source is supplied explicitly.
+tasks.register('resignNativeCompanion') {
+    dependsOn 'assembleDebug'
+    doLast {
+        def inputPath = providers.gradleProperty('nativeCompanion').orNull
+        if (!inputPath) throw new GradleException('Pass -PnativeCompanion=/absolute/path/to/patched-companion.apk')
+        def inputApk = rootProject.file(inputPath)
+        if (!inputApk.isFile() || !inputApk.name.endsWith('.apk')) throw new GradleException('Patched companion APK not found')
+        def signer = new File(android.sdkDirectory, 'build-tools/' + android.buildToolsVersion + (System.getProperty('os.name').toLowerCase().contains('windows') ? '/apksigner.bat' : '/apksigner'))
+        def debugKey = android.signingConfigs.debug
+        def outputApk = layout.buildDirectory.file('outputs/native-companion/' + inputApk.name.replace('.apk', '-debug.apk')).get().asFile
+        outputApk.parentFile.mkdirs()
+        exec {
+            environment 'NEXA_DEBUG_STORE_PASS', debugKey.storePassword
+            environment 'NEXA_DEBUG_KEY_PASS', debugKey.keyPassword
+            commandLine signer.absolutePath, 'sign', '--ks', debugKey.storeFile.absolutePath,
+                '--ks-key-alias', debugKey.keyAlias, '--ks-pass', 'env:NEXA_DEBUG_STORE_PASS',
+                '--key-pass', 'env:NEXA_DEBUG_KEY_PASS', '--out', outputApk.absolutePath, inputApk.absolutePath
+        }
+        println 'Debug companion: ' + outputApk.absolutePath
+    }
+}

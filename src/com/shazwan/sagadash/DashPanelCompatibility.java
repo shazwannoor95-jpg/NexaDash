@@ -76,7 +76,7 @@ final class DashPanelCompatibility {
     static String collect(Context context){
         PackageManager pm=context.getPackageManager();String own=context.getPackageName();
         StringBuilder out=new StringBuilder(4096);
-        out.append("NEXADASH — APP PANEL COMPATIBILITY\nRead-only check; this update does not embed apps.\n\n");
+        out.append("NEXADASH — APP PANEL COMPATIBILITY\nRead-only check; experimental native hosting needs a patched companion.\n\n");
         try{PackageInfo info=pm.getPackageInfo(own,0);out.append("NexaDash: ").append(clean(info.versionName)).append('\n');}catch(PackageManager.NameNotFoundException ignored){}
         out.append("Manufacturer: ").append(clean(Build.MANUFACTURER)).append("\nModel: ").append(clean(Build.MODEL))
             .append("\nAndroid reported version: ").append(clean(Build.VERSION.RELEASE)).append("\nActual SDK API: ").append(Build.VERSION.SDK_INT)

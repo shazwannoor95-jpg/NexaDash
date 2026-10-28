@@ -170,32 +170,34 @@ public class DashboardActivity extends Activity implements LocationListener {
     final class Pane {
         final String key;final LinearLayout box;final FrameLayout slot;final TextView selector;
         String mode;DashNavigationView navigation;DashMediaPanel mediaPanel;DashSourcePanel sourcePanel;
-        DashWebPlayer webPlayer;DashFilePlayer filePlayer;
+        DashWebPlayer webPlayer;DashFilePlayer filePlayer;DashNativeFrame nativeFrame;
         Pane(String key,String initial){
             this.key=key;box=card();LinearLayout head=row();TextView caption=text(key.equals("vehicle")?"LEFT PANEL":"RIGHT PANEL",11,MUTED);head.addView(caption,new LinearLayout.LayoutParams(0,-1,1));
             selector=text("Switch ▾",14,BLUE);selector.setGravity(Gravity.CENTER);selector.setOnClickListener(v->menu());selector.setContentDescription("Switch "+key+" panel");head.addView(selector,new LinearLayout.LayoutParams(px(142),-1));box.addView(head,new LinearLayout.LayoutParams(-1,px(27)));
             slot=new FrameLayout(DashboardActivity.this);box.addView(slot,new LinearLayout.LayoutParams(-1,0,1));setMode(initial);
         }
         void menu(){
-            String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","Navigation preview","YouTube app controls","TizenTube app controls","Media controls","Radio app controls"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","Navigation preview","Radio app controls","YouTube app controls","TizenTube app controls"};
-            String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","navigation","radio","youtube","tizentube"};
+            String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","Native app · experimental","Navigation preview","YouTube app controls","TizenTube app controls","Media controls","Radio app controls"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","Native app · experimental","Navigation preview","Radio app controls","YouTube app controls","TizenTube app controls"};
+            String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","native_app","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","native_app","navigation","radio","youtube","tizentube"};
             new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(labels,(d,i)->setMode(values[i])).setNegativeButton("Cancel",null).show();
         }
         void setMode(String requested){
-            String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio","youtube_web","video_file").contains(requested)?requested:"media";
+            String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio","youtube_web","video_file","native_app").contains(requested)?requested:"media";
             if(valid.equals("car")&&!key.equals("vehicle"))valid="media";
             Pane other=key.equals("vehicle")?rightPane:leftPane;
             if(inlineMode(valid)&&other!=null&&inlineMode(other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
             if(navigation!=null){navigation.close();navigation=null;}
             if(webPlayer!=null){webPlayer.close();webPlayer=null;}
             if(filePlayer!=null){filePlayer.close();filePlayer=null;}
+            if(nativeFrame!=null){nativeFrame.close();nativeFrame=null;}
             if("car".equals(mode))releaseVehicleResources();
             slot.removeAllViews();mode=valid;mediaPanel=null;sourcePanel=null;dashPrefs().edit().putString("pane_"+key,mode).apply();
-            String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Map preview":mode.equals("media")?"Media controls":mode.equals("youtube_web")?"YouTube web":mode.equals("video_file")?"Video file":mode.equals("youtube")?"YT app controls":mode.equals("tizentube")?"TizenTube controls":"Radio controls";selector.setText(caption+" ▾");
+            String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Map preview":mode.equals("media")?"Media controls":mode.equals("youtube_web")?"YouTube web":mode.equals("video_file")?"Video file":mode.equals("native_app")?"Native app lab":mode.equals("youtube")?"YT app controls":mode.equals("tizentube")?"TizenTube controls":"Radio controls";selector.setText(caption+" ▾");
             if(mode.equals("car")){detach(vehicleContent);slot.addView(vehicleContent,new FrameLayout.LayoutParams(-1,-1));}
             else if(mode.equals("media")){mediaPanel=key.equals("media")?primaryMedia:newMediaPanel();detach(mediaPanel);slot.addView(mediaPanel,new FrameLayout.LayoutParams(-1,-1));}
             else if(mode.equals("navigation")){navigation=new DashNavigationView(DashboardActivity.this,()->shortcut("Navigation"));slot.addView(navigation,new FrameLayout.LayoutParams(-1,-1));if(latestFix!=null)navigation.setLocation(latestFix);if(visible&&editMode==0)navigation.resume();}
             else if(mode.equals("youtube_web")){webPlayer=new DashWebPlayer(DashboardActivity.this);slot.addView(webPlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0){webPlayer.resume();webPlayer.open("");}}
+            else if(mode.equals("native_app")){nativeFrame=new DashNativeFrame(DashboardActivity.this);slot.addView(nativeFrame,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0)nativeFrame.resume();}
             else if(mode.equals("video_file")){
                 String saved=dashPrefs().getString("panel_video_uri","");Uri uri=saved.startsWith("content://")?Uri.parse(saved):null;
                 filePlayer=new DashFilePlayer(DashboardActivity.this,io,uri,()->pickPanelVideo(this));slot.addView(filePlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0)filePlayer.resume();
@@ -208,10 +210,10 @@ public class DashboardActivity extends Activity implements LocationListener {
             if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
         }
         void pause(){if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
-        void resume(){if(visible&&editMode==0){if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();}}
-        void close(){if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
+        void resume(){if(visible&&editMode==0){if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();if(nativeFrame!=null)nativeFrame.resume();}}
+        void close(){if(nativeFrame!=null)nativeFrame.close();if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
     }
-    static boolean inlineMode(String mode){return "youtube_web".equals(mode)||"video_file".equals(mode);}
+    static boolean inlineMode(String mode){return "youtube_web".equals(mode)||"video_file".equals(mode)||"native_app".equals(mode);}
     boolean inlineSelected(){return leftPane!=null&&inlineMode(leftPane.mode)||rightPane!=null&&inlineMode(rightPane.mode);}
     void pickPanelVideo(Pane pane){
         pendingVideoPane=pane.key;dashPrefs().edit().putString("panel_video_target",pane.key).apply();
@@ -238,7 +240,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void editLayoutMenu(){
         if(editMode!=0){finishEditing(true);return;}
         new AlertDialog.Builder(this).setTitle("Dashboard layout").setItems(new String[]{"Move / resize panels","Reorder dock icons","Reset default layout","Neon outline: "+(neon()?"On":"Off")},(d,i)->{
-            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
+            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();if(leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
             else if(i==2){layoutSurface.resetLayout();android.content.SharedPreferences.Editor reset=dashPrefs().edit().remove("dock_order");for(String name:DOCK_NAMES)reset.remove("dock_icon_scale_"+name);reset.apply();buildDock();leftPane.setMode("car");rightPane.setMode("media");}
             else{boolean enabled=!neon();android.content.SharedPreferences.Editor edit=dashPrefs().edit().putBoolean("style_neon",enabled);if(enabled&&appearance.intensity()==0)edit.putInt("appearance_neon",65);edit.apply();applyStyle();}
         }).setNegativeButton("Close",null).show();
@@ -389,7 +391,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         catch(PackageManager.NameNotFoundException ignored){installedVersion="unknown";}
         return installedVersion;
     }
-    String footerLabel(){return "Vehicle settings     ·     NexaDash v"+versionName();}
+    String footerLabel(){return "Native Lab · Vehicle settings     ·     NexaDash v"+versionName();}
     String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash"};}
     void settings(){
         closeApps();
@@ -413,7 +415,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void showAbout(){
         if(aboutDialog!=null&&aboutDialog.isShowing())return;
         aboutDialog=new AlertDialog.Builder(this).setTitle("About NexaDash")
-            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nYouTube web and local video can play in a panel. App-source modes remain media controls. Search destinations and open directions/voice in Maps or Waze. The panel map remains a GPS preview; original app UI hosting is not implemented.")
+            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nYouTube web and local video can play in a panel. App-source modes remain media controls. Search destinations and open directions/voice in Maps or Waze. The panel map remains a GPS preview; this Lab adds cooperative native hosting with matching companions only; it does not embed arbitrary original apps.")
             .setPositiveButton("Close",null).create();
         final AlertDialog shown=aboutDialog;shown.setOnDismissListener(d->{if(aboutDialog==shown)aboutDialog=null;});shown.show();
     }
@@ -559,7 +561,10 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
     @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
-    @Override protected void onPause(){visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();super.onPause();}
+    boolean nativeRunning(){return leftPane!=null&&leftPane.nativeFrame!=null&&leftPane.nativeFrame.display!=null||rightPane!=null&&rightPane.nativeFrame!=null&&rightPane.nativeFrame.display!=null;}
+    @Override protected void onStop(){pauseDashboard();if(leftPane!=null&&leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane!=null&&rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();super.onStop();}
+    @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
+    void pauseDashboard(){visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
     @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }

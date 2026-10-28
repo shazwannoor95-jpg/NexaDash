@@ -1,3 +1,9 @@
+> **Experimental branch: NexaDash .8 Native Lab**, application ID `com.shazwan.nexadash.lab`.
+> Installs beside the standard .8 app. [Lab APK](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk?raw=true) · [Install/Android Studio/companion guide](docs/NATIVE_LAB_MS.md).
+> Select **Native app · experimental** in either panel, install the matching companion first, then Start.
+> **708 checks passed** including cross-UID companion display, scaled touch, native text input and cleanup in the real dashboard panels. Live YouTube playback and physical head-unit/ARM Cobalt behavior remain unverified.
+> Routing/voice opens in Maps/Waze outside the panel. Unmodified original apps are not universally embeddable.
+
 <p><img src="design/nexadash-mark.svg" width="96" alt="NexaDash orbit navigation logo"></p>
 
 > **NexaDash** — lightweight Android head-unit dashboard, derived from KlikDash.

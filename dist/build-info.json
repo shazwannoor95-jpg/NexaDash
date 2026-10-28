@@ -1,16 +1,16 @@
 {
-  "file": "NexaDash-1.6.7-nexadash.8.apk",
-  "application_id": "com.shazwan.sagadash",
-  "version_name": "1.6.7-nexadash.8",
-  "version_code": 32,
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk",
+  "application_id": "com.shazwan.nexadash.lab",
+  "version_name": "1.6.7-nexadash.8-native1",
+  "version_code": 33,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
-  "size_bytes": 5491599,
-  "sha256": "ae97c7ebc1d144120335952b3d1a28f59a4651185adcd07cbfb8d89341bd08f0",
+  "size_bytes": 5499791,
+  "sha256": "281f465459624ee4d7729b8f6433b825ee8170439688c784f686f0c708155d4d",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Android Studio debug/release assembly and APK signature verification passed. 695 integration assertions passed on Android10/API29 x86_64 software emulator, including native destination entry, empty-input rejection, encoded Maps/Waze handoff, existing media/web/video lifecycle, settings/apps grids and layout.",
+  "validation": "708 integration assertions passed on API29 x86_64 emulator, including real cross-UID display/input/text proxy in dashboard panels and cleanup. Shell + Gradle app debug/release/panelprobe assembly and debug re-sign task passed; APK signatures/alignment/CRC verified.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -24,18 +24,45 @@
     "version_name": "1.6.7-sagadash.3",
     "limitation": "Prior .3 idle-dashboard measurement; not a measurement of the current build, playback, app hosting or physical head unit."
   },
-  "app_panel_status": "Local video and optional YouTube web beta in panel; destination search and directions/voice handed off to installed Maps/Waze. Original Maps/Waze/YouTube/TizenTube/WhatsApp UI hosting is not in the launcher.",
+  "app_panel_status": "Experimental cooperative native mode in left/right panels; explicit Start and matching patched companion required. One inline native/web/file player selected at a time. Arbitrary original app hosting and full in-panel Maps/Waze remain unavailable.",
   "glass_panels_default": true,
   "icon_cache_limit_bytes": 1048576,
   "icon_raster_max_pixels": [
     96,
     96
   ],
-  "integration_assertions": 695,
+  "integration_assertions": 708,
   "youtube_live_streaming_status": "Not verified: execution network blocks YouTube (CONNECT tunnel403). Actual local HTML5 video playback is tested; head-unit WebView/network/account compatibility remains untested.",
   "default_webview": "Not created in the default dashboard, or on resuming a saved web panel until Start is tapped.",
   "active_inline_player_limit": 1,
-  "display_name": "NexaDash",
+  "display_name": "NexaDash Native Lab",
   "navigation_routing": "Maps/Waze app handoff, or Maps website in browser when Maps is absent; no in-panel routing/voice engine.",
-  "experimental_probe": "Separate tiny opted-in host/target APKs under dist/experimental; no system permissions/root/ADB required by the demo. Actual OEM behavior unverified."
+  "experimental_probe": "Separate tiny opted-in host/target APKs under dist/experimental; no system permissions/root/ADB required by the demo. Actual OEM behavior unverified.",
+  "native_display_size": [
+    640,
+    400
+  ],
+  "native_feature_min_sdk": 26,
+  "native_protocol_version": 1,
+  "native_start": "Explicit Start only; no automatic native display/service/input worker on load or resume.",
+  "native_input_queue_limit": 32,
+  "native_cleanup": "Stop/mode switch/edit/Home/onStop release host resources; companion-owned background services are not force-stopped.",
+  "native_companion_demo": {
+    "file": "native-lab/NexaDash-DemoCompanion-native1.apk",
+    "min_sdk": 26,
+    "sha256": "1ce154e87d34c89406c954af854fd0a488e1e5473f48bd43c9ec1467ad822208"
+  },
+  "native_companion_v58": {
+    "min_sdk": 29,
+    "branch": "nexadash-v58-companion",
+    "playback": "unverified",
+    "lifecycle": "Previous standalone prototype logged a V58 Primes Activity-destruction error."
+  },
+  "native_companion_cobalt": {
+    "min_sdk": 24,
+    "abi": "armeabi-v7a",
+    "branch": "nexadash-native-companions",
+    "status": "Static validation only; ARM hardware rendering/playback not verified."
+  },
+  "native_startup_timeout_ms": 60000
 }
