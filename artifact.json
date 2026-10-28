@@ -1,0 +1,13 @@
+{
+  "file": "TizenTube-NativeLab-arm.apk",
+  "package": "com.shazwan.nexadash.tizentube.lab",
+  "version": "2.0.3",
+  "min_sdk": 24,
+  "native_abi": "armeabi-v7a",
+  "sha256": "097530c5403f1ebba0db24e2cfcc4b3b33d3ca55ea0724364ed57e976185ba40",
+  "size_bytes": 80702817,
+  "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
+  "status": "Static validation/signature verified; ARM runtime/playback/hosting not tested on physical head unit. Separate fork package; original Cobalt app retained.",
+  "upstream": "https://github.com/reisxd/TizenTubeCobalt/releases/tag/v2.0.3",
+  "upstream_apk_sha256": "72a3527f520db3a1b414916ad96481244e451c41e272ae33344ae5e79abb37dd"
+}
