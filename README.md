@@ -1,4 +1,6 @@
-Native Lab current build: **1.6.7-nexadash.8-native2**. YouTube web now collapses search/help while browsing and uses compact controls. Builds and test-source compilation checked; native2 runtime/head-unit playback pending. [Download / setup](docs/NATIVE_LAB_MS.md).
+Native3: official YouTube app shortcut; footer auto-hides after four seconds and reappears on dashboard touch. Maps/Waze still open outside the dashboard.
+
+Native Lab current build: **1.6.7-nexadash.8-native3**. YouTube web now collapses search/help while browsing and uses compact controls. Builds and test-source compilation checked; native2 runtime/head-unit playback pending. [Download / setup](docs/NATIVE_LAB_MS.md).
 
 > **Experimental branch: NexaDash .8 Native Lab**, application ID `com.shazwan.nexadash.lab`.
 > Installs beside the standard .8 app. [Lab APK](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk?raw=true) · [Install/Android Studio/companion guide](docs/NATIVE_LAB_MS.md).

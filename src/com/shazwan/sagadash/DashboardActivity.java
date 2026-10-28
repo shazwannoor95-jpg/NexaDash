@@ -142,7 +142,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         rightPane=new Pane("media",dashPrefs().getString("pane_media","media"));
         layoutSurface.addPanel("vehicle",leftPane.box);layoutSurface.addPanel("media",rightPane.box);
         LinearLayout shortcuts=row();
-        TextView youtube=button("▶\nYouTube web",()->leftPane.setMode("youtube_web"));youtube.setContentDescription("YouTube web in left panel. Long press for installed-app options.");youtube.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("YouTube options").setItems(new String[]{"Open YouTube / TizenTube app","Choose installed app"},(d,i)->{if(i==0)launchVideo();else DashShortcuts.choose(this,"YouTube");}).show();return true;});equal(shortcuts,youtube);
+        TextView youtube=button("▶\nYouTube",this::launchOfficialYouTube);youtube.setContentDescription("Open the installed official YouTube app. Long press for panel options.");youtube.setOnLongClickListener(v->{new AlertDialog.Builder(this).setTitle("YouTube options").setItems(new String[]{"YouTube web · in panel","Native app · experimental","Choose installed app"},(d,i)->{if(i==0)leftPane.setMode("youtube_web");else if(i==1)leftPane.setMode("native_app");else DashShortcuts.choose(this,"YouTube");}).show();return true;});equal(shortcuts,youtube);
         TextView navigation=button("↗\nNavigation",()->shortcut("Navigation"));navigation.setOnLongClickListener(v->{DashShortcuts.choose(this,"Navigation");return true;});equal(shortcuts,navigation);equal(shortcuts,button("♫\nMedia sources",this::sources));
         layoutSurface.addPanel("shortcuts",shortcuts);
         dock=row();buildDock();layoutSurface.addPanel("dock",dock);
@@ -451,6 +451,10 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     void closeApps(){appsGeneration++;if(appsGrid!=null){appsGrid.close();appsGrid=null;}if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
     void shortcut(String name){if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
+    void launchOfficialYouTube(){
+        Intent launch=getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+        if(launch==null||!DashShortcuts.start(this,launch))toast("Official YouTube is not installed or cannot be opened on this device.");
+    }
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);
@@ -532,8 +536,15 @@ public class DashboardActivity extends Activity implements LocationListener {
         if(!ScreenLock.hasPin(lockPrefs()))ScreenLock.create(this,pin->{ScreenLock.setPin(lockPrefs(),pin);toast("PIN saved. Open Screen lock again to lock.");});
         else new AlertDialog.Builder(this).setTitle("Screen lock").setItems(new String[]{"Lock now","Remove PIN"},(d,i)->{if(i==0){ScreenLock.setLocked(lockPrefs(),true);toast("Locked · Tap the screen to unlock");}else ScreenLock.verify(this,lockPrefs(),()->ScreenLock.clear(lockPrefs()),()->{});}).show();
     }
+    final Runnable hideFooter=()->{if(footerText!=null&&editMode==0)footerText.setVisibility(View.INVISIBLE);};
+    void revealFooter(){
+        if(footerText==null)return;
+        footerText.setVisibility(View.VISIBLE);handler.removeCallbacks(hideFooter);
+        if(editMode==0)handler.postDelayed(hideFooter,4000);
+    }
     @Override public boolean dispatchTouchEvent(MotionEvent e){
         if(ScreenLock.locked(lockPrefs())){if(e.getAction()==MotionEvent.ACTION_UP)ScreenLock.verify(this,lockPrefs(),()->ScreenLock.setLocked(lockPrefs(),false),()->{});return true;}
+        if(e.getActionMasked()==MotionEvent.ACTION_DOWN)revealFooter();
         if(editMode==2){
             if(e.getActionMasked()==MotionEvent.ACTION_DOWN){layoutSurface.getGlobalVisibleRect(editSurfaceBounds);dock.getGlobalVisibleRect(editDockBounds);int x=Math.round(e.getRawX()),y=Math.round(e.getRawY());blockEditTouch=editSurfaceBounds.contains(x,y)&&!editDockBounds.contains(x,y);}
             if(blockEditTouch){if(e.getActionMasked()==MotionEvent.ACTION_UP||e.getActionMasked()==MotionEvent.ACTION_CANCEL)blockEditTouch=false;return true;}
@@ -560,11 +571,11 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onProviderEnabled(String p){}
     @Override public void onStatusChanged(String p,int s,Bundle b){}
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
-    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
+    @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;revealFooter();appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
     boolean nativeRunning(){return leftPane!=null&&leftPane.nativeFrame!=null&&leftPane.nativeFrame.display!=null||rightPane!=null&&rightPane.nativeFrame!=null&&rightPane.nativeFrame.display!=null;}
     @Override protected void onStop(){pauseDashboard();if(leftPane!=null&&leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane!=null&&rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();super.onStop();}
     @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
-    void pauseDashboard(){visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
+    void pauseDashboard(){handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
     @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
 }
