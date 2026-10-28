@@ -6,6 +6,7 @@
 > Search a destination and open directions/voice in installed Google Maps or Waze. The panel map remains a GPS preview.
 > [Local video and YouTube web beta](docs/INLINE_PLAYBACK_MS.md) remain available in panels.
 > **Original Google Maps/Waze/YouTube/TizenTube/WhatsApp app UI hosting is not yet implemented in the main APK.**
+> [V58 native-display lab results/source](docs/V58_PANEL_LAB_MS.md) and the [tiny no-ADB head-unit probe](docs/OPTIN_PANEL_PROBE_MS.md) are separate experiments.
 > Package ID remains `com.shazwan.sagadash`; cloud signing key/settings are retained.
 > [Windows Android Studio](docs/WINDOWS_ANDROID_STUDIO_MS.md) · [Head-unit install](docs/HEAD_UNIT_INSTALL_MS.md) · [Performance](docs/PERFORMANCE.md).
 > The documentation below describes upstream KlikDash; upstream releases are different APKs. Physical TEST9278B performance/playback testing remains pending.

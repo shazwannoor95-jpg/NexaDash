@@ -27,3 +27,9 @@ Download source branch `saga-dash-android-studio`, extract ke folder baharu, Ope
 Upstream KlikDash dan lesen/kreditnya dikekalkan. Nama repo GitHub kekal `klikdash`; nama produk kini NexaDash.
 
 Untuk uji laluan hosting pada firmware tanpa ADB: [demo dua APK yang opt-in](OPTIN_PANEL_PROBE_MS.md). Demo berasingan ini bukan UI YouTube/Maps.
+
+Keputusan lanjut: [eksperimen V58 native panel](V58_PANEL_LAB_MS.md). UI native dan skrin Search dicapai dalam host lab; playback/IME/dialog/lifecycle dan API27 masih belum selesai. Ia bukan tambahan hosting dalam APK .8.
+
+![NexaDash .8](img/nexadash-v8.png)
+
+![Carian destinasi](img/nexadash-directions.png)

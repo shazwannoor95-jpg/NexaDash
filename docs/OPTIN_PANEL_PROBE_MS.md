@@ -16,3 +16,7 @@ Pada emulator Android10/API29, demo asal berjaya memaparkan Activity app berasin
 Source: [tools/optin-panel-probe](../tools/optin-panel-probe). Build dengan Android SDK35/build-tools36, JDK17 dan signing key sendiri (set `ANDROID_HOME`, `PROBE_KEYSTORE`, `KLIKDASH_KS_PASS`). Jangan commit key/password. Kedua-dua APK mesti menggunakan key sama.
 
 Kaedah ini menggunakan opt-in `android:allowEmbedded` serta host-owned proxy pada private display; tiada spoof UID/system permission. Perlindungan secure content tidak diubah. Rujukan platform: Android 8.1 `ActivityStackSupervisor.isCallerAllowedToLaunchOnDisplay` dalam AOSP.
+
+Semakan semula APK demo yang diterbitkan bersama NexaDash .8: counter 0→1 berjaya di private display5 pada emulator API29; private display dibuang selepas Home. Ini bukti app ujian sendiri, bukan UI app pihak ketiga.
+
+![Counter app berasingan melalui host](img/optin-panel-probe.png)
