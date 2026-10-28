@@ -23,8 +23,53 @@ final class DashNavigationChecks {
         check(selangor[1]<origin[1]&&selangor[1]>0,"Kuala Selangor projects north of the equator");
         double[] west=DashNavigationView.world(0,-180,12),east=DashNavigationView.world(0,180,12);
         check(west[0]==0&&east[0]==size,"date-line endpoints retain exact tile-wrap boundaries");
+        directions();
         decoder();
         return assertions;
+    }
+    int runUi(android.app.Instrumentation instrumentation,DashboardActivity dashboard){
+        int before=assertions;final android.app.AlertDialog[] dialog={null};final android.content.Intent[] launched={null};
+        android.content.SharedPreferences prefs=DashShortcuts.prefs(dashboard);
+        String oldDestination=prefs.getString("directions_destination",null),oldProvider=prefs.getString("directions_provider",null);
+        android.app.Instrumentation.ActivityMonitor monitor=new android.app.Instrumentation.ActivityMonitor(){
+            @Override public android.app.Instrumentation.ActivityResult onStartActivity(android.content.Intent intent){
+                if(android.content.Intent.ACTION_VIEW.equals(intent.getAction())&&intent.getData()!=null){launched[0]=intent;return new android.app.Instrumentation.ActivityResult(0,null);}return null;
+            }
+        };
+        instrumentation.addMonitor(monitor);
+        try{
+            instrumentation.runOnMainSync(()->dialog[0]=DashDirections.show(dashboard));
+            instrumentation.waitForIdleSync();
+            instrumentation.runOnMainSync(()->{
+            android.widget.EditText entry=dialog[0].getWindow().getDecorView().findViewWithTag("directions_destination");
+            entry.setText("  ");dialog[0].getButton(-1).performClick();
+            check(dialog[0].isShowing()&&entry.getError()!=null&&launched[0]==null,"empty destination stays in the dialog without launching anything");
+            entry.setText("KL Sentral & Jalan Tun #2");dialog[0].getButton(-1).performClick();
+            check(launched[0]!=null&&!dialog[0].isShowing(),"Directions hands off a valid destination and closes the native entry dialog");
+            android.net.Uri uri=launched[0].getData();String value=uri.getQueryParameter("destination");if(value==null)value=uri.getQueryParameter("q");
+            check("KL Sentral & Jalan Tun #2".equals(value),"UI destination is passed to the selected navigation provider intact");
+        });}finally{
+            instrumentation.removeMonitor(monitor);
+            instrumentation.runOnMainSync(()->{if(dialog[0]!=null)dialog[0].dismiss();});
+            android.content.SharedPreferences.Editor edit=prefs.edit();if(oldDestination==null)edit.remove("directions_destination");else edit.putString("directions_destination",oldDestination);if(oldProvider==null)edit.remove("directions_provider");else edit.putString("directions_provider",oldProvider);edit.commit();
+        }
+        return assertions-before;
+    }
+    private void directions(){
+        android.content.Intent maps=DashDirections.intent(DashDirections.MAPS,"  KL Sentral & Jalan Tun #2  ",true);
+        check(DashDirections.MAPS.equals(maps.getPackage()),"Maps directions target the installed Maps package");
+        check("KL Sentral & Jalan Tun #2".equals(maps.getData().getQueryParameter("destination")),"destination punctuation is URI-encoded without changing the search text");
+        check("driving".equals(maps.getData().getQueryParameter("travelmode")),"Maps requests driving directions");
+        android.content.Intent search=DashDirections.intent("web","医院 Kuala Lumpur",false);
+        check(search.getPackage()==null&&"www.google.com".equals(search.getData().getHost()),"missing Maps uses an explicit Maps web URL");
+        check("医院 Kuala Lumpur".equals(search.getData().getQueryParameter("query")),"Unicode destination survives encoding");
+        android.content.Intent waze=DashDirections.intent(DashDirections.WAZE,"Shah Alam",true);
+        check(DashDirections.WAZE.equals(waze.getPackage())&&"yes".equals(waze.getData().getQueryParameter("navigate")),"Waze directions stay assigned to Waze");
+        check("no".equals(DashDirections.intent(DashDirections.WAZE,"Shah Alam",false).getData().getQueryParameter("navigate")),"Waze search does not request navigation");
+        for(String invalid:new String[]{" ",new String(new char[241]).replace('\0','a')}){
+            boolean rejected=false;try{DashDirections.intent(DashDirections.MAPS,invalid,true);}catch(IllegalArgumentException expected){rejected=true;}
+            check(rejected,"empty and excessive destinations are rejected");
+        }
     }
     private void decoder(){
         try{

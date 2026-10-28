@@ -191,11 +191,11 @@ final class AiTools {
             switch (name) {
                 case "open_app": return openApp(a, in.optString("app"));
                 case "navigate": return navigate(a, in.optString("destination"), in.optString("app", "maps"));
-                case "play_quran": return "This feature is not included in Saga Dash.";
+                case "play_quran": return "This feature is not included in NexaDash.";
                 case "media_control": return media(a, in.optString("action"));
                 case "set_volume": return volume(a, in);
                 case "prayer_times": return prayerTimes(a);
-                case "open_dzikir": return "This feature is not included in Saga Dash.";
+                case "open_dzikir": return "This feature is not included in NexaDash.";
                 case "restrict_background": return restrict(a, in.optString("app"), in.optBoolean("restrict", true));
                 case "car_status": return status(a);
                 case "web_search": return webSearch(a, in.optString("query"));

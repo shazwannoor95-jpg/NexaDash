@@ -1,3 +1,5 @@
+> Ciri .7 di bawah dikekalkan dalam **NexaDash .8**. [Update terkini](NEXADASH_UPDATE_MS.md).
+
 # Player dalam panel tanpa ADB — .7
 
 Versi **1.6.7-sagadash.7 / code31** menambah pemain sebenar dalam panel. Ini berbeza daripada

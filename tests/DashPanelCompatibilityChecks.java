@@ -171,7 +171,7 @@ final class DashPanelCompatibilityChecks {
             ScrollView scroll=(ScrollView)view;
             if(scroll.getChildCount()==1&&scroll.getChildAt(0) instanceof TextView){
                 CharSequence text=((TextView)scroll.getChildAt(0)).getText();
-                if(text!=null&&text.toString().startsWith("SAGA DASH — APP PANEL COMPATIBILITY"))return scroll;
+                if(text!=null&&text.toString().startsWith("NEXADASH — APP PANEL COMPATIBILITY"))return scroll;
             }
         }
         if(view instanceof ViewGroup){

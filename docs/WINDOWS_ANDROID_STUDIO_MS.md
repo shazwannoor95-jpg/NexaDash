@@ -1,6 +1,6 @@
-# Saga Dash — Android Studio di Windows
+# NexaDash — Android Studio di Windows
 
-Nama app **Saga Dash**, Package ID **com.shazwan.sagadash**. Panduan ini bermula dengan emulator.
+Nama app **NexaDash**, Package ID **com.shazwan.sagadash**. Panduan ini bermula dengan emulator.
 Untuk APK signed dan pemasangan head unit kemudian, ikut [panduan pemasangan](HEAD_UNIT_INSTALL_MS.md).
 
 ## 1. Install Android Studio
@@ -23,7 +23,7 @@ kelas/asset model yang sudah dibuang. Folder lama boleh disimpan sebagai backup.
 
 1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
 2. Klik **Code > Download ZIP**, atau [download ZIP branch ini terus](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
-3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\SagaDash-v7`.
+3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\NexaDash-v8`.
 4. Cari folder yang terus mengandungi `settings.gradle`, `build.gradle`, `gradlew.bat` dan `app`.
    ZIP kadang-kadang mempunyai satu folder tambahan di dalamnya; pilih folder dalaman itu.
 5. Android Studio > **File > Open** > pilih folder tadi, kemudian **This Window** jika diminta.
@@ -68,12 +68,12 @@ RAM 2048MB dan image yang sama. Itu masih simulasi, bukan perkakasan TEST9278B.
 Jika emulator meminta virtualisasi, ikut diagnostik Android Studio; VT-x/AMD-V atau Windows
 Hypervisor Platform mungkin perlu diaktifkan pada komputer itu.
 
-## 5. Run Saga Dash
+## 5. Run NexaDash
 
 1. Pada bar atas, pilih konfigurasi **app** dan emulator yang hidup.
 2. Klik ▶ hijau. Tunggu build dan install selesai.
 3. Jika paparan mengiring, guna ikon Rotate pada toolbar emulator untuk menjadikannya landscape.
-4. Sahkan footer menunjukkan **1.6.7-sagadash.7**. Apps dan Dashboard settings patut menunjukkan grid ikon.
+4. Sahkan footer menunjukkan **1.6.7-nexadash.8**. Apps dan Dashboard settings patut menunjukkan grid ikon.
    Semak Home, pilihan panel dan Edit layout.
 5. Settings > Appearance: cuba Original/Synthwave. Default Static + Reduce motion tidak menganimasikan
    latar; susunan dan tindakan butang kekal. Lihat [panduan tema](SYNTHWAVE_MS.md).
@@ -88,7 +88,7 @@ Lihat [panduan kereta/shortcut](VIDEO_AND_SHORTCUTS_MS.md) dan [panel/Edit layou
 ## 6. Permission, masa dan media
 
 - Settings > Location permission: beri lokasi untuk GPS dan pemilihan zon solat.
-- Settings > Enable media / notification access: hidupkan Saga Dash jika mahu membaca sesi media.
+- Settings > Enable media / notification access: hidupkan NexaDash jika mahu membaca sesi media.
 - Mainkan media dalam app yang menyokong Android MediaSession untuk menguji mini player.
 - Radio, DSP dan Bluetooth audio vendor head unit tidak dibekalkan oleh emulator biasa.
 - Jam/countdown menunggu masa yang sah. Ketuk jam; hanya pilih Device time is correct jika masa

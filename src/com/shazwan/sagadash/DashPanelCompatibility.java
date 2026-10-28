@@ -49,7 +49,7 @@ final class DashPanelCompatibility {
                 AlertDialog shown=new AlertDialog.Builder(activity).setTitle("App panel compatibility")
                     .setView(scroll).setPositiveButton("Copy report",(d,w)->{
                         ClipboardManager clipboard=(ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        if(clipboard!=null){clipboard.setPrimaryClip(ClipData.newPlainText("Saga Dash app panel compatibility",report));Toast.makeText(activity,"Report copied. Paste it into your support chat.",Toast.LENGTH_LONG).show();}
+                        if(clipboard!=null){clipboard.setPrimaryClip(ClipData.newPlainText("NexaDash app panel compatibility",report));Toast.makeText(activity,"Report copied. Paste it into your support chat.",Toast.LENGTH_LONG).show();}
                     }).setNegativeButton("Close",null).create();
                 dialog=shown;shown.setOnDismissListener(d->{if(dialog==shown)dialog=null;});shown.show();
             });
@@ -76,8 +76,8 @@ final class DashPanelCompatibility {
     static String collect(Context context){
         PackageManager pm=context.getPackageManager();String own=context.getPackageName();
         StringBuilder out=new StringBuilder(4096);
-        out.append("SAGA DASH — APP PANEL COMPATIBILITY\nRead-only check; this update does not embed apps.\n\n");
-        try{PackageInfo info=pm.getPackageInfo(own,0);out.append("Saga Dash: ").append(clean(info.versionName)).append('\n');}catch(PackageManager.NameNotFoundException ignored){}
+        out.append("NEXADASH — APP PANEL COMPATIBILITY\nRead-only check; this update does not embed apps.\n\n");
+        try{PackageInfo info=pm.getPackageInfo(own,0);out.append("NexaDash: ").append(clean(info.versionName)).append('\n');}catch(PackageManager.NameNotFoundException ignored){}
         out.append("Manufacturer: ").append(clean(Build.MANUFACTURER)).append("\nModel: ").append(clean(Build.MODEL))
             .append("\nAndroid reported version: ").append(clean(Build.VERSION.RELEASE)).append("\nActual SDK API: ").append(Build.VERSION.SDK_INT)
             .append("\nSupported ABIs: ").append(android.text.TextUtils.join(", ",Build.SUPPORTED_ABIS)).append('\n');
@@ -90,8 +90,8 @@ final class DashPanelCompatibility {
             out.append(feature).append(": ").append(pm.hasSystemFeature(feature)).append('\n');
         }
         ApplicationInfo self=context.getApplicationInfo();
-        out.append("Saga Dash system app: ").append((self.flags&ApplicationInfo.FLAG_SYSTEM)!=0)
-            .append("\nSaga Dash target SDK: ").append(self.targetSdkVersion).append("\n\nHost permissions (not proof of a working host):\n");
+        out.append("NexaDash system app: ").append((self.flags&ApplicationInfo.FLAG_SYSTEM)!=0)
+            .append("\nNexaDash target SDK: ").append(self.targetSdkVersion).append("\n\nHost permissions (not proof of a working host):\n");
         for(String permission:PERMISSIONS)out.append(permission.substring("android.permission.".length())).append(": ")
             .append(pm.checkPermission(permission,own)==PackageManager.PERMISSION_GRANTED?"granted":"not granted").append('\n');
         out.append("\nRoot access: not probed\nOEM / Shizuku hosting integration: not established\n\nRelevant launch activities and saved assignments:\n");

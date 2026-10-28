@@ -46,9 +46,9 @@ final class DashNavigationView extends LinearLayout {
         attribution.setOnClickListener(v->{try{context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://www.openstreetmap.org/copyright")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));}catch(RuntimeException ignored){}});
         addView(attribution,new LayoutParams(-1,-2));
         LinearLayout buttons=new LinearLayout(context);buttons.setGravity(Gravity.CENTER_VERTICAL);
-        TextView open=label("Open navigation ↗",15,INK);open.setGravity(Gravity.CENTER);open.setPadding(padding,padding,padding,padding);open.setOnClickListener(v->openNavigation.run());buttons.addView(open,new LayoutParams(0,-2,1));
+        TextView open=label("Search / directions ↗",15,INK);open.setGravity(Gravity.CENTER);open.setPadding(padding,padding,padding,padding);open.setOnClickListener(v->openNavigation.run());buttons.addView(open,new LayoutParams(0,-2,1));
         for(int direction:new int[]{-1,1}){TextView button=label(direction<0?"−":"+",22,INK);button.setGravity(Gravity.CENTER);button.setPadding(padding,padding,padding,padding);button.setContentDescription(direction<0?"Zoom map out":"Zoom map in");button.setOnClickListener(v->{int next=Math.max(12,Math.min(17,zoom+direction));if(next!=zoom){zoom=next;failed=false;requestVisible();map.invalidate();}});buttons.addView(button,new LayoutParams(Math.max(1,Math.round(44*unit)),-2));}
-        addView(buttons,new LayoutParams(-1,-2));setContentDescription("GPS map preview. Open navigation for directions.");
+        addView(buttons,new LayoutParams(-1,-2));setContentDescription("GPS map preview. Search destinations and open directions in Maps or Waze.");
     }
     private TextView label(String text,int size,int color){TextView view=new TextView(getContext());view.setText(text);view.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,size*unit);view.setTextColor(color);view.setMaxLines(1);return view;}
     void setLocation(Location fix){
@@ -161,7 +161,7 @@ final class DashNavigationView extends LinearLayout {
                 if(!wanted(task))return;
                 String[] coordinate=key.split("_");URL url=new URL("https://tile.openstreetmap.org/"+coordinate[0]+"/"+coordinate[1]+"/"+coordinate[2]+".png");
                 connection=(HttpURLConnection)url.openConnection();task.connection=connection;
-                connection.setConnectTimeout(5000);connection.setReadTimeout(7000);connection.setRequestProperty("User-Agent","SagaDash/1.6.7 (+https://github.com/shazwannoor95-jpg/klikdash)");connection.setRequestProperty("Accept","image/png");
+                connection.setConnectTimeout(5000);connection.setReadTimeout(7000);connection.setRequestProperty("User-Agent","NexaDash/1.6.7 (+https://github.com/shazwannoor95-jpg/klikdash)");connection.setRequestProperty("Accept","image/png");
                 if(info.has("etag"))connection.setRequestProperty("If-None-Match",info.optString("etag"));if(info.has("modified"))connection.setRequestProperty("If-Modified-Since",info.optString("modified"));
                 if(!wanted(task))return;
                 int code=connection.getResponseCode();boolean noStore=directive(connection,"no-store");long expiry=expiry(connection);

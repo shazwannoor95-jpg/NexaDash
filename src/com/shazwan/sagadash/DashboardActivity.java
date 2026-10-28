@@ -127,7 +127,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void build(){
         root=row();root.setBackground(appearance.backdrop());pad(root,14);setContentView(root);
         LinearLayout nav=column();nav.setGravity(Gravity.CENTER);root.addView(nav,new LinearLayout.LayoutParams(px(96),-1));
-        TextView brand=text("Saga\nDash",17,BLUE);brand.setContentDescription("Saga Dash");brand.setGravity(Gravity.CENTER);nav.addView(brand,new LinearLayout.LayoutParams(-1,px(84)));
+        LinearLayout identity=column();identity.setGravity(Gravity.CENTER);identity.setContentDescription("NexaDash");ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);identity.addView(logo,new LinearLayout.LayoutParams(px(36),px(36)));TextView brand=text("NexaDash",14,BLUE);brand.setGravity(Gravity.CENTER);identity.addView(brand,new LinearLayout.LayoutParams(-1,px(28)));nav.addView(identity,new LinearLayout.LayoutParams(-1,px(84)));
         for(String item:new String[]{"⌂\nHome","▦\nApps","⚙\nSettings"}){TextView b=button(item,()->{if(item.contains("Apps"))apps();else if(item.contains("Settings"))settings();});nav.addView(b,new LinearLayout.LayoutParams(-1,px(90)));}
         main=column();root.addView(main,new LinearLayout.LayoutParams(0,-1,1));pad(main,10);
         LinearLayout header=row();clock=text("",38,TEXT);header.addView(clock,new LinearLayout.LayoutParams(0,px(55),1));
@@ -317,8 +317,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     void clockDialog(){
         SimpleDateFormat f=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss",Locale.US);f.setTimeZone(JakimSchedule.MY);
         String message=TrustedClock.label(this)+"\nDevice time: "+f.format(new Date(System.currentTimeMillis()))
-                +"\nSaga Dash time: "+f.format(new Date(TrustedClock.now(this)))
-                +"\n\nGPS time works offline after a fresh satellite fix. It changes Saga Dash's clock only. The verified time is kept for this boot, up to 24 hours without another fix."
+                +"\nNexaDash time: "+f.format(new Date(TrustedClock.now(this)))
+                +"\n\nGPS time works offline after a fresh satellite fix. It changes NexaDash's clock only. The verified time is kept for this boot, up to 24 hours without another fix."
                 +"\n\nIf GPS is unavailable, confirm device time only after checking it is correct. Prayer alerts remain paused while time is unverified.";
         new AlertDialog.Builder(this).setTitle("Clock & prayer time").setMessage(message)
             .setPositiveButton("Device time is correct",(d,w)->{
@@ -389,8 +389,8 @@ public class DashboardActivity extends Activity implements LocationListener {
         catch(PackageManager.NameNotFoundException ignored){installedVersion="unknown";}
         return installedVersion;
     }
-    String footerLabel(){return "Vehicle settings     ·     Saga Dash v"+versionName();}
-    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About Saga Dash"};}
+    String footerLabel(){return "Vehicle settings     ·     NexaDash v"+versionName();}
+    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash"};}
     void settings(){
         closeApps();
         if(!visible||isFinishing()||isDestroyed()||(settingsDialog!=null&&settingsDialog.isShowing()))return;
@@ -412,8 +412,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     void showAbout(){
         if(aboutDialog!=null&&aboutDialog.isShowing())return;
-        aboutDialog=new AlertDialog.Builder(this).setTitle("About Saga Dash")
-            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nYouTube web and local video can play in a panel. App-source modes remain media controls. The map is a preview; full turn-by-turn guidance is not implemented; original app UI hosting is not implemented.")
+        aboutDialog=new AlertDialog.Builder(this).setTitle("About NexaDash")
+            .setMessage("Version: "+versionName()+"\nApplication ID: "+getPackageName()+"\n\nApps: installed-app icon grid\nDashboard settings: icon grid\n\nYouTube web and local video can play in a panel. App-source modes remain media controls. Search destinations and open directions/voice in Maps or Waze. The panel map remains a GPS preview; original app UI hosting is not implemented.")
             .setPositiveButton("Close",null).create();
         final AlertDialog shown=aboutDialog;shown.setOnDismissListener(d->{if(aboutDialog==shown)aboutDialog=null;});shown.show();
     }
@@ -448,7 +448,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         });
     }
     void closeApps(){appsGeneration++;if(appsGrid!=null){appsGrid.close();appsGrid=null;}if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
-    void shortcut(String name){DashShortcuts.open(this,name);}
+    void shortcut(String name){if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);

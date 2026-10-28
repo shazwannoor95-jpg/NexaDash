@@ -1,19 +1,14 @@
-> **Saga Dash personal edition** — Android Studio project for Windows, with eight lightweight
-> rendered car-image angles (NEXA), configurable native panels, layout editing and a Synthwave theme.
-> The old interactive mesh/original-video app modes have been removed.
-> [APK](dist/SagaDash-1.6.7-sagadash.7.apk?raw=true) · [Validation/performance](docs/PERFORMANCE.md).
-> Start with the [Windows guide](docs/WINDOWS_ANDROID_STUDIO_MS.md),
-> [signed APK/head-unit installation](docs/HEAD_UNIT_INSTALL_MS.md),
-> [panel/layout instructions](docs/DASHBOARD_CUSTOMIZATION_MS.md),
-> [Synthwave appearance](docs/SYNTHWAVE_MS.md) and
-> [current features/limits](docs/PERSONAL_EDITION.md).
-> **.7 adds [in-panel local video and optional YouTube web (beta)](docs/INLINE_PLAYBACK_MS.md), without ADB.**
-> Settings/Apps icon grids and visible build versions from .6 are retained.
-> Apps has used an icon grid since .5. If it still shows “Installed apps”, follow the
-> [fresh Android Studio project steps](docs/CORRECT_BUILD_MS.md). Dashboard positions stay unchanged.
-> **.4 added a read-only [app-panel compatibility report](docs/APP_PANELS_MS.md), not app embedding.**
-> Package ID: `com.shazwan.sagadash`. The README below describes upstream KlikDash;
-> its release APKs are not this Saga Dash build. Physical TEST9278B testing is pending.
+<p><img src="design/nexadash-mark.svg" width="96" alt="NexaDash orbit navigation logo"></p>
+
+> **NexaDash** — lightweight Android head-unit dashboard, derived from KlikDash.
+> Cyan orbit/navigation logo, glass panels, NEXA car images, Apps/Settings icon grids and editable layout.
+> **Current: 1.6.7-nexadash.8** · [APK](dist/NexaDash-1.6.7-nexadash.8.apk?raw=true) · [Update / directions guide](docs/NEXADASH_UPDATE_MS.md).
+> Search a destination and open directions/voice in installed Google Maps or Waze. The panel map remains a GPS preview.
+> [Local video and YouTube web beta](docs/INLINE_PLAYBACK_MS.md) remain available in panels.
+> **Original Google Maps/Waze/YouTube/TizenTube/WhatsApp app UI hosting is not yet implemented in the main APK.**
+> Package ID remains `com.shazwan.sagadash`; cloud signing key/settings are retained.
+> [Windows Android Studio](docs/WINDOWS_ANDROID_STUDIO_MS.md) · [Head-unit install](docs/HEAD_UNIT_INSTALL_MS.md) · [Performance](docs/PERFORMANCE.md).
+> The documentation below describes upstream KlikDash; upstream releases are different APKs. Physical TEST9278B performance/playback testing remains pending.
 
 <p align="center">
   <img src="design/header.png" alt="KlikDash on an Android car headunit: home screen with prayer times and an offline Quran">

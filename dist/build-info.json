@@ -1,16 +1,16 @@
 {
-  "file": "SagaDash-1.6.7-sagadash.7.apk",
+  "file": "NexaDash-1.6.7-nexadash.8.apk",
   "application_id": "com.shazwan.sagadash",
-  "version_name": "1.6.7-sagadash.7",
-  "version_code": 31,
+  "version_name": "1.6.7-nexadash.8",
+  "version_code": 32,
   "min_sdk": 24,
   "target_sdk": 29,
   "compile_sdk": 35,
   "size_bytes": 5491599,
-  "sha256": "837d57f7fba734840bb56012456d964a98ea696061db59ab0e02bbafcb5c2838",
+  "sha256": "ae97c7ebc1d144120335952b3d1a28f59a4651185adcd07cbfb8d89341bd08f0",
   "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
   "signing_key": "Existing cloud development signing key. Private key is not distributed. Windows-generated keys differ.",
-  "validation": "Android Studio debug/release assembly and signature verification passed; 683 assertions passed on Android10/API29 x86_64 software emulator. New checks actually play local HTML5 and native content-URI video, plus user-gesture policy, URL restrictions, single-player transfer, error recovery and pause/decoder/browser release.",
+  "validation": "Android Studio debug/release assembly and APK signature verification passed. 695 integration assertions passed on Android10/API29 x86_64 software emulator, including native destination entry, empty-input rejection, encoded Maps/Waze handoff, existing media/web/video lifecycle, settings/apps grids and layout.",
   "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
   "default_theme": "Synthwave",
   "default_animation": "Static",
@@ -22,17 +22,20 @@
     "condition": "Fresh normal process after45sec warm-up; Static Synthwave + Reduce motion, image angles, active SGR02 countdown, no map or media playback; software emulator only.",
     "evidence": "../docs/performance/synthwave-v3.json",
     "version_name": "1.6.7-sagadash.3",
-    "limitation": "Prior idle-dashboard measurement; no new .4 playback or hosting benchmark."
+    "limitation": "Prior .3 idle-dashboard measurement; not a measurement of the current build, playback, app hosting or physical head unit."
   },
-  "app_panel_status": "Native local video and optional YouTube website (beta) play in panels; original app UI hosting is unimplemented. OEM FM and destination search/full turn-by-turn guidance remain unimplemented.",
+  "app_panel_status": "Local video and optional YouTube web beta in panel; destination search and directions/voice handed off to installed Maps/Waze. Original Maps/Waze/YouTube/TizenTube/WhatsApp UI hosting is not in the launcher.",
   "glass_panels_default": true,
   "icon_cache_limit_bytes": 1048576,
   "icon_raster_max_pixels": [
     96,
     96
   ],
-  "integration_assertions": 683,
+  "integration_assertions": 695,
   "youtube_live_streaming_status": "Not verified: execution network blocks YouTube (CONNECT tunnel403). Actual local HTML5 video playback is tested; head-unit WebView/network/account compatibility remains untested.",
   "default_webview": "Not created in the default dashboard, or on resuming a saved web panel until Start is tapped.",
-  "active_inline_player_limit": 1
+  "active_inline_player_limit": 1,
+  "display_name": "NexaDash",
+  "navigation_routing": "Maps/Waze app handoff, or Maps website in browser when Maps is absent; no in-panel routing/voice engine.",
+  "experimental_probe": "Separate tiny opted-in host/target APKs under dist/experimental; no system permissions/root/ADB required by the demo. Actual OEM behavior unverified."
 }

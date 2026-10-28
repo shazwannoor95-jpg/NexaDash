@@ -1,9 +1,9 @@
-# Pasang Saga Dash pada head unit — panduan beginner
+# Pasang NexaDash pada head unit — panduan beginner
 
 Untuk **TEST9278B, 1024×600, RAM 4GB/flash 32GB** yang ditunjukkan dalam screenshot. Menu awal dilabel 12.0; laporan app pada unit
 kemudian menunjukkan API27 (Android8.1), versi string9.1 dan armeabi-v7a/armeabi. Sambungan ADB
 dan hosting app belum diuji pada perkakasan itu. Ikut langkah ini apabila sudah
-bersedia untuk ujian head unit. Nama app **Saga Dash**, Package ID **com.shazwan.sagadash**.
+bersedia untuk ujian head unit. Nama app **NexaDash**, Package ID **com.shazwan.sagadash**.
 
 ## Pilih satu laluan APK
 
@@ -17,12 +17,12 @@ Windows release key boleh berbeza. Ini bukan ralat pada model head unit.
 
 ## A. Download APK signed yang disediakan
 
-Download [SagaDash-1.6.7-sagadash.7.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.7.apk).
-Fail ini berada dalam branch edisi Saga Dash, bukan release APK KlikDash upstream.
+Download [NexaDash-1.6.7-nexadash.8.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk).
+Fail ini berada dalam branch edisi NexaDash, bukan release APK KlikDash upstream.
 Versi .7 menambah [player video fail dan YouTube web beta dalam panel](INLINE_PLAYBACK_MS.md), tanpa ADB. Versi .6 menambah grid ikon Dashboard settings dan nombor versi pada footer/menu. Versi .5 menambah panel kaca statik dan grid ikon Apps. Versi .4 menambah [semakan app asal dalam panel](APP_PANELS_MS.md); embedding app belum ditambah.
 
 Simpan fail `.apk` itu pada komputer. Jika pautan raw disekat rangkaian, buka
-[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.7.apk)
+[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
 dan klik **Download raw file**. Jangan rename ZIP kepada APK. Private signing key tidak disertakan
 dalam download/projek. [Checksum dan maklumat build](../dist/build-info.json) disediakan untuk semakan.
 
@@ -52,14 +52,14 @@ Untuk update akan datang, pilih keystore sedia ada dalam wizard—jangan Create 
 2. Pada head unit, buka File Manager, cari fail APK dan ketuk.
 3. Jika diminta **Install unknown apps**, benarkan untuk File Manager yang sedang memasang itu,
    kemudian kembali ke installer. Pada sesetengah firmware, nama menu mungkin Unknown sources.
-4. Klik **Install > Open**. Untuk ujian pertama, buka Saga Dash sebagai app dahulu; belum perlu
+4. Klik **Install > Open**. Untuk ujian pertama, buka NexaDash sebagai app dahulu; belum perlu
    menjadikannya default launcher.
 5. Semak paparan landscape, lapan sudut imej kereta, panel dan ikon. Default kereta ialah imej statik,
    bukan Original Saga video atau Interactive 3D model lama.
    Settings > Appearance membolehkan pertukaran Original/Synthwave. Kekalkan Static dan Reduce motion
    untuk permulaan ringan; ini tidak mengubah susunan panel atau pilihan app.
-6. Setelah ujian asas memuaskan, **Settings Saga Dash > Set as default launcher** membuka tetapan
-   Home Android. Pilih Saga Dash jika mahu menggunakannya sebagai launcher.
+6. Setelah ujian asas memuaskan, **Settings NexaDash > Set as default launcher** membuka tetapan
+   Home Android. Pilih NexaDash jika mahu menggunakannya sebagai launcher.
 
 Untuk kembali ke launcher asal, buka Android Settings > Apps > Default apps > Home app dan pilih
 launcher bawaan. Susunan menu vendor boleh berbeza; jangan tukar MCU/CAN/factory settings untuk
@@ -82,7 +82,7 @@ Di luar mod Edit, tekan lama shortcut > **Choose app**. Pilih label yang benar-b
 
 Pengesanan label hanya memilih app apabila padanan tidak kabur; package ID tidak diteka daripada
 screenshot. Jika ada beberapa padanan, pilih sendiri. **CarSet tidak dipilih sebagai DSP secara automatik.**
-Membuka app vendor tidak menjamin metadata radio/Bluetooth boleh dibaca oleh Saga Dash.
+Membuka app vendor tidak menjamin metadata radio/Bluetooth boleh dibaca oleh NexaDash.
 
 Untuk mini player, hidupkan Settings > Enable media / notification access, kemudian mainkan lagu
 melalui app asal. Maklumat dan Play/Pause bergantung pada sesi yang firmware/app itu dedahkan.
@@ -107,16 +107,16 @@ ini belum disahkan dan TizenTube **belum dipasang atau diuji pada head unit ini*
 
 Helper Bash `tools/install_tizentube.sh` menyemak API24, memilih ABI dan mengesahkan hash APK
 yang dipin serta tandatangan sebelum memasang pada serial yang ditetapkan. Ia tidak dijalankan
-secara automatik oleh Saga Dash dan tidak menyemak semua keupayaan GPU/perkakasan.
+secara automatik oleh NexaDash dan tidak menyemak semua keupayaan GPU/perkakasan.
 
 Jika tidak disokong atau kurang sesuai, gunakan **YouTube yang sudah kelihatan dalam screenshot**:
 tekan lama shortcut YouTube > Choose app > YouTube. Untuk panel, pilih **YouTube controls**,
-bukan TizenTube controls. TizenTube kekal pilihan berasingan dan tidak dibundel dalam APK Saga Dash.
+bukan TizenTube controls. TizenTube kekal pilihan berasingan dan tidak dibundel dalam APK NexaDash.
 
 ## E. Waktu solat dan ujian awal
 
 1. Beri Location permission dan hidupkan lokasi/GPS. Tunggu fix di tempat dengan penerimaan satelit.
-2. Pastikan Android date/time betul. Saga Dash boleh mengesahkan masa GPS untuk dirinya, tetapi
+2. Pastikan Android date/time betul. NexaDash boleh mengesahkan masa GPS untuk dirinya, tetapi
    tidak menukar jam sistem Android/app lain.
 3. Jika belum ada GPS dan jam peranti memang betul, ketuk jam > Device time is correct.
 4. Settings > Prayer zone & timetable: guna GPS atau pilih zon manual yang betul.

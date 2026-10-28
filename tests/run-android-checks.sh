@@ -10,7 +10,7 @@ mkdir -p "$TEST_BUILD/classes" "$TEST_BUILD/dex"
 cat > "$TEST_BUILD/AndroidManifest.xml" <<'MANIFEST'
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.shazwan.sagadash.checks">
 <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="29" />
-<application android:label="Saga Dash checks">
+<application android:label="NexaDash checks">
 <provider android:name="com.shazwan.sagadash.SagaShowroomChecks$VideoProvider" android:authorities="com.shazwan.sagadash.checks.showroom" android:exported="true" />
 </application>
 <instrumentation android:name="com.shazwan.sagadash.DashboardChecks" android:targetPackage="com.shazwan.sagadash" />

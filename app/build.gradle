@@ -18,8 +18,8 @@ android {
         applicationId 'com.shazwan.sagadash'
         minSdk 24
         targetSdk 29
-        versionCode 31
-        versionName '1.6.7-sagadash.7'
+        versionCode 32
+        versionName '1.6.7-nexadash.8'
     }
     sourceSets {
         main {

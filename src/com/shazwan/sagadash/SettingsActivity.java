@@ -297,7 +297,7 @@ public class SettingsActivity extends Activity {
 
         String ver = Updater.installedVersion(this);
         long checked = prefs.getLong("updateChecked", 0);
-        list.addView(row("Personal edition", "Upstream automatic updates are disabled. Install your own signed Saga Dash builds."));
+        list.addView(row("Personal edition", "Upstream automatic updates are disabled. Install your own signed NexaDash builds."));
 
         list.addView(row(getString(R.string.settings_about_title), getString(R.string.settings_about_desc, ver)));
         return scroll(list);

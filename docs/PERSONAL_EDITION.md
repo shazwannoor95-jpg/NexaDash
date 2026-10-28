@@ -1,4 +1,8 @@
-# Saga Dash personal edition
+> NexaDash .8/code32 passed **695 integration assertions** on the API29 software emulator; debug/release Gradle assembly and APK signature verification passed. This is not a physical head-unit performance or full-navigation road test.
+
+> Current branding/navigation changes: [NexaDash .8](NEXADASH_UPDATE_MS.md). Original app UI hosting is still experimental and is not in the launcher.
+
+# NexaDash personal edition
 
 English landscape launcher for the owner's red Proton Saga VVT. It keeps the supplied dashboard's
 default positions, a JAKIM prayer strip below the clock, two configurable native panels, app shortcuts
@@ -33,7 +37,7 @@ See [the no-ADB playback guide](INLINE_PLAYBACK_MS.md).
 
 ## Version identification and Settings grid (.6)
 
-Dashboard settings uses a native icon grid with the same fourteen actions, plus About Saga Dash.
+Dashboard settings uses a native icon grid with the same fourteen actions, plus About NexaDash.
 Footer and both drawer titles show the installed package version. The native system icons add no
 package scan, icon worker or cache. Closing/pausing releases the settings drawer. Opening an unavailable
 OEM settings action reports the unavailable state rather than crashing. This does not add app hosting.
@@ -107,7 +111,7 @@ recorded in [UPSTREAM_REVIEW.md](UPSTREAM_REVIEW.md).
 
 ## Media and native head-unit apps
 
-Saga Dash reads public Android MediaSessions after the owner grants notification access. Vendor
+NexaDash reads public Android MediaSessions after the owner grants notification access. Vendor
 radio/Bluetooth metadata may not be exposed that way; AVRCP alone does not establish support.
 Optional LRCLIB lyrics send track title/artist only after explicit enabling. Synced lyrics require
 available timestamps and playback position. Missing provider data is shown as unavailable.
@@ -117,7 +121,7 @@ and matching labels such as BT, CarSettings/CarSet, Music, Video/VLC and ZLINK, 
 ambiguous. Screenshot labels do not establish package IDs. CarSet is not inferred to be DSP.
 Radio/BT/DSP/CAN behavior still needs testing with the actual unit and vendor apps.
 
-TizenTube is separate from Saga Dash. The optional helper targets
+TizenTube is separate from NexaDash. The optional helper targets
 [TizenTube Cobalt v2.0.3](https://github.com/reisxd/TizenTubeCobalt/releases/tag/v2.0.3), checks the chosen
 device's ABI, pinned APK hash and signature, and requires an explicitly selected device. It has not
 been installed or verified on the owner's head unit. Touch/playback/session interoperability is unverified.
@@ -149,13 +153,13 @@ cover images are capped at 128px. The native map shares a 3MiB memory cache, 12M
 worker; hidden maps do not download tiles and no tile download starts without GPS.
 
 The upstream KlikDash README's approximate 30MB statement belongs to that author's app/device.
-It is not a Saga Dash measurement or guaranteed percentage. PSS and CPU measurements need their
+It is not a NexaDash measurement or guaranteed percentage. PSS and CPU measurements need their
 mode, device, duration and separately running apps identified. Emulator timing cannot establish
 Cortex-A7 performance. No guarantee of zero lag/stutter/crash or total head-unit RAM use is made.
 
 ## Build and delivery
 
-Application ID/Java namespace: **com.shazwan.sagadash**; label: **Saga Dash**. It installs beside
+Application ID/Java namespace: **com.shazwan.sagadash**; label: **NexaDash**. It installs beside
 upstream `com.ashafizullah.klikdash` with separate data and permissions. Quran/dhikr activities and
 playback service are not registered; English UI is fixed. Upstream auto-update is disabled.
 
@@ -176,7 +180,7 @@ source /workspace/.cloud-setup/env.sh
 ```
 
 Emulator checks use an explicitly selected test device via `tests/run-android-checks.sh`. Its synthetic
-fixtures are separate from production data. The current **1.6.7-sagadash.7/code31** build passed
+fixtures are separate from production data. The previous **1.6.7-sagadash.7/code31** build passed
 **683 integration assertions**, including the native app grid, bounded icon raster/cache release, glass finish state preservation,
 the read-only compatibility report, actual clipboard copy,
 theme state/lifecycle and compact layout regressions.

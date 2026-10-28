@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shazwan.sagadash"
-    android:versionCode="31"
-    android:versionName="1.6.7-sagadash.7">
+    android:versionCode="32"
+    android:versionName="1.6.7-nexadash.8">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
-        android:label="Saga Dash"
+        android:label="NexaDash"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/KlikDash"
         android:allowBackup="false"
@@ -90,7 +90,7 @@
             android:name=".BeamService"
             android:exported="false" />
 
-        <service android:name=".DashMediaAccess" android:label="Saga Dash media access"
+        <service android:name=".DashMediaAccess" android:label="NexaDash media access"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
             <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
         </service>

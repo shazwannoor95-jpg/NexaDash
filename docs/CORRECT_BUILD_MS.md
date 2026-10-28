@@ -1,8 +1,8 @@
-# Buka source Saga Dash terkini dalam Android Studio — Windows
+# Buka source NexaDash terkini dalam Android Studio — Windows
 
-Panduan ini untuk **1.6.7-sagadash.7 / version code 31**. Versi .6 menambah grid ikon
+Panduan ini untuk **1.6.7-nexadash.8 / version code 32**. Versi .6 menambah grid ikon
 **Dashboard settings**, mengekalkan grid ikon **Apps**, dan memaparkan versi pada footer/menu
-serta **About Saga Dash** supaya build yang sedang berjalan mudah dikenal pasti.
+serta **About NexaDash** supaya build yang sedang berjalan mudah dikenal pasti.
 
 ## Kenapa rakaman masih menunjukkan senarai Apps
 
@@ -16,8 +16,8 @@ folder itu. Memuat turun ZIP baharu tidak menukar projek yang sedang dibuka seca
 ## Muat turun dan buka folder baharu
 
 1. Dalam Android Studio, pilih **File > Close Project**.
-2. Download [source ZIP branch Saga Dash terkini](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
-3. Extract ke folder baharu, contohnya `C:\SagaDash-v7`. Jangan salin atau extract bertindih
+2. Download [source ZIP branch NexaDash terkini](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
+3. Extract ke folder baharu, contohnya `C:\NexaDash-v8`. Jangan salin atau extract bertindih
    ke folder projek lama.
 4. Dalam Android Studio, pilih **Open**. Buka folder di dalam hasil extract yang mengandungi
    **settings.gradle**, **build.gradle** dan folder **app**. Kadangkala ZIP mempunyai satu
@@ -25,8 +25,8 @@ folder itu. Memuat turun ZIP baharu tidak menukar projek yang sedang dibuka seca
 5. Sebelum Run, semak **app > build.gradle**:
 
    ```groovy
-   versionCode 31
-   versionName '1.6.7-sagadash.7'
+   versionCode 32
+   versionName '1.6.7-nexadash.8'
    ```
 
 6. Pastikan dua fail ini ada di bawah `src/com/shazwan/sagadash`:
@@ -41,7 +41,7 @@ folder itu. Memuat turun ZIP baharu tidak menukar projek yang sedang dibuka seca
 1. Guna emulator **API31 atau API32** yang sudah tersedia; tidak perlu mencipta emulator lain.
 2. Pada bar atas Studio, pilih konfigurasi **app** dan emulator yang kau mahu gunakan.
 3. Tekan **Run ▶** dan tunggu build serta pemasangan selesai.
-4. Periksa nombor versi **1.6.7-sagadash.7** pada footer/menu, atau buka **About Saga Dash**.
+4. Periksa nombor versi **1.6.7-nexadash.8** pada footer/menu, atau buka **About NexaDash**.
 5. Tekan **Apps**: ia patut membuka grid ikon sebenar bersama nama app.
 6. Tekan **Settings**: **Dashboard settings** juga patut menggunakan grid ikon.
 
@@ -55,7 +55,7 @@ emulator pada masa yang sama.
 ## ZIP source dan APK ialah dua laluan berbeza
 
 - **Source ZIP** di atas ialah projek untuk dibuka dan dibina dalam Android Studio.
-- [APK siap .7](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.7.apk)
+- [APK siap .8](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
   ialah fail pemasangan terus; ia tidak dibuka sebagai projek Studio.
 
 Untuk update pemasangan sedia ada, gunakan signing key yang sama seperti sebelumnya. Jangan

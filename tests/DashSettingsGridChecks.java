@@ -21,7 +21,7 @@ final class DashSettingsGridChecks {
             DashAppsChecks.onMain(instrumentation,()->{
                 String[] labels={"Prayer zone & timetable","Media access","Lyrics: Off","Location permission","Android settings",
                     "AI assistant","Screen lock","Power saver","AI profiles","Set as default launcher","Clock / GPS time",
-                    "Dashboard layout","Appearance","App panel compatibility","About Saga Dash"};
+                    "Dashboard layout","Appearance","App panel compatibility","About NexaDash"};
                 grid[0]=new DashSettingsGrid(dashboard,dashboard.appearance,labels,index->selected[0]=index);
                 ListAdapter adapter=grid[0].getAdapter();
                 check(adapter!=null&&adapter.getCount()==15,"settings grid retains all original actions and About");

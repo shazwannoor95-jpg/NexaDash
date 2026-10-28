@@ -57,6 +57,7 @@ public class DashboardChecks extends Instrumentation {
                 check(absent,"removed launcher feature: "+removed);
             }
             dash[0]=(DashboardActivity)startActivitySync(new Intent(getTargetContext(),DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            assertions+=new DashNavigationChecks().runUi(this,dash[0]);
             assertions+=new DashPanelCompatibilityChecks().runUi(this,dash[0]);
             assertions+=new DashAppsChecks().run(this,dash[0]);
             assertions+=new DashSettingsGridChecks().run(this,dash[0]);
