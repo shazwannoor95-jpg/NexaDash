@@ -1,3 +1,5 @@
+> Follow-up: the later35-part set extracted completely (141 APKs/117 folders) and the CarSet/CanBus class-definition search is now completed. [Updated full-archive results](NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio details](RADIO_FULL_ARCHIVE_35_REVIEW.md). The39-APK review below is the earlier subset, not the size of the new archive.
+
 # Semakan eksport head unit — 29 Oktober 2026
 
 Semakan statik terhadap 16 bahagian RAR yang dibekalkan: **39 fail APK dalam 31 folder**, 476,512,273 bait selepas extraction. Semua 39 struktur ZIP/CRC lulus; 38 APK lulus `apksigner verify`. `video_GalaVideo.apk` gagal semakan kerana metadata v1 menyatakan signature v2 tetapi blok v2 tiada. Punca boleh berkaitan export/repackaging; ini bukan penentuan keselamatan atau keadaan APK yang sedang berjalan pada unit.

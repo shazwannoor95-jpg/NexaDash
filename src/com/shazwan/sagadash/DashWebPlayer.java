@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.*;
 import android.widget.*;
@@ -25,6 +28,12 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
     private final LinearLayout searchRow;
     private final Handler main=new Handler(Looper.getMainLooper());
     private boolean active,closed;
+    private View customView;
+    private FrameLayout fullscreenOverlay;
+    private ViewGroup fullscreenParent;
+    private WebChromeClient.CustomViewCallback fullscreenCallback;
+    private int savedSystemUi,savedWindowFlags;
+    private static final int FULLSCREEN_WINDOW_FLAGS=WindowManager.LayoutParams.FLAG_FULLSCREEN|WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
     DashWebPlayer(Activity activity){
         super(activity);this.activity=activity;setOrientation(VERTICAL);
@@ -37,7 +46,7 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
         start=button("Start YouTube web\nPlays here · Internet required",()->open(query.getText().toString()));start.setTextSize(14);body.addView(start,new FrameLayout.LayoutParams(-1,-1));
         status=new TextView(activity);status.setTextSize(11);status.setTextColor(DashboardActivity.MUTED);status.setText("Website player · tap video to play");status.setMaxLines(2);addView(status,new LayoutParams(-1,-2));
         LinearLayout controls=new LinearLayout(activity);
-        controls.addView(button("Back",()->{if(web!=null&&web.canGoBack())web.goBack();}),new LayoutParams(0,dp(32),1));
+        controls.addView(button("Back",()->{if(!exitFullscreen()&&web!=null&&web.canGoBack())web.goBack();}),new LayoutParams(0,dp(32),1));
         controls.addView(button("Search",()->{boolean show=searchRow.getVisibility()!=VISIBLE;searchRow.setVisibility(show?VISIBLE:GONE);status.setVisibility(show?VISIBLE:GONE);}),new LayoutParams(0,dp(32),1));
         controls.addView(button("Home",()->open("")),new LayoutParams(0,dp(32),1));
         controls.addView(button("Stop",()->{releaseWeb();status.setText("Stopped · tap Start to load again");}),new LayoutParams(0,dp(32),1));addView(controls);
@@ -59,6 +68,7 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
     void pause(){active=false;releaseWeb();}
     void open(String value){
         if(!active||closed)return;
+        exitFullscreen();
         android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         if(keyboard!=null)keyboard.hideSoftInputFromWindow(query.getWindowToken(),0);query.clearFocus();
         if(ensureWeb()==null)return;
@@ -79,13 +89,58 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
             created.setWebViewClient(Build.VERSION.SDK_INT>=26?new ModernClient():new Client());
             created.setWebChromeClient(new WebChromeClient(){
                 @Override public void onPermissionRequest(PermissionRequest request){request.deny();}
-                @Override public void onShowCustomView(View view,CustomViewCallback callback){callback.onCustomViewHidden();status.setVisibility(VISIBLE);status.setText("Use Edit layout to resize this panel; playback stays inside it.");}
+                @Override public void onShowCustomView(View view,CustomViewCallback callback){
+                    if(web!=created){notifyHidden(callback);return;}showFullscreen(view,callback);
+                }
+                @Override public void onHideCustomView(){if(web==created)exitFullscreen();}
                 @Override public void onGeolocationPermissionsShowPrompt(String origin,GeolocationPermissions.Callback callback){callback.invoke(origin,false,false);}
             });
             created.setDownloadListener((url,ua,disposition,mime,length)->{status.setVisibility(VISIBLE);status.setText("Downloads are unavailable in this player");});
             start.setVisibility(GONE);body.addView(created,new FrameLayout.LayoutParams(-1,-1));
         }catch(RuntimeException|LinkageError unavailable){releaseWeb();status.setText("WebView unavailable. Update Android System WebView on this device.");return null;}
         return web;
+    }
+    boolean isFullscreen(){return customView!=null;}
+    private static void notifyHidden(WebChromeClient.CustomViewCallback callback){
+        if(callback!=null)try{callback.onCustomViewHidden();}catch(RuntimeException ignored){}
+    }
+    /** Hosts the WebView's existing video surface; no second browser or player is created. */
+    void showFullscreen(View view,WebChromeClient.CustomViewCallback callback){
+        if(customView!=null){
+            if(callback!=fullscreenCallback)notifyHidden(callback);
+            return;
+        }
+        if(view==null||view.getParent()!=null||!active||closed||web==null||activity.isFinishing()||activity.isDestroyed()){
+            notifyHidden(callback);return;
+        }
+        View decor=activity.getWindow().getDecorView();
+        if(!(decor instanceof ViewGroup)){notifyHidden(callback);return;}
+        savedSystemUi=decor.getSystemUiVisibility();savedWindowFlags=activity.getWindow().getAttributes().flags&FULLSCREEN_WINDOW_FLAGS;
+        customView=view;fullscreenCallback=callback;fullscreenParent=(ViewGroup)decor;
+        FrameLayout overlay=new FrameLayout(activity);fullscreenOverlay=overlay;overlay.setBackgroundColor(Color.BLACK);
+        overlay.setClickable(true);overlay.setFocusableInTouchMode(true);overlay.setContentDescription("YouTube web fullscreen video");
+        overlay.setOnKeyListener((v,key,event)->{if(key!=KeyEvent.KEYCODE_BACK)return false;if(event.getAction()==KeyEvent.ACTION_UP)exitFullscreen();return true;});
+        try{
+            overlay.addView(view,new FrameLayout.LayoutParams(-1,-1));
+            TextView exit=button("Exit fullscreen",this::exitFullscreen);exit.setContentDescription("Exit fullscreen and return to dashboard panel");
+            FrameLayout.LayoutParams exitBounds=new FrameLayout.LayoutParams(dp(124),dp(44),Gravity.TOP|Gravity.END);exitBounds.setMargins(dp(12),dp(12),dp(12),dp(12));overlay.addView(exit,exitBounds);
+            fullscreenParent.addView(overlay,new ViewGroup.LayoutParams(-1,-1));
+            activity.getWindow().setFlags(FULLSCREEN_WINDOW_FLAGS,FULLSCREEN_WINDOW_FLAGS);
+            decor.setSystemUiVisibility(savedSystemUi|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            overlay.requestFocus();
+        }catch(RuntimeException unavailable){
+            exitFullscreen();status.setVisibility(VISIBLE);status.setText("Fullscreen unavailable. Video remains in the panel.");
+        }
+    }
+    /** Clear state before callbacks because the provider may synchronously call onHideCustomView. */
+    boolean exitFullscreen(){
+        if(customView==null)return false;
+        View oldView=customView;FrameLayout overlay=fullscreenOverlay;ViewGroup parent=fullscreenParent;WebChromeClient.CustomViewCallback callback=fullscreenCallback;
+        customView=null;fullscreenOverlay=null;fullscreenParent=null;fullscreenCallback=null;
+        if(overlay!=null){overlay.setOnKeyListener(null);overlay.removeView(oldView);if(parent!=null)parent.removeView(overlay);}
+        activity.getWindow().setFlags(savedWindowFlags,FULLSCREEN_WINDOW_FLAGS);
+        activity.getWindow().getDecorView().setSystemUiVisibility(savedSystemUi);
+        notifyHidden(callback);return true;
     }
     private class Client extends WebViewClient {
         @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){return block(request.getUrl().toString());}
@@ -103,9 +158,10 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
         }
     }
     private void releaseWeb(){
-        WebView old=web;web=null;
+        WebView old=web;web=null;exitFullscreen();
         if(old!=null){body.removeView(old);old.stopLoading();old.onPause();old.removeAllViews();old.destroy();}
         start.setVisibility(VISIBLE);searchRow.setVisibility(VISIBLE);status.setVisibility(VISIBLE);
     }
     @Override public void close(){closed=true;pause();}
+    @Override protected void onDetachedFromWindow(){pause();super.onDetachedFromWindow();}
 }

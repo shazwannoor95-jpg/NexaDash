@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8-native9}
-VERSION_CODE=${VERSION_CODE:-41}
+VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8-native10}
+VERSION_CODE=${VERSION_CODE:-42}
 APP_ID=${PKG:-com.shazwan.nexadash.lab}
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}

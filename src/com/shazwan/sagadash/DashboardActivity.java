@@ -592,5 +592,9 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
     void pauseDashboard(){handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
     @Override protected void onDestroy(){closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
-    @Override public void onBackPressed(){if(editMode!=0)finishEditing(false);}
+    @Override public void onBackPressed(){
+        if(leftPane!=null&&leftPane.webPlayer!=null&&leftPane.webPlayer.exitFullscreen())return;
+        if(rightPane!=null&&rightPane.webPlayer!=null&&rightPane.webPlayer.exitFullscreen())return;
+        if(editMode!=0)finishEditing(false);
+    }
 }

@@ -1,3 +1,5 @@
+> Current source is native10 (web fullscreen fix). [Read native10 status](NATIVE10_WEB_FULLSCREEN_MS.md). No signed native10 APK is published; existing downloads remain unchanged.
+
 > Current source is native9; no signed native9 APK is published. [Read the native9 instructions and signing status first](NATIVE9_SOURCE_MS.md). Existing APK download links below refer to earlier artifacts, whose native8 file still reports native1/code33 in its manifest. Native9 source fixes the version override.
 
 # NexaDash .8 Native Lab — install dan cuba

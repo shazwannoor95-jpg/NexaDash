@@ -1,0 +1,26 @@
+{
+  "source_version_name": "1.6.7-nexadash.8-native10",
+  "source_version_code": 42,
+  "application_id": "com.shazwan.nexadash.lab",
+  "signed_update_published": false,
+  "signing_status": "Original cloud private key not restored. Existing signed APKs unchanged; no signed native10 update.",
+  "validation": {
+    "resources_java_dex_alignment_unsigned": "passed",
+    "gradle_unsigned_release": "passed",
+    "gradle_debug_app_and_demo_java": "passed",
+    "all_test_source_compilation": "passed",
+    "fullscreen_custom_view_runtime_tests": "not run after environment reset",
+    "youtube_on_head_unit_fullscreen": "not verified by this source build"
+  },
+  "archive35": {
+    "parts": 35,
+    "extraction_complete": true,
+    "folders": 117,
+    "apk_files": 141,
+    "expanded_bytes": 1144954118,
+    "apk_crc_errors": 0
+  },
+  "exported_installed_host_matches_signed_native8": true,
+  "native_radio_hardware_control_delivered": false,
+  "web_fullscreen": "Activity overlay hosts existing custom video view; Exit/Back restores panel; no second browser."
+}

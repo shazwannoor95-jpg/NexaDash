@@ -26,6 +26,42 @@ final class DashInlineChecks {
         DashAppsChecks.onMain(instrumentation,()->view.evaluateJavascript(script,result->{value.set(result);done.countDown();}));
         if(!done.await(10,TimeUnit.SECONDS))throw new AssertionError("WebView script callback timed out");return value.get();
     }
+    /** Synthetic custom views exercise app fullscreen lifecycle, not YouTube's website/decoder. */
+    void fullscreenChecks(Instrumentation instrumentation,DashboardActivity dashboard,DashWebPlayer player)throws Exception{
+        final android.webkit.WebView browser=player.web;
+        final android.view.ViewGroup decor=(android.view.ViewGroup)dashboard.getWindow().getDecorView();
+        final android.view.View[] first={null};final int[] children={0},ui={0},flags={0};
+        java.util.concurrent.atomic.AtomicInteger hidden=new java.util.concurrent.atomic.AtomicInteger(),duplicate=new java.util.concurrent.atomic.AtomicInteger();
+        android.webkit.WebChromeClient.CustomViewCallback callback=()->{hidden.incrementAndGet();player.exitFullscreen();};
+        DashAppsChecks.onMain(instrumentation,()->{
+            children[0]=decor.getChildCount();ui[0]=decor.getSystemUiVisibility();flags[0]=dashboard.getWindow().getAttributes().flags;
+            first[0]=new android.view.View(dashboard);player.showFullscreen(first[0],callback);
+            check(player.isFullscreen()&&first[0].getParent()!=null&&decor.getChildCount()==children[0]+1,"custom fullscreen surface is attached above the actual dashboard");
+            check(player.web==browser&&browser.getParent()==player.body,"fullscreen reuses the same browser and retains its panel parent/history");
+            player.showFullscreen(first[0],callback);check(hidden.get()==0,"duplicate request for active custom view does not close its callback");
+            player.showFullscreen(new android.view.View(dashboard),duplicate::incrementAndGet);
+            check(duplicate.get()==1&&hidden.get()==0&&player.isFullscreen(),"second fullscreen request is rejected without replacing the active surface");
+        });
+        await(instrumentation,()->first[0].getWidth()==decor.getWidth()&&first[0].getHeight()==decor.getHeight(),"custom video fills the activity rather than only its panel");
+        DashAppsChecks.onMain(instrumentation,()->{
+            dashboard.onBackPressed();
+            check(!player.isFullscreen()&&first[0].getParent()==null&&hidden.get()==1&&decor.getChildCount()==children[0],"Back removes fullscreen and invokes its reentrant callback once");
+            check(player.web==browser&&browser.getParent()==player.body,"Back returns to the existing in-panel browser");
+            int mask=android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN|android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            check(decor.getSystemUiVisibility()==ui[0]&&(dashboard.getWindow().getAttributes().flags&mask)==(flags[0]&mask),"fullscreen restores the prior window and system UI flags");
+            check(!player.exitFullscreen()&&hidden.get()==1,"duplicate fullscreen exit is harmless");
+            android.view.View next=new android.view.View(dashboard);java.util.concurrent.atomic.AtomicInteger paused=new java.util.concurrent.atomic.AtomicInteger();
+            player.showFullscreen(next,paused::incrementAndGet);player.pause();
+            check(!player.isFullscreen()&&player.web==null&&next.getParent()==null&&paused.get()==1&&decor.getChildCount()==children[0],"pause releases both custom fullscreen surface and browser with one callback");
+            player.resume();check(player.web==null,"resume after fullscreen pause does not autoplay or recreate a browser");
+            player.ensureWeb();android.view.View modeView=new android.view.View(dashboard);java.util.concurrent.atomic.AtomicInteger switched=new java.util.concurrent.atomic.AtomicInteger();
+            player.showFullscreen(modeView,switched::incrementAndGet);dashboard.leftPane.setMode("media");
+            check(!player.isFullscreen()&&player.web==null&&modeView.getParent()==null&&switched.get()==1,"mode switch detaches fullscreen and cleans up the old browser");
+            check(decor.getChildCount()==children[0],"mode switch leaves no fullscreen overlay on the activity");
+            player.showFullscreen(new android.view.View(dashboard),duplicate::incrementAndGet);
+            check(!player.isFullscreen()&&duplicate.get()==2,"closed player rejects stale fullscreen callbacks");
+        });
+    }
     int run(Instrumentation instrumentation,DashboardActivity dashboard)throws Exception{
         check(DashWebPlayer.allowed("https://m.youtube.com/watch?v=abc"),"first-party HTTPS YouTube URL accepted");
         for(String url:new String[]{"http://youtube.com/","https://youtube.com.evil.invalid/","https://youtube.com@evil.invalid/","intent://video","file:///sdcard/private","javascript:alert(1)"})
@@ -64,7 +100,10 @@ final class DashInlineChecks {
             boolean advanced=false;long playbackEnd=SystemClock.elapsedRealtime()+15000;
             while(!advanced&&SystemClock.elapsedRealtime()<playbackEnd){String value=js(instrumentation,web[0].web,"document.getElementById('v').currentTime");try{advanced=Double.parseDouble(value)>.1;}catch(RuntimeException ignored){}if(!advanced)SystemClock.sleep(50);}
             check(advanced,"HTML5 fixture actually advances after a real touch inside the panel");
+            fullscreenChecks(instrumentation,dashboard,web[0]);
             DashAppsChecks.onMain(instrumentation,()->{
+                boolean wasVisible=dashboard.visible;dashboard.visible=false;dashboard.leftPane.setMode("youtube_web");dashboard.visible=wasVisible;
+                web[0]=dashboard.leftPane.webPlayer;web[0].resume();web[0].ensureWeb();
                 web[0].pause();check(web[0].web==null,"background/pause destroys the web player");web[0].resume();check(web[0].web==null,"returning does not silently recreate a browser");
                 dashboard.rightPane.setMode("video_file");file[0]=dashboard.rightPane.filePlayer;
                 check(dashboard.leftPane.webPlayer==null&&!DashboardActivity.inlineMode(dashboard.leftPane.mode),"moving video to the other pane closes the old in-panel player");

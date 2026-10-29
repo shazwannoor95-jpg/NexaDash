@@ -1,10 +1,10 @@
-**Current source: 1.6.7-nexadash.8-native9 (code41).** Direct TizenTube native-panel selection, remembered panel target and persisted actual-display startup diagnostics. [Native9 instructions/signing status](docs/NATIVE9_SOURCE_MS.md) · [39-APK head-unit review](docs/HEAD_UNIT_EXPORT_REVIEW_MS.md).
+**Current source: 1.6.7-nexadash.8-native10 (code42).** YouTube web custom-view fullscreen with Exit/Back and lifecycle cleanup, using the same browser. [Native10/full35-part archive review](docs/NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio follow-up](docs/RADIO_FULL_ARCHIVE_35_REVIEW.md).
 
-**No signed native9 update is published.** The original cloud signing key was not restored after workspace replacement. Source and unsigned build checks are available; existing signed APKs remain unchanged. The file named native8 has legacy manifest metadata native1/code33; this is documented and the build version override is fixed for native9.
+**No signed native10 update is published.** The original cloud signing key was not restored after workspace replacement. Source and unsigned build checks are available; existing signed APKs remain unchanged. The file named native8 has legacy manifest metadata native1/code33; this is documented and the build version override is fixed for native9.
 
 > **Experimental branch: NexaDash Native Lab**, application ID `com.shazwan.nexadash.lab`.
 > Source native9: select **TizenTube · native panel (experimental)**, then **Start**. External controls / Open outside launches a separate app window. [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment).
-> Resources/Java/DEX/test-source compilation and unsigned Gradle release checked. Native9 runtime and physical head-unit hosting/playback are not verified. Older emulator results are historical.
+> Resources/Java/DEX/test-source compilation and unsigned Gradle release checked. Native9/native10 runtime and physical head-unit hosting/playback are not verified. Older emulator results are historical.
 > [Existing signed native8 UI APK (legacy version metadata)](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk?raw=true) · [Earlier companion/install guide](docs/NATIVE_LAB_MS.md).
 > Maps/Waze native hosting is not delivered; original Google Maps25.32 export clears API26/ARM32 requirements but still needs a separate validated hosting solution.
 
