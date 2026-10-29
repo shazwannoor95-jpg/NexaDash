@@ -159,7 +159,13 @@ final class DashWebPlayer extends LinearLayout implements AutoCloseable {
     }
     private void releaseWeb(){
         WebView old=web;web=null;exitFullscreen();
-        if(old!=null){body.removeView(old);old.stopLoading();old.onPause();old.removeAllViews();old.destroy();}
+        if(old!=null){
+            body.removeView(old);
+            // A dead OEM renderer may reject stopLoading/onPause. Always attempt destroy,
+            // so recovery leaves neither an attached browser nor a retained player.
+            try{old.stopLoading();old.onPause();}catch(RuntimeException ignored){}
+            finally{try{old.removeAllViews();}catch(RuntimeException ignored){}try{old.destroy();}catch(RuntimeException ignored){}}
+        }
         start.setVisibility(VISIBLE);searchRow.setVisibility(VISIBLE);status.setVisibility(VISIBLE);
     }
     @Override public void close(){closed=true;pause();}

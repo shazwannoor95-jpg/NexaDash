@@ -33,6 +33,8 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     final String token=UUID.randomUUID().toString();
     Target target=TARGETS[0];volatile VirtualDisplay display;volatile IBinder remote;
     boolean active,closed,wanted,bound,proxyLaunched,protocolVerified,targetConfirmed,targetLaunchRequested,startupFinalized;volatile int generation;
+    boolean touchInProgress;
+    MotionEvent lastTouch;
     int requestedDisplay=-1,proxyDisplay=-1,lastObservedDisplay=-1;
     private java.util.function.IntConsumer targetListener;
     static final String STARTUP_PREFS="native_panel_startup";
@@ -45,7 +47,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     private ServiceConnection connectionFor(final int run){return new ServiceConnection(){
         @Override public void onServiceConnected(ComponentName name,IBinder binder){if(run!=generation||!wanted||closed||!bound)return;remote=binder;
             input.post(()->{boolean supported=false;Parcel data=Parcel.obtain(),reply=Parcel.obtain();try{data.writeInterfaceToken(TOKEN);if(binder.transact(8,data,reply,0)){reply.readException();supported=reply.readInt()==1;}}catch(RemoteException|RuntimeException ignored){}finally{data.recycle();reply.recycle();}
-                final boolean valid=supported;main.post(()->{if(run!=generation||!wanted||closed)return;if(!valid){fail("Older companion protocol. Install the Native Lab companion APK.");return;}protocolVerified=true;launchIfReady();});});}
+                final boolean valid=supported;main.post(()->{if(run!=generation||!wanted||closed)return;if(!valid){fail("Companion protocol mismatch. Install the matching companion for this launcher.");return;}protocolVerified=true;launchIfReady();});});}
         @Override public void onServiceDisconnected(ComponentName name){if(run==generation)fail("App disconnected. Press Start to reconnect.");}
         @Override public void onBindingDied(ComponentName name){if(run==generation)fail("App updated or stopped. Press Start to reconnect.");}
         @Override public void onNullBinding(ComponentName name){if(run==generation)fail("Companion does not provide a usable input service.");}
@@ -72,19 +74,20 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         keys.addView(button("Open outside panel",()->{stop();DashShortcuts.start(owner,new Intent(Intent.ACTION_MAIN).setComponent(new ComponentName(target.pkg,target.activity)));}),new LayoutParams(0,-2,2));
         tools.addView(keys,new LayoutParams(-1,-2));
         LinearLayout typing=new LinearLayout(owner);entry=new EditText(owner);entry.setSingleLine(true);entry.setTextSize(12);entry.setHint("Tap text field in app, type here");entry.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(240)});
-        typing.addView(entry,new LayoutParams(0,-2,1));typing.addView(button("Send",()->command(5,entry.getText().toString())),new LayoutParams(-2,-2));tools.addView(typing,new LayoutParams(-1,-2));addView(tools,new LayoutParams(-1,-2));
+        entry.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEND);
+        entry.setOnEditorActionListener((v,action,event)->{if(action!=android.view.inputmethod.EditorInfo.IME_ACTION_SEND)return false;sendText();return true;});
+        typing.addView(entry,new LayoutParams(0,-2,1));typing.addView(button("Send",this::sendText),new LayoutParams(-2,-2));tools.addView(typing,new LayoutParams(-1,-2));addView(tools,new LayoutParams(-1,-2));
         setPadding(pad,pad,pad,pad);HOSTS.put(token,new WeakReference<>(this));
     }
     /** Preserve the measured panel aspect ratio, with a bounded raster and usable logical UI. */
     static int[] fittedSize(int width,int height){
-        width=Math.max(1,width);height=Math.max(1,height);
-        double factor=Math.min(MAX_EDGE/(double)Math.max(width,height),Math.max(1,320.0/Math.min(width,height)));
-        return new int[]{Math.max(1,(int)Math.round(width*factor)),Math.max(1,(int)Math.round(height*factor))};
+        return DashNativeGeometry.fittedSize(width,height,MAX_EDGE);
     }
     private void fitSurface(int width,int height){
         if(width<=0||height<=0||closed)return;
         int[] size=fittedSize(width,height);
         if(size[0]==renderWidth&&size[1]==renderHeight)return;
+        cancelTouch();
         renderWidth=size[0];renderHeight=size[1];
         try{
             surface.getHolder().setFixedSize(renderWidth,renderHeight);
@@ -145,7 +148,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
             ServiceInfo s=pm.getServiceInfo(new ComponentName(target.pkg,target.service),0);
             if(!a.exported||!a.enabled||(a.flags&0x80000000)==0)return "Companion activity has not opted into native display hosting.";
             if(!s.exported||!s.enabled||!target.permission.equals(s.permission))return "Matching signature-protected companion service is missing.";
-            if(pm.checkPermission(target.permission,owner.getPackageName())!=PackageManager.PERMISSION_GRANTED)return "Install the companion first, then reopen this launcher; the signature permission must be granted.";
+            if(pm.checkPermission(target.permission,owner.getPackageName())!=PackageManager.PERMISSION_GRANTED)return "Install the companion first, then install/update this launcher again to grant its signature permission.";
         }catch(PackageManager.NameNotFoundException absent){return target.label+" companion not installed. "+(nextHost()?"Install the Maps NexaDash Next companion first.":"Use its matching Lab APK; Demo supports API26+.");}
         return null;
     }
@@ -180,36 +183,58 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
             if(input!=null)input.postDelayed(readinessProbe,350);}
         catch(RuntimeException failure){fail("App launch rejected: "+failure.getClass().getSimpleName());proxy.finish();}
     }
-    private void forward(MotionEvent event){
-        if(!wanted||display==null||remote==null||input==null)return;
+    /** A resize/overflow ends the old gesture. Ignore its remaining fingers until a fresh Down. */
+    private void cancelTouch(){
         synchronized(events){
-            if(events.size()>8&&event.getActionMasked()==MotionEvent.ACTION_MOVE)return;
-            if(events.size()>=32){for(MotionEvent queued:events)queued.recycle();events.clear();MotionEvent cancel=MotionEvent.obtain(event);cancel.setAction(MotionEvent.ACTION_CANCEL);events.add(cancel);}
-            MotionEvent copy=MotionEvent.obtain(event);Matrix scale=new Matrix();scale.setScale(renderWidth/(float)Math.max(1,surface.getWidth()),renderHeight/(float)Math.max(1,surface.getHeight()));copy.transform(scale);events.add(copy);
+            if(touchInProgress&&lastTouch!=null){MotionEvent cancel=MotionEvent.obtain(lastTouch);cancel.setAction(MotionEvent.ACTION_CANCEL);events.add(cancel);}
+            touchInProgress=false;if(lastTouch!=null){lastTouch.recycle();lastTouch=null;}
         }
-        input.removeCallbacks(drain);input.post(drain);
+        Handler worker=input;if(worker!=null)worker.post(drain);
+    }
+    private void forward(MotionEvent event){
+        if(!wanted||!targetConfirmed||display==null||remote==null||input==null)return;
+        synchronized(events){
+            int action=event.getActionMasked();
+            if(action==MotionEvent.ACTION_DOWN)touchInProgress=true;
+            if(!touchInProgress)return;
+            if(events.size()>8&&action==MotionEvent.ACTION_MOVE)return;
+            if(events.size()>=32){
+                for(MotionEvent queued:events)queued.recycle();events.clear();cancelTouch();return;
+            }
+            MotionEvent copy=MotionEvent.obtain(event);Matrix scale=new Matrix();scale.setScale(renderWidth/(float)Math.max(1,surface.getWidth()),renderHeight/(float)Math.max(1,surface.getHeight()));copy.transform(scale);events.add(copy);
+            if(lastTouch!=null)lastTouch.recycle();lastTouch=MotionEvent.obtain(copy);
+            if(action==MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL){touchInProgress=false;lastTouch.recycle();lastTouch=null;}
+        }
+        input.post(drain);
     }
     private void drainInput(){
         Handler worker=input;if(worker==null||Looper.myLooper()!=worker.getLooper())return;final int run=generation;
         while(run==generation&&input==worker){MotionEvent event;synchronized(events){event=events.poll();}if(event==null)return;
             Parcel data=Parcel.obtain();try{IBinder binder=remote;if(binder!=null&&run==generation){data.writeInterfaceToken(TOKEN);VirtualDisplay current=display;if(current!=null){data.writeInt(current.getDisplay().getDisplayId());event.writeToParcel(data,0);binder.transact(6,data,null,IBinder.FLAG_ONEWAY);}}}
-            catch(RemoteException failure){main.post(()->{if(run==generation)fail("Input service disconnected. Press Start to reconnect.");});}
+            catch(RemoteException|RuntimeException failure){main.post(()->{if(run==generation)fail("Input service disconnected. Press Start to reconnect.");});}
             finally{data.recycle();event.recycle();}
         }
     }
+    private void sendText(){
+        if(!wanted||!targetConfirmed){note("Start and confirm the companion before sending text.");return;}
+        command(5,entry.getText().toString());
+        android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)owner.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(keyboard!=null)keyboard.hideSoftInputFromWindow(entry.getWindowToken(),0);entry.clearFocus();
+    }
     private void command(int code,String text){
-        Handler worker=input;IBinder binder=remote;if(worker==null||binder==null||display==null){note("Start a companion first.");return;}
+        Handler worker=input;IBinder binder=remote;if(worker==null||binder==null||display==null||!wanted||!targetConfirmed){note("Start and confirm a companion first.");return;}
         final int run=generation,id=display.getDisplay().getDisplayId();
-        worker.post(()->{Parcel data=Parcel.obtain();try{data.writeInterfaceToken(TOKEN);data.writeInt(id);if(code==5)data.writeString(text);binder.transact(code,data,null,IBinder.FLAG_ONEWAY);}
-            catch(RemoteException failure){main.post(()->{if(generation==run)fail("Companion input service disconnected.");});}finally{data.recycle();}});
+        worker.post(()->{if(run!=generation||input!=worker||remote!=binder)return;Parcel data=Parcel.obtain();try{data.writeInterfaceToken(TOKEN);data.writeInt(id);if(code==5)data.writeString(text);binder.transact(code,data,null,IBinder.FLAG_ONEWAY);}
+            catch(RemoteException|RuntimeException failure){main.post(()->{if(generation==run)fail("Companion input service disconnected.");});}finally{data.recycle();}});
     }
     private void fail(String message){startupFinalized=true;recordStartup("failed: "+message);stop();note(message);}
     void stop(){
         if(wanted&&!targetConfirmed&&!startupFinalized){startupFinalized=true;recordStartup("stopped before companion display was confirmed");}
+        if(entry.hasFocus()){android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)owner.getSystemService(Context.INPUT_METHOD_SERVICE);if(keyboard!=null)keyboard.hideSoftInputFromWindow(entry.getWindowToken(),0);entry.clearFocus();}
         wanted=false;targetConfirmed=false;targetLaunchRequested=false;proxyLaunched=false;protocolVerified=false;main.removeCallbacks(startupTimeout);generation++;remote=null;
         if(bound){bound=false;try{owner.unbindService(connection);}catch(IllegalArgumentException ignored){}}
         if(display!=null){display.release();display=null;}
-        synchronized(events){for(MotionEvent event:events)event.recycle();events.clear();}
+        synchronized(events){for(MotionEvent event:events)event.recycle();events.clear();touchInProgress=false;if(lastTouch!=null){lastTouch.recycle();lastTouch=null;}}
         if(input!=null)input.removeCallbacksAndMessages(null);input=null;
         if(inputThread!=null)inputThread.quit();inputThread=null;
         status.setMaxLines(2);note("Stopped · native display released and input stop requested. Press Start to reopen.");

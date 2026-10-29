@@ -186,7 +186,7 @@ public class DashboardActivity extends Activity implements LocationListener {
             String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","native_tizentube","native_app","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","native_tizentube","native_app","navigation","radio","youtube","tizentube"};
             java.util.List<String> menuLabels=new ArrayList<>(),menuValues=new ArrayList<>();
             boolean next="com.shazwan.nexadash.next".equals(getPackageName());
-            for(int i=0;i<values.length;i++){if(next&&"native_tizentube".equals(values[i]))continue;menuLabels.add(labels[i]);menuValues.add(values[i]);}
+            for(int i=0;i<values.length;i++){if(next&&("native_tizentube".equals(values[i])||"native_app".equals(values[i])))continue;menuLabels.add(labels[i]);menuValues.add(values[i]);}
             if(next){menuLabels.add(0,"Google Maps · native Next companion (test)");menuValues.add(0,"native_maps");}
             new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(menuLabels.toArray(new String[0]),(d,i)->{String picked=menuValues.get(i);if("native_maps".equals(picked))selectNativeTarget(3);else if("native_tizentube".equals(picked))selectNativeTarget(1);else setMode(picked);}).setNegativeButton("Cancel",null).show();
         }

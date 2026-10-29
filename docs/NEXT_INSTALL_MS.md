@@ -3,7 +3,7 @@
 ## APKs
 
 1. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install **first**.
-2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.0.apk) — install after the companion, then open from Apps.
+2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.1.apk) — install after the companion, then open from Apps.
 
 Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.next`. Both use the same new signing key and a dedicated signature permission, different from old Native Lab. The original Google Maps and old NexaDash are not replaced or uninstalled; their data remains. Next starts with its own settings.
 
@@ -32,3 +32,11 @@ This check gathers missing firmware locations; it is not a substitute FM control
 Settings → Performance check provides the existing opt-in own-process30s sample. It excludes Maps/WebView companion processes; it is not a total memory/CPU measurement for the whole system. See [measurement guide](PREVIEW_PERFORMANCE_MS.md).
 
 Next resources/Java/DEX, signature/alignment/CRC, unique identity/HOME filter/task/control permission checks, Gradle compile and test-source compilation passed. Maps companion validation includes split/shared-UID cleanup, provider namespace, matching certificate, all original DEX/native libraries and resource IDs (only obsolete xml/splits0 removed). Rebuild from pinned APKEditor source succeeded. No head-unit or full runtime pass is claimed. Radio hardware control is explicitly not implemented.
+
+## Next 1.1 update
+
+Install Next1.1 over Next1.0: same package/key, versionCode2, existing Next settings retained. Maps companion is unchanged; no need to install it again if the matching Next companion is already present. The old cloud Native Lab is still a different app.
+
+Queued Back/text actions now check their original session before dispatch. Native touches wait for companion display confirmation. An active gesture is cancelled on raster resize or queue overflow; remaining fingers are ignored until a new Down. Text tools support keyboard Send, hide the host keyboard afterwards, and release host input focus on Stop. Next removes the duplicate generic-native menu entry. Browser cleanup always attempts destroy after an OEM renderer stop/pause exception.
+
+Twelve JVM geometry cases passed, covering bounds/aspect/mapped extents including tiny, portrait and extreme sizes. They do not exercise Android MotionEvent/Binder or Maps UI. Signed APK, API27 signature/alignment/CRC, Android compilation and existing test-source compilation checked. No emulator/head-unit runtime test ran; synthetic fullscreen instrumentation exists but was not executed in this environment. Physical Maps search/navigation and Radio hardware control remain unverified/not delivered respectively.
