@@ -48,6 +48,12 @@ final class DashSourcePanel extends LinearLayout {
         explanation.setOnClickListener(v->{if(switchPanel!=null)switchPanel.run();});
     }
 
+    void offerRadioCheck(Runnable check){
+        explanation.setText("Radio UI is not hosted here.\nTap for a read-only tuner runtime check →");
+        explanation.setMaxLines(3);explanation.setTextColor(DashboardActivity.BLUE);
+        explanation.setOnClickListener(v->{if(check!=null)check.run();});
+    }
+
     @Override protected void onMeasure(int widthSpec,int heightSpec){
         // A 200-unit panel leaves 145 units after its outer padding and selector.
         // Keep both control rows reachable; expanded panels retain the original layout.

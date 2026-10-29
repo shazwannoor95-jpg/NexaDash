@@ -76,7 +76,17 @@
   "layout_focused_assertions": 37,
   "artifact_source_label": "1.6.7-nexadash.8-native8",
   "artifact_metadata_correction": "Confirmed via aapt2: file named native8 retains canonical-manifest native1/code33. Native9 source fixes --replace-version. Existing APK bytes unchanged.",
-  "source_version_name": "1.6.7-nexadash.8-native11",
-  "source_version_code": 43,
-  "source_build_info": "preview/artifact.json"
+  "source_version_name": "1.6.7-nexadash.8-native12",
+  "source_version_code": 44,
+  "source_build_info": "next/artifact.json",
+  "next_release": {
+    "file": "next/NexaDash-Next-1.0.apk",
+    "application_id": "com.shazwan.nexadash.next",
+    "version_name": "1.0-next1",
+    "home_candidate": true,
+    "separate_identity": true,
+    "maps_companion_branch": "nexadash-maps-next-companion",
+    "maps_runtime": "unverified",
+    "radio_native_controller_delivered": false
+  }
 }

@@ -62,6 +62,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     DashAppearance appearance;
     DashPanelCompatibility panelCompatibility;
     DashPerformance performance;
+    DashRadioRuntime radioRuntime;
     DashMedia media;
     LocationManager locations;
     Location previous;
@@ -183,7 +184,11 @@ public class DashboardActivity extends Activity implements LocationListener {
         void menu(){
             String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","YouTube · external app controls","TizenTube · external app controls","Media controls","Radio · external app controls"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","Radio · external app controls","YouTube · external app controls","TizenTube · external app controls"};
             String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","native_tizentube","native_app","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","native_tizentube","native_app","navigation","radio","youtube","tizentube"};
-            new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(labels,(d,i)->{if("native_tizentube".equals(values[i]))selectNativeTarget(1);else setMode(values[i]);}).setNegativeButton("Cancel",null).show();
+            java.util.List<String> menuLabels=new ArrayList<>(),menuValues=new ArrayList<>();
+            boolean next="com.shazwan.nexadash.next".equals(getPackageName());
+            for(int i=0;i<values.length;i++){if(next&&"native_tizentube".equals(values[i]))continue;menuLabels.add(labels[i]);menuValues.add(values[i]);}
+            if(next){menuLabels.add(0,"Google Maps · native Next companion (test)");menuValues.add(0,"native_maps");}
+            new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(menuLabels.toArray(new String[0]),(d,i)->{String picked=menuValues.get(i);if("native_maps".equals(picked))selectNativeTarget(3);else if("native_tizentube".equals(picked))selectNativeTarget(1);else setMode(picked);}).setNegativeButton("Cancel",null).show();
         }
         void selectNativeTarget(int index){
             dashPrefs().edit().putInt("native_target_"+key,index).apply();
@@ -220,7 +225,8 @@ public class DashboardActivity extends Activity implements LocationListener {
                 String name=mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";
                 String app=mode.equals("youtube")?"YouTube app":name;
                 sourcePanel=new DashSourcePanel(DashboardActivity.this,unit(),name,()->shortcut(app),()->DashShortcuts.choose(DashboardActivity.this,app),()->media.command(-1),()->media.command(0),()->media.command(1));
-                if(mode.equals("tizentube"))sourcePanel.offerNativePanel(()->selectNativeTarget(1));
+                if(mode.equals("tizentube")&&!"com.shazwan.nexadash.next".equals(getPackageName()))sourcePanel.offerNativePanel(()->selectNativeTarget(1));
+                if(mode.equals("radio"))sourcePanel.offerRadioCheck(DashboardActivity.this::showRadioRuntime);
                 slot.addView(sourcePanel,new FrameLayout.LayoutParams(-1,-1));
             }
             if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
@@ -408,7 +414,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         return installedVersion;
     }
     String footerLabel(){return "Native Lab · Vehicle settings     ·     NexaDash v"+versionName();}
-    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash","Vehicle settings","Performance check"};}
+    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash","Vehicle settings","Performance check","Radio runtime paths"};}
     void settings(){
         closeApps();
         if(!visible||isFinishing()||isDestroyed()||(settingsDialog!=null&&settingsDialog.isShowing()))return;
@@ -423,9 +429,10 @@ public class DashboardActivity extends Activity implements LocationListener {
             android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();window.setLayout(Math.round(metrics.widthPixels*.96f),Math.round(metrics.heightPixels*.88f));}
     }
     void closeSettings(){if(settingsGrid!=null){settingsGrid.close();settingsGrid=null;}if(settingsDialog!=null){settingsDialog.dismiss();settingsDialog=null;}}
+    void showRadioRuntime(){if(radioRuntime==null)radioRuntime=new DashRadioRuntime();radioRuntime.show(this,io);}
     void showPanelCompatibility(){if(panelCompatibility==null)panelCompatibility=new DashPanelCompatibility();panelCompatibility.show(this,io);}
     void settingsAction(int i){
-        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;case 15:shortcut("Vehicle settings");break;case 16:if(performance==null)performance=new DashPerformance(this,()->"left="+leftPane.mode+", right="+rightPane.mode,()->visible);performance.show();break;}}
+        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;case 15:shortcut("Vehicle settings");break;case 16:if(performance==null)performance=new DashPerformance(this,()->"left="+leftPane.mode+", right="+rightPane.mode,()->visible);performance.show();break;case 17:showRadioRuntime();break;}}
         catch(ActivityNotFoundException|SecurityException unavailable){toast("This setting is unavailable on this device");}
     }
     void showAbout(){
@@ -591,8 +598,8 @@ public class DashboardActivity extends Activity implements LocationListener {
     boolean nativeRunning(){return leftPane!=null&&leftPane.nativeFrame!=null&&leftPane.nativeFrame.display!=null||rightPane!=null&&rightPane.nativeFrame!=null&&rightPane.nativeFrame.display!=null;}
     @Override protected void onStop(){pauseDashboard();if(leftPane!=null&&leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane!=null&&rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();super.onStop();}
     @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
-    void pauseDashboard(){if(performance!=null)performance.pause();handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
-    @Override protected void onDestroy(){if(performance!=null)performance.close();closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    void pauseDashboard(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.pause();handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
+    @Override protected void onDestroy(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.close();closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){
         if(leftPane!=null&&leftPane.webPlayer!=null&&leftPane.webPlayer.exitFullscreen())return;
         if(rightPane!=null&&rightPane.webPlayer!=null&&rightPane.webPlayer.exitFullscreen())return;

@@ -60,6 +60,7 @@ final class DashPanelCompatibility {
 
     static boolean candidate(DashShortcuts.App app){
         if(app==null||app.component==null)return false;
+        for(DashNativeFrame.Target target:DashNativeFrame.TARGETS)if(target.pkg.equals(app.component.getPackageName()))return true;
         for(String source:SOURCES){
             if(app.label!=null&&DashShortcuts.labelMatches(source,app.label))return true;
             for(String pkg:DashShortcuts.defaults(source))if(pkg.equals(app.component.getPackageName()))return true;

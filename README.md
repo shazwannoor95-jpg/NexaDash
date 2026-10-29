@@ -1,8 +1,12 @@
+**New full launcher: [NexaDash Next 1.0 (~5.5MB)](dist/next/NexaDash-Next-1.0.apk?raw=true)** · [Install and status](docs/NEXT_INSTALL_MS.md). Separate package/data and new signing key; can be chosen as Home manually. Old NexaDash/Native Lab remain installed. Includes current dashboard, web fullscreen, performance check and read-only Radio runtime paths.
+
+**[Maps · NexaDash Next ARM32 companion (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk)** — install first, then Next. In Next choose **Google Maps · native Next companion (test)** in a panel and tap **Start**. Actual Maps payload with a cooperative bridge; static/rebuild/signature checks passed. **No ARM/head-unit execution: map rendering, search, routes/voice, Google services and panel input remain unverified.** One inline player at a time. Radio FM native control is **not implemented**; the new read-only report gathers missing runtime paths.
+
 **Installable full-dashboard trial:** [NexaDash Preview1.0 (~5.5MB)](dist/preview/NexaDash-Preview-1.0.apk?raw=true) · [Performance measurement steps](docs/PREVIEW_PERFORMANCE_MS.md). Co-installs with separate data, no default-HOME role. Includes current dashboard, web fullscreen and opt-in30-second own-process CPU/RAM check. Seven CPU math cases/static build checks passed; hardware sampling pending.
 
 **New installable fullscreen test:** [NexaDash Web Test1.0 APK (~21KB)](dist/web-test/NexaDash-WebTest-1.0.apk?raw=true) · [Head-unit steps](docs/WEB_TEST_INSTALL_MS.md). Separate internet-only app, no HOME/default-launcher role; leaves the existing Native Lab/data untouched. New test signing key; static build checks passed, physical playback/fullscreen pending.
 
-**Current source: 1.6.7-nexadash.8-native11 (code43).** YouTube web custom-view fullscreen with Exit/Back and lifecycle cleanup, using the same browser. [Native10/full35-part archive review](docs/NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio follow-up](docs/RADIO_FULL_ARCHIVE_35_REVIEW.md).
+**Current source: 1.6.7-nexadash.8-native12 (code44).** YouTube web custom-view fullscreen with Exit/Back and lifecycle cleanup, using the same browser. [Native10/full35-part archive review](docs/NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio follow-up](docs/RADIO_FULL_ARCHIVE_35_REVIEW.md).
 
 **No signed native10 update is published.** The original cloud signing key was not restored after workspace replacement. Source and unsigned build checks are available; existing signed APKs remain unchanged. The file named native8 has legacy manifest metadata native1/code33; this is documented and the build version override is fixed for native9.
 
@@ -10,7 +14,7 @@
 > Source native9: select **TizenTube · native panel (experimental)**, then **Start**. External controls / Open outside launches a separate app window. [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment).
 > Resources/Java/DEX/test-source compilation and unsigned Gradle release checked. Native9/native10 runtime and physical head-unit hosting/playback are not verified. Older emulator results are historical.
 > [Existing signed native8 UI APK (legacy version metadata)](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk?raw=true) · [Earlier companion/install guide](docs/NATIVE_LAB_MS.md).
-> Maps/Waze native hosting is not delivered; original Google Maps25.32 export clears API26/ARM32 requirements but still needs a separate validated hosting solution.
+> Waze native hosting is not delivered. The separately signed Next launcher/Maps companion above is an experimental Maps native-hosting candidate; its runtime navigation is unverified.
 
 <p><img src="design/nexadash-mark.svg" width="96" alt="NexaDash orbit navigation logo"></p>
 

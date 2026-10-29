@@ -17,13 +17,15 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     static final int MAX_EDGE=800;
     int renderWidth=640,renderHeight=400;
     static final class Target {
-        final String label,pkg,activity,service;
-        Target(String l,String p,String a,String s){label=l;pkg=p;activity=a;service=s;}
+        final String label,pkg,activity,service,permission;
+        Target(String l,String p,String a,String s){this(l,p,a,s,CONTROL);}
+        Target(String l,String p,String a,String s,String required){label=l;pkg=p;activity=a;service=s;permission=required;}
     }
     static final Target[] TARGETS={
         new Target("YouTube V58 · patched","com.gold.android.youtube","com.google.android.youtube.app.honeycomb.Shell$HomeActivity","com.shazwan.nexapanel.Bridge"),
         new Target("TizenTube · patched ARM","com.shazwan.nexadash.tizentube.lab","dev.cobalt.app.MainActivity","com.shazwan.nexapanel.Bridge"),
-        new Target("Demo companion","com.shazwan.embedprobe.target","com.shazwan.embedprobe.target.Main","com.shazwan.embedprobe.target.Bridge")
+        new Target("Demo companion","com.shazwan.embedprobe.target","com.shazwan.embedprobe.target.Main","com.shazwan.embedprobe.target.Bridge"),
+        new Target("Google Maps · Next companion","com.shazwan.nexadash.maps.next","com.google.android.maps.MapsActivity","com.shazwan.nexapanel.Bridge","com.shazwan.nexadash.next.permission.CONTROL")
     };
     static final Map<String,WeakReference<DashNativeFrame>> HOSTS=new HashMap<>();
     final Activity owner;final Handler main=new Handler(Looper.getMainLooper());
@@ -54,8 +56,11 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         status=new TextView(owner);status.setTextSize(11);status.setTextColor(0xffdcefff);status.setMaxLines(2);status.setEllipsize(android.text.TextUtils.TruncateAt.END);
         status.setText("Native app lab · install the matching patched companion, then Start. No autoplay.");addView(status,new LayoutParams(-1,-2));
         LinearLayout toolbar=new LinearLayout(owner);
-        choose=button("YouTube V58",()->new AlertDialog.Builder(owner).setTitle("Native panel companion")
-            .setItems(new String[]{TARGETS[0].label,TARGETS[1].label,TARGETS[2].label},(d,index)->select(index)).setNegativeButton("Cancel",null).show());
+        if(nextHost())target=TARGETS[3];
+        choose=button(nextHost()?"Google Maps":"YouTube V58",()->{
+            String[] labels=nextHost()?new String[]{TARGETS[3].label}:new String[]{TARGETS[0].label,TARGETS[1].label,TARGETS[2].label,TARGETS[3].label};
+            new AlertDialog.Builder(owner).setTitle("Native panel companion").setItems(labels,(d,index)->select(nextHost()?3:index)).setNegativeButton("Cancel",null).show();
+        });
         start=button("Start",this::start);stop=button("Stop",this::stop);
         toolbar.addView(choose,new LayoutParams(0,-2,2));toolbar.addView(start,new LayoutParams(0,-2,1));toolbar.addView(stop,new LayoutParams(0,-2,1));addView(toolbar,new LayoutParams(-1,-2));
         surface=new SurfaceView(owner);surface.setContentDescription("Cooperative native app surface");surface.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->fitSurface(r-l,b-t));surface.getHolder().addCallback(this);
@@ -87,8 +92,9 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         }catch(RuntimeException failure){fail("Native resize failed. Press Start to retry.");}
     }
     private Button button(String label,Runnable run){Button b=new Button(owner);b.setText(label);b.setTextSize(11);int touch=Math.round(32*owner.getResources().getDisplayMetrics().density);b.setMinHeight(touch);b.setMinimumHeight(touch);b.setMinWidth(touch);b.setMinimumWidth(touch);b.setPadding(4,2,4,2);b.setOnClickListener(v->run.run());return b;}
+    private boolean nextHost(){return "com.shazwan.nexadash.next".equals(owner.getPackageName());}
     void setOnTargetSelected(java.util.function.IntConsumer listener){targetListener=listener;}
-    void select(int index){stop();int actual=Math.max(0,Math.min(TARGETS.length-1,index));target=TARGETS[actual];choose.setText(actual==0?"YouTube V58":actual==1?"TizenTube":"Demo");note("Selected "+target.label+". Press Start to try this panel; Open outside panel is separate.");if(targetListener!=null)targetListener.accept(actual);}
+    void select(int index){stop();int actual=nextHost()?3:Math.max(0,Math.min(TARGETS.length-1,index));target=TARGETS[actual];choose.setText(actual==0?"YouTube V58":actual==1?"TizenTube":actual==3?"Google Maps":"Demo");note("Selected "+target.label+". Press Start to try this panel; Open outside panel is separate.");if(targetListener!=null)targetListener.accept(actual);}
     static DashNativeFrame find(String token){WeakReference<DashNativeFrame> ref=HOSTS.get(token);return ref==null?null:ref.get();}
     private void note(String message){if(!closed)status.setText(message);}
     private static String version(Context context,String pkg){try{return String.valueOf(context.getPackageManager().getPackageInfo(pkg,0).versionName);}catch(PackageManager.NameNotFoundException absent){return "not installed";}}
@@ -134,13 +140,13 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         PackageManager pm=owner.getPackageManager();
         try{
             pm.getApplicationInfo(target.pkg,0);
-            if(pm.checkSignatures(owner.getPackageName(),target.pkg)!=PackageManager.SIGNATURE_MATCH)return "Install a companion signed with the same key as NexaDash Lab. Original/unpatched apps cannot be used here.";
+            if(pm.checkSignatures(owner.getPackageName(),target.pkg)!=PackageManager.SIGNATURE_MATCH)return "Install a companion signed with the same key as this launcher. Original/unpatched apps cannot be used here.";
             ActivityInfo a=pm.getActivityInfo(new ComponentName(target.pkg,target.activity),0);
             ServiceInfo s=pm.getServiceInfo(new ComponentName(target.pkg,target.service),0);
             if(!a.exported||!a.enabled||(a.flags&0x80000000)==0)return "Companion activity has not opted into native display hosting.";
-            if(!s.exported||!s.enabled||!CONTROL.equals(s.permission))return "Matching signature-protected companion service is missing.";
-            if(pm.checkPermission(CONTROL,owner.getPackageName())!=PackageManager.PERMISSION_GRANTED)return "Install the companion first, then reopen/reinstall this Lab APK to grant its signature permission.";
-        }catch(PackageManager.NameNotFoundException absent){return target.label+" companion not installed. Use its matching Lab APK; Demo supports API26+.";}
+            if(!s.exported||!s.enabled||!target.permission.equals(s.permission))return "Matching signature-protected companion service is missing.";
+            if(pm.checkPermission(target.permission,owner.getPackageName())!=PackageManager.PERMISSION_GRANTED)return "Install the companion first, then reopen this launcher; the signature permission must be granted.";
+        }catch(PackageManager.NameNotFoundException absent){return target.label+" companion not installed. "+(nextHost()?"Install the Maps NexaDash Next companion first.":"Use its matching Lab APK; Demo supports API26+.");}
         return null;
     }
     void start(){

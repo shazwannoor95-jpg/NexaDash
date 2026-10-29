@@ -22,3 +22,6 @@ design/poster-*
 local.properties
 app/build/
 *.iml
+
+# Private signing-key backup archives must never be committed.
+*-private-signing-backup.zip

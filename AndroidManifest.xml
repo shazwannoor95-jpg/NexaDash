@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shazwan.sagadash"
-    android:versionCode="43"
-    android:versionName="1.6.7-nexadash.8-native11">
+    android:versionCode="44"
+    android:versionName="1.6.7-nexadash.8-native12">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Network access for JAKIM, optional lyrics, AI and BEAM. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.shazwan.embedprobe.permission.CONTROL" />
+    <uses-permission android:name="com.shazwan.nexadash.next.permission.CONTROL" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Ubin TANYA: perintah suara untuk asisten AI -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
