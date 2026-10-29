@@ -1,3 +1,5 @@
+> Maps follow-up: a separate experimental companion has since been built from the Maps25.32 export, with archive provenance rechecked. [Current Maps/Next status](NEXT_INSTALL_MS.md#maps-mana-yang-digunakan--semakan-semula-arkib). The earlier statements below describe the review at that time; physical runtime remains unverified.
+
 > Follow-up: the later35-part set extracted completely (141 APKs/117 folders) and the CarSet/CanBus class-definition search is now completed. [Updated full-archive results](NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio details](RADIO_FULL_ARCHIVE_35_REVIEW.md). The39-APK review below is the earlier subset, not the size of the new archive.
 
 # Semakan eksport head unit — 29 Oktober 2026

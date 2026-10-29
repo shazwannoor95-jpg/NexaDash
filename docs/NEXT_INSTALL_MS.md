@@ -9,6 +9,19 @@ Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.ne
 
 Next is a HOME candidate, not an in-place signed upgrade of the old cloud APK. If the Android Home settings are available, choose **NexaDash Next** manually via Settings → Default launcher. It remains usable from Apps if this firmware hides Home settings. Private Web Test signing backup also signs Next; a Next-labelled private backup is provided in the support session, never in GitHub.
 
+## Maps mana yang digunakan? — semakan semula arkib
+
+**Companion ini memang berasal daripada Google Maps dalam arkib head unit yang dibekalkan**, versi **25.32.00.790560726**, minimum API26, ARM32. Ia bukan Maps26.42/26.43 minimum API29 yang dihantar sebelum eksport sistem.
+
+Semakan semula membandingkan keempat-empat fail `Maps_base.apk`, `Maps_split_config.armeabi_v7a.apk`, `Maps_split_config.en.apk` dan `Maps_split_config.mdpi.apk` dalam eksport 35 bahagian dengan hash input companion yang telah diterbitkan: semuanya sepadan. Kesemua 9 DEX asal dan 10 library ARM32 dibandingkan byte demi byte dengan companion; semuanya dikekalkan. Semakan manifest, resource IDs, bridge, tandatangan API27, alignment dan CRC juga lulus semula. [Metadata/hash companion](https://github.com/shazwannoor95-jpg/klikdash/blob/nexadash-maps-next-companion/artifact.json).
+
+| Pemasangan | Untuk apa |
+|---|---|
+| **Maps asal** — `com.google.android.apps.maps` | Maps sedia ada dalam head unit. NexaDash tidak mengubah pemasangan ini. Activity utamanya `singleTask`, resizeable/PiP tetapi tiada `allowEmbedded` atau service bridge NexaDash. |
+| **Maps · NexaDash Next** — `com.shazwan.nexadash.maps.next` | Salinan berasingan daripada Maps arkib tadi, dengan bridge input/paparan dan konfigurasi panel. Inilah sasaran yang disambungkan kepada host Next. |
+
+Memilih app asal dalam senarai Apps atau navigation shortcut tidak menambah bridge kepada app itu. NexaDash tidak mempunyai signing key Google untuk memasang APK yang diubah sebagai update kepada Maps asal. Oleh itu laluan panel yang tersedia sekarang memerlukan pemasangan companion berasingan. Jika **Maps · NexaDash Next** sudah terpasang, tidak perlu pasang companion semula kerana semakan ini tidak menghasilkan APK baharu. App dan data Maps asal kekal. Fungsi Maps selepas perubahan identiti/tandatangan masih memerlukan ujian pada peranti; kesepadanan arkib bukan pengesahan runtime.
+
 ## Maps native panel
 
 In **Next**, open the right-panel selector → **Google Maps · native Next companion (test)** → **Start**. Host raster follows the surface aspect ratio (longest edge<=800), with corresponding touch coordinates. Only one inline web/file/native player is selected at once. The other panel can remain car or ordinary media controls.
