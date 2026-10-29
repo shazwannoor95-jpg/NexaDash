@@ -1,3 +1,5 @@
+**New installable fullscreen test:** [NexaDash Web Test1.0 APK (~21KB)](dist/web-test/NexaDash-WebTest-1.0.apk?raw=true) · [Head-unit steps](docs/WEB_TEST_INSTALL_MS.md). Separate internet-only app, no HOME/default-launcher role; leaves the existing Native Lab/data untouched. New test signing key; static build checks passed, physical playback/fullscreen pending.
+
 **Current source: 1.6.7-nexadash.8-native10 (code42).** YouTube web custom-view fullscreen with Exit/Back and lifecycle cleanup, using the same browser. [Native10/full35-part archive review](docs/NATIVE10_WEB_FULLSCREEN_MS.md) · [Radio follow-up](docs/RADIO_FULL_ARCHIVE_35_REVIEW.md).
 
 **No signed native10 update is published.** The original cloud signing key was not restored after workspace replacement. Source and unsigned build checks are available; existing signed APKs remain unchanged. The file named native8 has legacy manifest metadata native1/code33; this is documented and the build version override is fixed for native9.

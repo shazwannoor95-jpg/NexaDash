@@ -1,0 +1,16 @@
+{
+  "file": "NexaDash-WebTest-1.0.apk",
+  "application_id": "com.shazwan.nexadash.webtest",
+  "label": "NexaDash Web Test",
+  "version_name": "1.0",
+  "version_code": 1,
+  "min_sdk": 24,
+  "target_sdk": 29,
+  "native_abis": "No bundled native libraries; system WebView handles device ABI",
+  "size_bytes": 20979,
+  "sha256": "fd0108019274447e9f67444416e03df22368ee38a156ad3f4e65f2c007b2d8ca",
+  "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
+  "signing_status": "New separate Web Test identity/key; cannot replace NexaDash Native Lab. Private backup is not published in Git.",
+  "validation": "Resources/Java/DEX compiled; APK signature, alignment, CRC, distinct package/label, Internet-only permission and absence of HOME filter verified. No emulator/head-unit YouTube playback/fullscreen run performed.",
+  "runtime": "Requires a functioning Android System WebView and Internet. Restricted/sign-in-only videos may be unavailable."
+}
