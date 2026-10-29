@@ -5,7 +5,9 @@ public final class DashNativeProxy extends Activity {
     private final Handler main=new Handler(Looper.getMainLooper());private boolean launched;
     @Override protected void onResume(){super.onResume();if(launched)return;launched=true;
         main.postDelayed(()->{DashNativeFrame frame=DashNativeFrame.find(getIntent().getStringExtra("native_token"));int id=getWindowManager().getDefaultDisplay().getDisplayId();
-            if(frame==null||id==0||id!=getIntent().getIntExtra("native_display",-1)){finish();return;}frame.launchTarget(this,id);},150);
+            if(frame==null||frame.generation!=getIntent().getIntExtra("native_generation",-1)){finish();return;}
+            int expected=getIntent().getIntExtra("native_display",-1);
+            if(id==0||id!=expected){frame.proxyDisplayFailed(expected,id);finish();return;}frame.launchTarget(this,id);},150);
     }
     @Override protected void onDestroy(){main.removeCallbacksAndMessages(null);super.onDestroy();}
 }

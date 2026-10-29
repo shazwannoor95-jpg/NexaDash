@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8-native8}
-VERSION_CODE=${VERSION_CODE:-40}
+VERSION_NAME=${VERSION_NAME:-1.6.7-nexadash.8-native9}
+VERSION_CODE=${VERSION_CODE:-41}
 APP_ID=${PKG:-com.shazwan.nexadash.lab}
 
 SDK=${ANDROID_HOME:-$HOME/Library/Android/sdk}
@@ -37,7 +37,7 @@ DEBUG_FLAG=""; [ "$MODE" != "release" ] && [ "${DEBUGGABLE:-0}" = "1" ] && DEBUG
 # tanpa menghapus KlikDash yang terpasang).
 DEBUG_FLAG="$DEBUG_FLAG --rename-manifest-package $APP_ID"
 "$BT/aapt2" link -o build/base.apk -I "$JAR" --manifest AndroidManifest.xml -A build/assets -0 ttf $DEBUG_FLAG \
-    --min-sdk-version 24 --target-sdk-version 29 --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" \
+    --min-sdk-version 24 --target-sdk-version 29 --replace-version --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" \
     --java build/gen build/res.zip
 
 javac --release 8 -encoding UTF-8 -classpath "$JAR" \

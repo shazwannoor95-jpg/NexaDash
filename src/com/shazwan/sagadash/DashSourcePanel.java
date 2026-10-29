@@ -25,12 +25,12 @@ final class DashSourcePanel extends LinearLayout {
         addView(title,new LayoutParams(-1,-2));
         artist=label("Track details appear when available",15,DashboardActivity.MUTED);artist.setMaxLines(2);artist.setEllipsize(TextUtils.TruncateAt.END);
         addView(artist,new LayoutParams(-1,-2));
-        explanation=label("Uses the installed app in its own window",13,DashboardActivity.MUTED);explanation.setMaxLines(2);explanation.setGravity(Gravity.CENTER);
+        explanation=label("External app controls · Open launches outside NexaDash",13,DashboardActivity.MUTED);explanation.setMaxLines(2);explanation.setGravity(Gravity.CENTER);
         addView(explanation,new LayoutParams(-1,0,1));
 
         LinearLayout apps=new LinearLayout(context);apps.setGravity(Gravity.CENTER_VERTICAL);
-        addControl(apps,control("Open "+name,"Open "+name,open));
-        addControl(apps,control("Choose app","Choose app for "+name,choose));
+        addControl(apps,control("Open outside","Open "+name+" outside NexaDash",open));
+        addControl(apps,control("Choose app","Choose external app for "+name,choose));
         addView(apps,new LayoutParams(-1,p(43)));
 
         LinearLayout transport=new LinearLayout(context);transport.setGravity(Gravity.CENTER_VERTICAL);
@@ -39,6 +39,13 @@ final class DashSourcePanel extends LinearLayout {
         next=control("Next","Next track",nextAction);addControl(transport,next);
         addView(transport,new LayoutParams(-1,p(45)));
         setTrack("","",false,false);
+    }
+
+    void offerNativePanel(Runnable switchPanel){
+        explanation.setText("External controls only · Open launches outside NexaDash\nSwitch to TizenTube native panel →");
+        explanation.setMaxLines(3);explanation.setTextColor(DashboardActivity.BLUE);
+        explanation.setContentDescription("Switch to TizenTube native panel. Matching companion required; press Start after switching.");
+        explanation.setOnClickListener(v->{if(switchPanel!=null)switchPanel.run();});
     }
 
     @Override protected void onMeasure(int widthSpec,int heightSpec){

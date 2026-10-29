@@ -1,3 +1,5 @@
+> Current source is native9; no signed native9 APK is published. [Read the native9 instructions and signing status first](NATIVE9_SOURCE_MS.md). Existing APK download links below refer to earlier artifacts, whose native8 file still reports native1/code33 in its manifest. Native9 source fixes the version override.
+
 # NexaDash .8 Native Lab — install dan cuba
 
 **Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native8 / code40**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.

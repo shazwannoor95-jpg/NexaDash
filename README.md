@@ -1,22 +1,12 @@
-Native8: standalone clock glass capsule; transparent center; separate Edit layout / Media access pills. Frameless floating dock and enlarged equal panels retained.
+**Current source: 1.6.7-nexadash.8-native9 (code41).** Direct TizenTube native-panel selection, remembered panel target and persisted actual-display startup diagnostics. [Native9 instructions/signing status](docs/NATIVE9_SOURCE_MS.md) · [39-APK head-unit review](docs/HEAD_UNIT_EXPORT_REVIEW_MS.md).
 
-Native7: frameless bottom dock, smaller icon badges/labels and reduced bottom spacing; both equal panels extend further down. No new worker or animation.
+**No signed native9 update is published.** The original cloud signing key was not restored after workspace replacement. Source and unsigned build checks are available; existing signed APKs remain unchanged. The file named native8 has legacy manifest metadata native1/code33; this is documented and the build version override is fixed for native9.
 
-Native6: compact lower dock and larger equal panels; hidden footer reserves no height. Clock fits its space with native text auto-size. API29 emulator focused layout checks: PASS36; physical head-unit behavior pending.
-
-Native5: cooperative native display follows actual panel aspect ratio (800px longest-edge cap); touch mapping uses current raster size. Demo has prior emulator coverage; V58 lifecycle/playback and ARM TizenTube remain experimental. No native navigation companion delivered.
-
-Native4: equal left/right panels; upper-right shortcut row removed. Bottom dock: official YouTube replaces DSP; DiAuto replaces Car Link (launch shortcut only). No DiAuto integration or execution performed.
-
-Native3: official YouTube app shortcut; footer auto-hides after four seconds and reappears on dashboard touch. Maps/Waze still open outside the dashboard.
-
-Native Lab current build: **1.6.7-nexadash.8-native8**. YouTube web now collapses search/help while browsing and uses compact controls. Builds and test-source compilation checked; native2 runtime/head-unit playback pending. [Download / setup](docs/NATIVE_LAB_MS.md).
-
-> **Experimental branch: NexaDash .8 Native Lab**, application ID `com.shazwan.nexadash.lab`.
-> Installs beside the standard .8 app. [Lab APK](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native1.apk?raw=true) · [Install/Android Studio/companion guide](docs/NATIVE_LAB_MS.md).
-> Select **Native app · experimental** in either panel, install the matching companion first, then Start.
-> **Previous native1: 708 checks passed** including cross-UID companion display, scaled touch, native text input and cleanup in the real dashboard panels. Live YouTube playback and physical head-unit/ARM Cobalt behavior remain unverified.
-> Routing/voice opens in Maps/Waze outside the panel. Unmodified original apps are not universally embeddable.
+> **Experimental branch: NexaDash Native Lab**, application ID `com.shazwan.nexadash.lab`.
+> Source native9: select **TizenTube · native panel (experimental)**, then **Start**. External controls / Open outside launches a separate app window. [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment).
+> Resources/Java/DEX/test-source compilation and unsigned Gradle release checked. Native9 runtime and physical head-unit hosting/playback are not verified. Older emulator results are historical.
+> [Existing signed native8 UI APK (legacy version metadata)](dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk?raw=true) · [Earlier companion/install guide](docs/NATIVE_LAB_MS.md).
+> Maps/Waze native hosting is not delivered; original Google Maps25.32 export clears API26/ARM32 requirements but still needs a separate validated hosting solution.
 
 <p><img src="design/nexadash-mark.svg" width="96" alt="NexaDash orbit navigation logo"></p>
 
@@ -27,7 +17,7 @@ Native Lab current build: **1.6.7-nexadash.8-native8**. YouTube web now collapse
 > [Local video and YouTube web beta](docs/INLINE_PLAYBACK_MS.md) remain available in panels.
 > **Original Google Maps/Waze/YouTube/TizenTube/WhatsApp app UI hosting is not yet implemented in the main APK.**
 > [V58 native-display lab results/source](docs/V58_PANEL_LAB_MS.md) and the [tiny no-ADB head-unit probe](docs/OPTIN_PANEL_PROBE_MS.md) are separate experiments.
-> Package ID remains `com.shazwan.sagadash`; cloud signing key/settings are retained.
+> Package ID remains `com.shazwan.sagadash`; existing app settings remain; current signing-key availability is described above.
 > [Windows Android Studio](docs/WINDOWS_ANDROID_STUDIO_MS.md) · [Head-unit install](docs/HEAD_UNIT_INSTALL_MS.md) · [Performance](docs/PERFORMANCE.md).
 > The documentation below describes upstream KlikDash; upstream releases are different APKs. Physical TEST9278B performance/playback testing remains pending.
 

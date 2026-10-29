@@ -26,7 +26,7 @@ final class DashCustomizationChecks {
     int run(Instrumentation instrumentation,DashboardActivity dashboard) throws Exception {
         SharedPreferences preferences=dashboard.dashPrefs(),assignments=DashShortcuts.prefs(dashboard);
         Map<String,Object> saved=new HashMap<>(),savedAssignments=new HashMap<>();
-        for(String key:new String[]{"pane_vehicle","pane_media","vehicle_video","vehicle_view","vehicle_angle_frame","vehicle_preview_source","lyrics"})saved.put(key,preferences.getAll().get(key));
+        for(String key:new String[]{"pane_vehicle","pane_media","vehicle_video","vehicle_view","vehicle_angle_frame","vehicle_preview_source","lyrics","native_target_vehicle","native_target_media"})saved.put(key,preferences.getAll().get(key));
         for(String key:new String[]{"YouTube app","TizenTube","Radio"})savedAssignments.put(key,assignments.getAll().get(key));
         final MediaSession[] session={null};final String[] selected={""};final Location[] fix={null};final boolean[] videoMode={true};
         try{
@@ -62,6 +62,19 @@ final class DashCustomizationChecks {
                 dashboard.leftPane.setMode("tizentube");
                 check(dashboard.leftPane.sourcePanel!=null&&dashboard.leftPane.slot.getChildCount()==1,"TizenTube uses one native source-control view");
                 check(!containsWebView(dashboard.root),"source panels do not retain an embedded browser");
+                View nativeEntry=described(dashboard.leftPane.sourcePanel,"Switch to TizenTube native panel. Matching companion required; press Start after switching.");
+                check(nativeEntry!=null,"legacy TizenTube controls explain and expose a separate native-panel entry");nativeEntry.performClick();
+                check("native_app".equals(dashboard.leftPane.mode)&&dashboard.leftPane.sourcePanel==null&&dashboard.leftPane.nativeFrame!=null,"TizenTube native entry creates an in-panel native host instead of external controls");
+                check(dashboard.leftPane.nativeFrame.target==DashNativeFrame.TARGETS[1]&&preferences.getInt("native_target_vehicle",-1)==1,"direct TizenTube choice selects and saves its patched companion");
+                check(!dashboard.leftPane.nativeFrame.wanted&&dashboard.leftPane.nativeFrame.display==null&&dashboard.leftPane.nativeFrame.inputThread==null,"switching to TizenTube native does not launch an app, display or worker before Start");
+                dashboard.leftPane.setMode("media");dashboard.leftPane.setMode("native_app");
+                check(dashboard.leftPane.nativeFrame.target==DashNativeFrame.TARGETS[1],"reopening native mode restores the left panel companion selection");
+                dashboard.leftPane.nativeFrame.select(2);dashboard.leftPane.setMode("media");dashboard.leftPane.setMode("native_app");
+                check(dashboard.leftPane.nativeFrame.target==DashNativeFrame.TARGETS[2]&&preferences.getInt("native_target_vehicle",-1)==2,"native chooser changes persist for that panel");
+                dashboard.rightPane.selectNativeTarget(1);
+                check(dashboard.rightPane.nativeFrame.target==DashNativeFrame.TARGETS[1]&&preferences.getInt("native_target_vehicle",-1)==2&&preferences.getInt("native_target_media",-1)==1,"each panel keeps an independent remembered native companion");
+                check(!dashboard.rightPane.nativeFrame.wanted&&dashboard.rightPane.nativeFrame.display==null&&dashboard.rightPane.nativeFrame.inputThread==null,"right-panel direct native choice also requires explicit Start");
+                dashboard.leftPane.setMode("tizentube");
                 dashboard.rightPane.setMode("radio");
                 check(dashboard.rightPane.sourcePanel!=null&&!dashboard.rightPane.sourcePanel.play.isEnabled(),"Radio controls do not commandeer a nonmatching media source");
 

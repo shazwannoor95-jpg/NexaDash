@@ -94,6 +94,11 @@ final class DashPanelCompatibility {
             .append("\nNexaDash target SDK: ").append(self.targetSdkVersion).append("\n\nHost permissions (not proof of a working host):\n");
         for(String permission:PERMISSIONS)out.append(permission.substring("android.permission.".length())).append(": ")
             .append(pm.checkPermission(permission,own)==PackageManager.PERMISSION_GRANTED?"granted":"not granted").append('\n');
+        out.append("\n").append(DashNativeFrame.lastStartupResult(context)).append("\n");
+        if(Build.VERSION.SDK_INT>=26)try{
+            PackageInfo provider=android.webkit.WebView.getCurrentWebViewPackage();
+            out.append("WebView provider: ").append(provider==null?"not established":clean(provider.packageName)+" · "+clean(provider.versionName)).append('\n');
+        }catch(RuntimeException|LinkageError unavailable){out.append("WebView provider: unavailable\n");}
         out.append("\nRoot access: not probed\nOEM / Shizuku hosting integration: not established\n\nRelevant launch activities and saved assignments:\n");
         LinkedHashSet<ComponentName> targets=new LinkedHashSet<>();
         for(String source:SOURCES){ComponentName assigned=DashShortcuts.saved(context,source);if(assigned!=null){
