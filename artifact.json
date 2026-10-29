@@ -1,0 +1,38 @@
+{
+  "file": "Maps-NexaDash-Next-arm32.apk",
+  "package": "com.shazwan.nexadash.maps.next",
+  "label": "Maps \u00b7 NexaDash Next",
+  "min_sdk": 26,
+  "target_sdk": 36,
+  "base_version": "25.32.00.790560726",
+  "version_name": "25.32.00.790560726-next1",
+  "size_bytes": 62668811,
+  "sha256": "da6b18a6c73b9f34784ff0e75e91d33c172a098e8f1091308a1b4c93339f9bdf",
+  "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
+  "single_apk_split_markers_removed": true,
+  "original_inputs_unchanged": true,
+  "native_arm32_libraries_preserved": 10,
+  "original_dex_preserved": 9,
+  "bridge_dex_added": "classes10.dex",
+  "main_activity_embedding_optin": true,
+  "main_activity_launch_mode": "standard",
+  "shared_uid_removed": true,
+  "provider_authorities_renamed": 10,
+  "control_permission": "com.shazwan.nexadash.next.permission.CONTROL",
+  "runtime_validation": "NOT RUN: ARM/headunit map rendering, GMS/login, search, routing, voice, resize and full lifecycle unverified",
+  "limitations": [
+    "Re-signed/repackaged Google app may reject identity/backend or hardcoded provider lookups",
+    "Manifest/bridge checks do not establish functioning navigation or native-panel rendering"
+  ],
+  "original_resources": 23795,
+  "merged_resources": 23794,
+  "expected_removed_resources": {
+    "0x7f170044": "xml/splits0"
+  },
+  "original_input_sha256": {
+    "Maps_split_config.mdpi.apk": "4b8bda6bf76717f30c40d4043bb21492cf1062313e1bc75f8f21bdb6d49c297b",
+    "Maps_split_config.armeabi_v7a.apk": "75d9504932f3054422a0370f9b095b8cfc36f6bd87702b5431cd936e51dc7430",
+    "Maps_split_config.en.apk": "5f488b185310e34023023065305fdb39bbc4b69a53f4e5f1872bbf30c47d29ff",
+    "Maps_base.apk": "21b4913c5110f54f5e178389ef03d9bdcb2bf1094a83ebd1dd2a88c8f7a71ab7"
+  }
+}
