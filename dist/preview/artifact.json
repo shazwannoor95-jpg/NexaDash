@@ -1,0 +1,33 @@
+{
+  "file": "NexaDash-Preview-1.0.apk",
+  "application_id": "com.shazwan.nexadash.preview",
+  "label": "NexaDash Preview",
+  "version_name": "1.0-preview1",
+  "version_code": 1,
+  "source_version": "1.6.7-nexadash.8-native11",
+  "min_sdk": 24,
+  "target_sdk": 29,
+  "size_bytes": 5507981,
+  "sha256": "35b8b2672e1b380576d661002c92ad86c801b20a1984bad000ada7d03efb1bbe",
+  "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
+  "coinstall": true,
+  "default_home_candidate": false,
+  "data_migrated_from_old_launcher": false,
+  "validation": {
+    "signed_build_and_alignment": "passed",
+    "apk_crc": "passed",
+    "unique_package_and_isolated_tasks": "passed",
+    "no_home_or_update_auto_launch": "passed",
+    "jvm_cpu_math_cases": 7,
+    "android_test_sources": "compiled",
+    "gradle_release_and_debug_java": "passed",
+    "android_performance_sampling_runtime": "not run",
+    "physical_head_unit": "not tested"
+  },
+  "limitations": [
+    "CPU/PSS measure Preview process only; WebView renderer/other processes excluded",
+    "Two memory snapshots do not certify peak RAM, FPS or crash stability",
+    "Cloud-signed native companions do not match Preview signing key",
+    "No native Radio/Maps delivered"
+  ]
+}
