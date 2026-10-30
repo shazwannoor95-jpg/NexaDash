@@ -4,7 +4,7 @@
 
 *Contoh reka bentuk daripada screenshot versi terdahulu yang telah disunting untuk mengosongkan plat. Susunan versi Next semasa mungkin berbeza. Ini menunjukkan dashboard launcher; bukan bukti Maps/Radio native berfungsi.*
 
-NexaDash ialah launcher Android yang dibangunkan daripada KlikDash. Versi untuk percubaan komuniti sekarang: **Next 1.2 (`1.2-next3`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
+NexaDash ialah launcher Android dengan dashboard panel kaca. Versi untuk percubaan komuniti sekarang: **Next 1.2 (`1.2-next3`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
 
 ## Install
 
@@ -40,6 +40,6 @@ Buka/tutup launcher, tekan Home dan kembali ke launcher asal; uji Apps/Settings 
 
 ## Source dan lesen
 
-[Source branch](https://github.com/shazwannoor95-jpg/klikdash/tree/nexadash-native-panel-experiment) · [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment) · [Lesen MIT dan kredit KlikDash](../LICENSE).
+[Source branch](https://github.com/shazwannoor95-jpg/klikdash/tree/nexadash-native-panel-experiment) · [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment) · [Lesen projek](../LICENSE) · [Kredit dan lesen komponen](../ATTRIBUTIONS.md).
 
 Lesen MIT projek tidak memberikan lesen kepada APK Google Maps/YouTube atau aset pihak ketiga. Eksperimen companion tidak patut dianggap sebahagian daripada pelepasan open-source berlesen MIT; hak pengedaran pihak ketiga perlu disemak sebelum pengedaran awam lanjut. Private signing backup mesti disimpan di luar repo. Source Android Studio menggunakan identiti Lab secara lalai; [build Next](../tools/next/README.md) menghasilkan identiti Next dengan signing key sendiri.
