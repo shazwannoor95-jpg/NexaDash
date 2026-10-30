@@ -1,0 +1,92 @@
+{
+  "file": "native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk",
+  "application_id": "com.shazwan.nexadash.lab",
+  "version_name": "1.6.7-nexadash.8-native1",
+  "version_code": 33,
+  "min_sdk": 24,
+  "target_sdk": 29,
+  "compile_sdk": 35,
+  "size_bytes": 5499791,
+  "sha256": "ec3f1ca6abd0b56b91580e5ed04baf707454125e86636f5c97cf48557379d1b2",
+  "signing_certificate_sha256": "4c1b1c678b0fa31e3e92f8d8ebc6052700e10d4aa52152cac49cc740e45325d2",
+  "signing_key": "Original cloud key not restored after workspace replacement; no signed native9 update published. Existing APK certificate/bytes unchanged.",
+  "validation": "Native8 shell release and offline Gradle debug/release pass; focused API29 x86_64 layout integration PASS37, including clock width/height fit, equal panels, frameless bottom dock, drag/resize and persistence. APK signature/alignment verified; no full-suite or physical head-unit pass claimed.",
+  "hardware_status": "Owner's on-device report: TEST9278B, SDK API27, reported Android string9.1, armeabi-v7a/armeabi, 1024x600. No direct head-unit ADB/hosting or performance test performed.",
+  "default_theme": "Synthwave",
+  "default_animation": "Static",
+  "reduce_motion_default": true,
+  "wallpaper_bitmap_limit_bytes": 2097152,
+  "previous_version_performance_sample": {
+    "process_pss_mib": 40.0947265625,
+    "cpu_percent_one_virtual_core": 1.6916384726921359,
+    "condition": "Fresh normal process after45sec warm-up; Static Synthwave + Reduce motion, image angles, active SGR02 countdown, no map or media playback; software emulator only.",
+    "evidence": "../docs/performance/synthwave-v3.json",
+    "version_name": "1.6.7-sagadash.3",
+    "limitation": "Prior .3 idle-dashboard measurement; not a measurement of the current build, playback, app hosting or physical head unit."
+  },
+  "app_panel_status": "Experimental cooperative native mode in left/right panels; explicit Start and matching patched companion required. One inline native/web/file player selected at a time. Arbitrary original app hosting and full in-panel Maps/Waze remain unavailable.",
+  "glass_panels_default": true,
+  "icon_cache_limit_bytes": 1048576,
+  "icon_raster_max_pixels": [
+    96,
+    96
+  ],
+  "integration_assertions": null,
+  "youtube_live_streaming_status": "Not verified: execution network blocks YouTube (CONNECT tunnel403). Actual local HTML5 video playback is tested; head-unit WebView/network/account compatibility remains untested.",
+  "default_webview": "Not created in the default dashboard, or on resuming a saved web panel until Start is tapped.",
+  "active_inline_player_limit": 1,
+  "display_name": "NexaDash Native Lab",
+  "navigation_routing": "Maps/Waze app handoff, or Maps website in browser when Maps is absent; no in-panel routing/voice engine.",
+  "experimental_probe": "Separate tiny opted-in host/target APKs under dist/experimental; no system permissions/root/ADB required by the demo. Actual OEM behavior unverified.",
+  "native_display_size": "Adaptive to measured SurfaceView aspect ratio; longest edge<=800 pixels, density160; same mapping for touch.",
+  "native_feature_min_sdk": 26,
+  "native_protocol_version": 1,
+  "native_start": "Explicit Start only; no automatic native display/service/input worker on load or resume.",
+  "native_input_queue_limit": 32,
+  "native_cleanup": "Stop/mode switch/edit/Home/onStop release host resources; companion-owned background services are not force-stopped.",
+  "native_companion_demo": {
+    "file": "native-lab/NexaDash-DemoCompanion-native1.apk",
+    "min_sdk": 26,
+    "sha256": "1ce154e87d34c89406c954af854fd0a488e1e5473f48bd43c9ec1467ad822208"
+  },
+  "native_companion_v58": {
+    "min_sdk": 29,
+    "branch": "nexadash-v58-companion",
+    "playback": "unverified",
+    "lifecycle": "Observed V58 Primes Activity-destruction errors in standalone and Lab tests; not crash-free certified."
+  },
+  "native_companion_cobalt": {
+    "min_sdk": 24,
+    "abi": "armeabi-v7a",
+    "branch": "nexadash-native-companions",
+    "status": "Static validation only; ARM hardware rendering/playback not verified."
+  },
+  "native_startup_timeout_ms": 60000,
+  "web_panel_fit": "Search/help rows collapse on open; Search toggles them back. 32dp controls; WebView text zoom100 and fitted viewport. Physical YouTube playback remains unverified.",
+  "footer": "GONE in normal mode, no reserved height. Edit instructions visible only while editing. Vehicle settings available in Settings.",
+  "youtube_shortcut": "Launches installed official com.google.android.youtube outside dashboard; long press retains web/native companion choices.",
+  "layout": "Dock54 design units, 4-unit bottom insets; equal panels expand into recovered space; one-time reset of left/right/dock geometry. Icon order/scales and pane content retained.",
+  "dock": "Outer dock background removed; per-shortcut idle background fills/outlines removed. Colored30-unit badges,17-unit captions and selected/pressed underline retained. Official YouTube and DiAuto launch shortcuts unchanged.",
+  "native_fit_status": "Aspect-preserving host raster, not proof that third-party app UI reflows or navigation/playback works.",
+  "previous_native_focused_assertions": {
+    "version": "native5",
+    "assertions": 16
+  },
+  "header": "Standalone164-unit clock capsule, transparent flexible center, separated Edit layout and Media access pills with10-unit gaps; no shared header panel. Frameless dock and panel geometry unchanged.",
+  "layout_focused_assertions": 37,
+  "artifact_source_label": "1.6.7-nexadash.8-native8",
+  "artifact_metadata_correction": "Confirmed via aapt2: file named native8 retains canonical-manifest native1/code33. Native9 source fixes --replace-version. Existing APK bytes unchanged.",
+  "source_version_name": "1.6.7-nexadash.8-native13",
+  "source_version_code": 45,
+  "source_build_info": "next/artifact.json",
+  "next_release": {
+    "file": "next/NexaDash-Next-1.1.apk",
+    "application_id": "com.shazwan.nexadash.next",
+    "version_name": "1.1-next2",
+    "home_candidate": true,
+    "separate_identity": true,
+    "maps_companion_branch": "nexadash-maps-next-companion",
+    "maps_runtime": "unverified",
+    "radio_native_controller_delivered": false
+  }
+}

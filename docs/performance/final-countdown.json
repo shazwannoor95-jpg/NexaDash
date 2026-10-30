@@ -1,0 +1,24 @@
+{
+  "condition": "Optimized403-tested APK after45sec warm-up: rendered-angle car, idle media, verified device time, manualSGR02 real2026 timetable active countdown, no GPS/map/media playback, no dialog; CPU sampled before memory dump",
+  "captured_utc": "2026-10-26T12:04:30.044128+00:00",
+  "serial": "emulator-5554",
+  "pid": 4630,
+  "foreground": [
+    "mResumedActivity: ActivityRecord{efa2a92 u0 com.shazwan.sagadash/.DashboardActivity t9}",
+    "ResumedActivity:ActivityRecord{efa2a92 u0 com.shazwan.sagadash/.DashboardActivity t9}",
+    "ResumedActivity: ActivityRecord{efa2a92 u0 com.shazwan.sagadash/.DashboardActivity t9}"
+  ],
+  "focus": [],
+  "pss_kb": 49308,
+  "pss_mib": 48.15234375,
+  "pss_percent_of_4gib_arithmetic_only": 1.1755943298339844,
+  "thread_count": 19,
+  "custom_gl_thread_count": 0,
+  "cpu_ticks_delta": 44,
+  "clock_tick_hz": 100,
+  "uptime_seconds_delta": 20.690000000000055,
+  "host_seconds_delta": 21.433775671001058,
+  "memory_dump_after_cpu_interval": true,
+  "process_cpu_percent_one_virtual_core": 2.126631222812948,
+  "note": "Short software-emulator observation only; not a TEST9278B head-unit result, total-device load, lag test, or performance guarantee. PSS includes a proportional share of shared memory."
+}

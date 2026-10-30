@@ -1,0 +1,26 @@
+{
+  "source_version_name": "1.6.7-nexadash.8-native9",
+  "source_version_code": 41,
+  "application_id": "com.shazwan.nexadash.lab",
+  "signed_update_published": false,
+  "signing_status": "Original cloud private key not restored; no new signing key generated. Existing signed APKs unchanged.",
+  "validation": {
+    "resources_java_dex_alignment_unsigned": "passed",
+    "gradle_unsigned_release": "passed",
+    "gradle_debug_java_and_demo_compile": "passed",
+    "test_source_compilation": "passed",
+    "runtime_native9": "not run after workspace replacement",
+    "physical_head_unit_native_playback": "not established"
+  },
+  "features": [
+    "Explicit TizenTube native panel selection without autoplay",
+    "Per-panel companion selection persistence",
+    "Startup requested/proxy/reported display diagnostics with deadline60s",
+    "No readiness probes after confirmation or Stop",
+    "Version override fixed with aapt2 --replace-version"
+  ],
+  "existing_signed_native8_file_actual_version": {
+    "name": "1.6.7-nexadash.8-native1",
+    "code": 33
+  }
+}

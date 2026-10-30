@@ -1,0 +1,104 @@
+> Current source is native10 (web fullscreen fix). [Read native10 status](NATIVE10_WEB_FULLSCREEN_MS.md). No signed native10 APK is published; existing downloads remain unchanged.
+
+> Current source is native9; no signed native9 APK is published. [Read the native9 instructions and signing status first](NATIVE9_SOURCE_MS.md). Existing APK download links below refer to earlier artifacts, whose native8 file still reports native1/code33 in its manifest. Native9 source fixes the version override.
+
+# NexaDash .8 Native Lab — install dan cuba
+
+**Build eksperimen berasingan**, package `com.shazwan.nexadash.lab`, versi **1.6.7-nexadash.8-native8 / code40**. Boleh dipasang bersama NexaDash .8 biasa. Setting/data .8 biasa tidak diganti atau dipindahkan. Jangan jadikan Lab default launcher sebelum ujian sendiri memuaskan.
+
+## Download
+
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk)
+- [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
+
+Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
+
+| Companion | Download / keperluan | Status |
+|---|---|---|
+| Demo | [APK kecil](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-DemoCompanion-native1.apk); API26+ | Counter, input teks dan video ujian sintetik; bukan YouTube. Diuji dalam panel sebenar pada emulator API29 |
+| TizenTube ARM | [APK](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-companions/TizenTube-NativeLab-arm.apk); minAPI24, ARM32 | Fork berasingan; manifest/signature/CRC diperiksa. Rendering/playback/touch belum diuji pada hardware ARM. Calon ujian head unit API27 |
+| YouTube V58 | [ZIP companion](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-v58-companion); **minAPI29** | Extract semua, jalankan `Join-V58-Windows.cmd`, dapat `YouTube-V58-native1.apk`. Original V58 tidak mempunyai bridge. MicroG/setup masih diperlukan |
+
+API host untuk native display: **API26+**. Minimum Lab APK kekal API24, tetapi ciri native disekat secara jelas sebelum API26. **V58 tetap tidak boleh dipasang secara biasa pada head unit API27.** Menukar APK launcher tidak mengubah minimum SDK companion. Untuk hardware API27, mula dengan Demo atau calon TizenTube ARM. Cobalt ARM tidak berjalan pada emulator x86-only.
+
+APK V58 >100MB, jadi GitHub menyimpannya dalam tiga bahagian 90MB/90MB/baki pada branch berasingan. `Join-V58-Windows.cmd` mencantum menggunakan `copy /b` dan mencetak SHA256; bandingkan dengan `artifact.json`. Linux/Termux boleh guna `sh Join-V58-Termux.sh` tanpa simbol pipe. Jangan install fail `.part` satu-satu. Source ZIP launcher tidak membawa APK besar itu.
+
+## Cara dalam panel kiri / kanan
+
+1. Buka **NexaDash Native Lab** dari Apps, semak footer **1.6.7-nexadash.8-native8**.
+2. Tekan pilihan di penjuru atas panel kiri atau kanan → **Native app · experimental**.
+3. Tekan butang pilihan app dalam panel, pilih **YouTube V58 / TizenTube / Demo** yang sepadan dengan companion terpasang.
+4. Tekan **Start**. Tiada auto-launch pada load/resume. Startup dibatalkan selepas 60 saat jika companion/display tidak bersedia; tiada auto-retry. App native diharapkan muncul dalam permukaan panel; status error dipaparkan jika firmware/companion menolak.
+5. **Stop** melepaskan display, binding dan worker input milik Lab. Tukar mode, edit layout atau Home/onStop juga melepaskannya. Selepas Done/resume, tekan Start semula jika mahu.
+6. Butang **⋯** membuka **Back**, **Open app / setup**, dan proxy teks. Tap medan teks dalam app dahulu, taip pada medan host, kemudian **Send**. Tidak semua dialog atau input app menyokong kaedah ini. Setup awal MicroG/V58 dibuat secara normal melalui Open app/setup, bukan melalui panel.
+
+Untuk jimat sumber, hanya **satu panel native/web/video fail** dipilih pada satu masa. Panel sebelah boleh kekal GPS map preview atau media controls. Ini belum menjadi host universal dua app asal yang tidak diubah.
+
+## Android Studio
+
+Extract Source ZIP ke folder baharu, Open folder dengan `settings.gradle`. Pilih module **panelprobe** dan Run dahulu, kemudian pilih **app** dan Run. Kedua-duanya menggunakan debug key tempatan yang sama. Dalam Lab, pilih companion **Demo** dan Start; counter serta medan teks boleh diuji terus tanpa APK mod atau internet.
+
+Untuk YouTube/Cobalt yang didownload: **cloud companion tidak sama signing key dengan Studio debug app**. Jalankan dari terminal projek pada Windows:
+
+```bat
+gradlew.bat :app:resignNativeCompanion "-PnativeCompanion=C:\Downloads\YouTube-V58-native1.apk"
+```
+
+Task ini menandatangani salinan menggunakan debug key Studio komputer itu; output di `app/build/outputs/native-companion/*-debug.apk`. Install salinan debug itu bersama app debug. Ia tidak menyalin/menerbitkan private key. Alternatif paling mudah untuk cuba companion cloud: install APK cloud Lab dan companion cloud sebagai pasangan, tanpa Run versi debug menimpanya.
+
+Gunakan emulator ujian bersih jika ada signing conflict. Konflik pada APK Lab/Demo tidak memerlukan uninstall NexaDash .8 biasa. Source dan resource namespace Java masih `com.shazwan.sagadash`, tetapi application ID Lab berasingan.
+
+## Peta / directions
+
+Carian destinasi dan directions .8 dikekalkan: **Navigation → alamat/tempat → pilih Maps/Waze → Search/Directions**. Routing dan suara dijalankan dalam app Maps/Waze **di luar panel**. Panel peta masih GPS preview. Lab ini **belum meng-embed UI asal Maps/Waze**, dan bukan navigasi penuh dalam panel.
+
+## Semakan dan had sebenar
+
+- **708 assertions** pada emulator Android10/API29: app asal .8, native display cross-UID di panel kiri/kanan, sentuhan berskala ke counter sebenar companion, input text proxy ke EditText app berasingan, explicit-start/no-autoresume, one-player limit serta cleanup.
+- Build shell dan Gradle debug/release + panelprobe berjaya. APK signature/ZIP alignment/CRC diperiksa. Debug re-sign task diuji dan certificate pasangan dibandingkan.
+- Ujian manual Lab ini juga merender UI YouTube V58 sebenar dalam panel kiri (screenshot bawah); prototaip terdahulu turut membuka skrin Search melalui sentuhan. Ini **bukan bukti video streaming berjaya**. Live YouTube playback masih belum disahkan; persekitaran ujian menunjukkan masalah sambungan.
+- Terdapat log error lifecycle **Primes** dalam proses V58 semasa teardown pada prototaip terdahulu dan teardown ujian Lab. Companion bukan crash-free yang disahkan. Window dialog, IME, back handling dan lifecycle semua app belum lengkap. Lab mengasingkan proses target dan melepaskan sumber miliknya; ia tidak memaksa-stop semua service/background playback milik companion.
+- Main Lab tidak meminta MANAGE_ACTIVITY_TASKS, INJECT_EVENTS atau system hosting permission. Ia hanya menerima companion yang opt-in, mempunyai service signature-protected, protocol sesuai dan signing key sama. Tiada auto-patch APK asal, bypass DRM/secure-window/login atau root command.
+- Tiada ukuran RAM/CPU head unit fizikal. Default tidak memulakan native display, binding atau input worker sebelum Start; relay input mempunyai queue terhad. Ini tidak menjamin penggunaan rendah oleh YouTube/Cobalt/MicroG sendiri.
+
+Source: [native frame](../src/com/shazwan/sagadash/DashNativeFrame.java), [proxy](../src/com/shazwan/sagadash/DashNativeProxy.java), [tests](../tests/DashNativeChecks.java), [V58 patch](../tools/v58-panel-lab), [Cobalt patch](../tools/native-companion). Cobalt asal dan notis/lesen pihak ketiga dikekalkan dalam companion; ia bukan keluaran rasmi Google/Cobalt dan bukan APK standard .8.
+
+![Demo companion native dalam panel dashboard](img/native-lab-demo-left.png)
+
+![YouTube V58 native dalam NexaDash Lab pada emulator API29; masih loading, bukan bukti playback](img/native-lab-youtube.png)
+
+## Native2: YouTube web panel fit
+
+Search/help rows collapse when opening YouTube; tap Search to show them again. Controls use 32dp height and website text zoom stays at 100%. No extra polling, browser instance or animation. Live YouTube playback on the physical head unit remains unverified.
+
+## Native3: shortcuts / footer
+
+YouTube shortcut opens official installed YouTube outside the dashboard. Long press retains Web/native-companion choices. Footer hides after four seconds without dashboard touch; touch to reveal. Edit instructions remain visible. Its reserved space stays fixed, avoiding panel jumps/display resizing. Original Maps/Waze UI cannot fill the right dashboard area; navigation continues via external app handoff.
+
+## Native4: equal panels
+
+Removed the three upper-right shortcuts. Left/right panels now have equal width and height. First Native4 load resets only the two panel bounds (dock placement retained); users can edit again. Dock DSP becomes official YouTube; Car Link becomes DiAuto (launch only, no projection integration). No automatic DiAuto launch or testing. Uploaded Maps/Waze require API29; API27 needs compatible older ARM32 builds for normal external app launch.
+
+## Native5: panel aspect fit
+
+Native virtual-display raster follows the actual SurfaceView aspect ratio instead of stretching a fixed640x400 image. Longest edge capped at800 pixels; target logical density160. Display resize and touch mapping use the same current dimensions; explicit Start/resource cleanup remains. Apps can reconfigure/restart on size changes; their internal responsive layout and physical OEM behavior are not guaranteed. No DiAuto integration/execution. New Maps26.42 APK still requires API29; Waze5.9 incomplete archive skipped at owner request.
+
+Native5 focused native-panel integration: PASS16 on API29 x86_64, including real cross-UID touch/text, aspect fit, both panel positions and cleanup. Run via `DEVICE=emulator-5554 NATIVE_ONLY=1 tests/run-android-checks.sh` after sourcing Android environment. Physical TEST9278B and third-party app playback remain unverified.
+
+## Native6: compact bottom dock / clock
+
+Dock height87→64 design units, icons46→36 and captions24→20. Footer no longer reserves44 units in normal mode; edit instructions still appear while editing. Vehicle settings moved to Settings. Both equal panels expand into recovered space, dock stays at bottom. First Native6 launch resets left/right/dock geometry only; content assignments, icon order and chosen sizes retained. Clock uses one line, horizontal inset and API26+ native auto-size to avoid clipping. No new worker/animation/network loop.
+
+Native6 verification: PASS36 focused layout integration on API29 x86_64 (drag/resize/persistence, equal panels, dock bottom, no footer gap and clock width/height fit). Run `DEVICE=emulator-5554 LAYOUT_ONLY=1 tests/run-android-checks.sh`. APK signature/alignment checked; full-suite and physical head-unit validation not claimed.
+
+## Native7: frameless lower dock
+
+Removed outer dock panel and individual shortcut idle fills/outlines. Colored icon badges, labels and state underline remain. Dock64→54 design units, badges36→30, captions20→17; bottom root/main insets reduced to4 each. Equal panels gain the recovered height. Geometry resets once for left/right/dock; icon order/scales and content choices retained. No extra animation/worker.
+
+Native7 verification: PASS37 focused layout checks on API29 x86_64, including absent outer dock background, expanded equal panels, dock bottom, drag/resize/persistence and clock width/height fit.
+
+## Native8: separate header capsules
+
+Clock is a compact standalone glass capsule; center space is transparent. Edit layout and Media access use separate pills with explicit gaps. Frameless bottom dock and enlarged equal panels retained. No layout migration or additional background work.
+
+Native8 verification: PASS37 focused API29 x86_64 layout checks; release/debug build, signature and alignment checks pass.

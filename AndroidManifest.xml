@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ashafizullah.klikdash">
+    package="com.shazwan.sagadash"
+    android:versionCode="45"
+    android:versionName="1.6.7-nexadash.8-native13">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- adbd lokal (127.0.0.1:5555, lihat Tweaks.java), unduhan Al-Qur'an, asisten AI, dan server BEAM -->
+    <!-- Network access for JAKIM, optional lyrics, AI and BEAM. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.shazwan.embedprobe.permission.CONTROL" />
+    <uses-permission android:name="com.shazwan.nexadash.next.permission.CONTROL" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Ubin TANYA: perintah suara untuk asisten AI -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- Pembaruan dari Pengaturan bila ADB lokal tidak tersedia (Android meminta konfirmasi) -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Pengingat sholat melayang di atas Maps/Waze; diberikan lewat ADB lokal (PrayerAlarm.allowOverlay). -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
-        android:label="KlikDash"
+        android:label="NexaDash Native Lab"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/KlikDash"
         android:allowBackup="false"
@@ -23,14 +25,14 @@
         android:hardwareAccelerated="true">
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".DashboardActivity"
+            android:screenOrientation="sensorLandscape"
             android:directBootAware="true"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
-            android:resumeWhilePausing="true"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|locale|layoutDirection|fontScale">
+            android:resumeWhilePausing="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
@@ -39,36 +41,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".QuranActivity"
-            android:label="@string/app_quran"
-            android:icon="@drawable/ic_quran"
-            android:taskAffinity="com.ashafizullah.klikdash.quran"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|locale|layoutDirection|fontScale">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".DzikirActivity"
-            android:label="@string/app_dzikir"
-            android:icon="@drawable/ic_dzikir"
-            android:taskAffinity="com.ashafizullah.klikdash.dzikir"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|locale|layoutDirection|fontScale">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".DashNativeProxy" android:exported="false"
+            android:taskAffinity="com.shazwan.nexadash.lab.nativeproxy" android:resizeableActivity="true" android:allowEmbedded="true" />
 
         <activity
             android:name=".SettingsActivity"
             android:label="@string/app_settings"
-            android:taskAffinity="com.ashafizullah.klikdash.settings"
+            android:taskAffinity="com.shazwan.sagadash.settings"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:windowSoftInputMode="adjustResize"
@@ -78,7 +57,7 @@
             android:name=".AskActivity"
             android:label="@string/app_ask"
             android:icon="@drawable/ic_ask"
-            android:taskAffinity="com.ashafizullah.klikdash.ask"
+            android:taskAffinity="com.shazwan.sagadash.ask"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:screenOrientation="unspecified">
@@ -94,7 +73,7 @@
             android:name=".BeamActivity"
             android:label="@string/app_beam"
             android:icon="@drawable/ic_beam"
-            android:taskAffinity="com.ashafizullah.klikdash.beam"
+            android:taskAffinity="com.shazwan.sagadash.beam"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|locale|layoutDirection|fontScale" />
@@ -116,8 +95,9 @@
             android:name=".BeamService"
             android:exported="false" />
 
-        <service
-            android:name=".QuranService"
-            android:exported="false" />
+        <service android:name=".DashMediaAccess" android:label="NexaDash media access"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
+            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
+        </service>
     </application>
 </manifest>

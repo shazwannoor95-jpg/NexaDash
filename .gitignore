@@ -15,3 +15,18 @@ assets/quran-en.txt
 
 # Poster promosi (media sosial), dibuat per rilis; tidak perlu di repo
 design/poster-*
+
+# Android Studio / Gradle local state
+.gradle/
+.idea/
+local.properties
+app/build/
+*.iml
+
+# Private signing-key backup archives must never be committed.
+*-private-signing-backup.zip
+
+# Local Python tools environment and personal car photo inputs from the guide.
+.venv/
+my-car/
+__pycache__/

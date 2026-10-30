@@ -1,0 +1,24 @@
+{
+  "condition": "v3 signed code27 afterforce-stop/freshlaunch and45sec warm-up: Synthwave Static brightness65 transparency25 neon65,ReduceMotiontrue,imageangles,idlemedia,verifieddeviceclock,currentOct27Malaysia,manualSGR02 activeofficialJAKIMcountdown,noGPS/map/playback,no dialogs; CPU-first20sec",
+  "captured_utc": "2026-10-27T00:59:53.341343+00:00",
+  "serial": "emulator-5554",
+  "pid": 5507,
+  "foreground": [
+    "mResumedActivity: ActivityRecord{47db79c u0 com.shazwan.sagadash/.DashboardActivity t11}",
+    "ResumedActivity:ActivityRecord{47db79c u0 com.shazwan.sagadash/.DashboardActivity t11}",
+    "ResumedActivity: ActivityRecord{47db79c u0 com.shazwan.sagadash/.DashboardActivity t11}"
+  ],
+  "focus": [],
+  "pss_kb": 41057,
+  "pss_mib": 40.0947265625,
+  "pss_percent_of_4gib_arithmetic_only": 0.9788751602172852,
+  "thread_count": 20,
+  "custom_gl_thread_count": 0,
+  "cpu_ticks_delta": 35,
+  "clock_tick_hz": 100,
+  "uptime_seconds_delta": 20.689999999999827,
+  "host_seconds_delta": 21.24225001799641,
+  "memory_dump_after_cpu_interval": true,
+  "process_cpu_percent_one_virtual_core": 1.6916384726921359,
+  "note": "Short software-emulator observation only; not a TEST9278B head-unit result, total-device load, lag test, or performance guarantee. PSS includes a proportional share of shared memory."
+}

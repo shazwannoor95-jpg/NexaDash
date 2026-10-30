@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Logo KlikDash: "K" gelap di kotak amber dengan titik krem (sama dengan header README dan klikapps). -->
+<!-- NexaDash: vector rendition of the approved cyan orbit, ice arrow/road and violet dot. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    <path android:fillColor="#FFF5AA14"
-        android:pathData="M14,1h20a13,13 0 0 1 13,13v20a13,13 0 0 1 -13,13h-20a13,13 0 0 1 -13,-13v-20a13,13 0 0 1 13,-13z" />
-    <path android:strokeColor="#FF0B0B0A" android:strokeWidth="5"
-        android:strokeLineCap="round" android:strokeLineJoin="round"
-        android:pathData="M16.5,13.5v21M16.5,26L29,13.5M21.5,21.5L31,34.5" />
-    <path android:fillColor="#FFECE6D8"
-        android:pathData="M31.5,12.5a4,4 0 1 0 8,0a4,4 0 1 0 -8,0z" />
+    android:width="48dp" android:height="48dp" android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="#071522" android:pathData="M12,0H36Q48,0 48,12V36Q48,48 36,48H12Q0,48 0,36V12Q0,0 12,0Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#00D5EF" android:strokeWidth="3.4" android:strokeLineCap="round"
+        android:pathData="M13.9,38.9A18,18 0 1,1 38.8,13.8M42,23.3A18,18 0 0,1 33,39.6" />
+    <path android:fillColor="#E5F7FF" android:pathData="M23.2,13.4Q24,12.1 24.8,13.4L30.2,23.3Q30.7,24.5 29.4,24L24,21.2L18.6,24Q17.3,24.5 17.8,23.3Z" />
+    <path android:fillColor="#E5F7FF" android:pathData="M24,23C37,29 29,42 20,41C15,40 20,36 23,33C28,28 27,26 24,23Z" />
+    <path android:fillColor="#9B50FF" android:pathData="M44,18A2.5,2.5 0 1,1 39,18A2.5,2.5 0 1,1 44,18Z" />
 </vector>

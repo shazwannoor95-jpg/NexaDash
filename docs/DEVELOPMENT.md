@@ -9,7 +9,7 @@ klikdash/
 ├── AndroidManifest.xml
 ├── build.sh                  build + install on the headunit
 ├── klikdash.keystore         APK signing key (do not lose it, see Notes)
-├── src/com/ashafizullah/klikdash/
+├── src/com/shazwan/sagadash/
 │   ├── HomeActivity.java     launcher: tiles, clock, prayer times, temperature, drag & drop
 │   ├── PrayerTimes.java      prayer-time calculation (Java port of PrayTimes.js, LGPL v3)
 │   ├── QuranActivity.java    mushaf view + player
@@ -83,7 +83,7 @@ Always install with `./build.sh install`. With a plain `adb install`, the home p
 
 The app downloads the audio by itself (see Features). To fill all 114 surahs at once (1.6 GB) without
 using the headunit's connection, download them on a computer and push them over ADB. Files live at
-`/sdcard/Android/data/com.ashafizullah.klikdash/files/quran/audio/SSSAAA.mp3`.
+`/sdcard/Android/data/com.shazwan.sagadash/files/quran/audio/SSSAAA.mp3`.
 
 ```bash
 # download (once)
@@ -94,7 +94,7 @@ for z in zips/*.zip; do unzip -qq -o -j "$z" '*.mp3' -d audio; done
 mkdir -p intro && mv audio/*000.mp3 intro/
 
 # push to the headunit (~20 minutes over WiFi)
-adb push audio /sdcard/Android/data/com.ashafizullah.klikdash/files/quran/
+adb push audio /sdcard/Android/data/com.shazwan.sagadash/files/quran/
 ```
 
 The basmala before verse 1 (except Al-Fatihah and At-Taubah) uses `001001.mp3`.
@@ -162,7 +162,7 @@ The interface is in Indonesian (`res/values/strings_*.xml`, the default) and Eng
 - **The city name is not detected automatically**, because the geocoder on this device returns no results.
   It can be set manually and is kept while the position stays within 15 km:
   ```bash
-  adb shell am start -n com.ashafizullah.klikdash/.HomeActivity --es lat -6.1754 --es lon 106.8272 --es city "Jakarta"
+  adb shell am start -n com.shazwan.sagadash/.HomeActivity --es lat -6.1754 --es lon 106.8272 --es city "Jakarta"
   ```
 - **`klikdash.keystore`** (alias `klikdash`) must be backed up somewhere safe, for example as a password-manager
   attachment. It is not in the repo. Its password is in the **macOS Keychain** (service `klikdash-keystore`):

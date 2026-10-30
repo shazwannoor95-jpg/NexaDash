@@ -1,0 +1,177 @@
+# Saga Dash resource measurements
+
+The current APK is `dist/SagaDash-1.6.7-sagadash.7.apk` (package `com.shazwan.sagadash`, code 31).
+The car preview is eight image angles. Original video and live mesh classes/assets are removed.
+Default Static + Reduce motion has no background animation; Ambient/Cinematic are opt-in, capped at
+10fps and stopped while inactive. The wallpaper uses a bounded bitmap, without a custom GL renderer, blur or WebView.
+Optional video/map work starts only when selected.
+
+## Optional in-panel playback (.7)
+
+The new local-file player uses a native SurfaceView/MediaPlayer, content URIs without copying,
+background source I/O, audio focus,1080p/2MP limits and an active-playback-only1Hz progress callback.
+The optional YouTube website creates one WebView when requested, not on an idle saved-mode resume.
+No app activity is hosted. One video/web panel is selected at a time; native car video is suppressed
+while it is selected. Changing panels, editing, pausing or closing releases player/website resources.
+Renderer processes may remain in Android's pool after WebView destruction; zero residual RAM is not
+claimed. Native data-source jobs and late callbacks are generation-gated. No new permission is added.
+
+YouTube connectivity is blocked by the execution proxy (CONNECT403), so live service playback is
+not validated. Tests actually play a local HTML5 H.264/AAC fixture after a real touch in the WebView
+and a native content-URI fixture, plus pause/resume/error/teardown. This is not a head-unit codec
+benchmark or streaming guarantee. Older system WebViews, account/video restrictions and Internet
+conditions may prevent YouTube website playback; it remains beta.
+
+Android Studio debug/release assembly and APK signature verification passed. **683 integration
+assertions passed** on the software emulator, including native and HTML5 fixture playback, user gesture,
+URL policy, error recovery and hidden/closed resource release. A separate manual smoke test selected
+the owner-provided720p clip through Android File Picker and rendered it in the panel; this is not
+a framerate or physical-decoder benchmark. No new Android permission was added.
+
+[Playback instructions and remaining navigation/FM scope](INLINE_PLAYBACK_MS.md).
+The .3 idle measurements below are historical and do not describe .7 playback.
+
+## Settings grid and version identification checkpoint (.6)
+
+Settings uses recycled native cells and shared system icons, with no new worker, bitmap cache,
+network access, renderer or polling. All earlier action indices are retained. Footer/drawer versions
+are read from the installed package once and cached, not queried every tick. Drawer/adapter references
+are released on close/pause. Apps retains the existing bounded .5 icon cache. No new Android permission
+is added. Android Studio debug/release assembly and APK signature verification passed. **653 integration
+assertions passed** on the Android10/API29 emulator, including stable settings action routing,
+closing/pausing, repeated menu taps, version labels and About status.
+Original-app panel hosting remains unimplemented; no playback or physical-head-unit
+performance measurement is claimed for this build.
+
+## Glass panels and icon drawer checkpoint (.5)
+
+The panel geometry and existing feature state are retained. Glass is a static fill gradient and
+rim reflection, without live blur, a new bitmap, decoder or animation loop. It can be disabled in
+Appearance > Glass panels; transparency remains adjustable. Original retains its opaque fill.
+
+Apps uses a recycled native GridView with density-aware columns and real installed activity icons.
+Each retained icon raster is at most96×96pixels. The LRU cache is capped at1MiB, plus visible-cell
+references; package drawables can consume transient memory during loading. Up to24 icon jobs are
+pending on the existing serial worker. No icon work runs while the drawer is closed; closing it
+cancels pending jobs, releases its adapter/cache and rejects late results. Missing icons fall back
+to the system placeholder. There are no new Android permissions or continuous refresh timers.
+
+Android Studio debug/release assembly and signed APK verification passed. **626 integration
+assertions passed** on Android10/API29 software emulation, including native-grid activity discovery,
+icon raster bounds/cache release and glass finish state preservation. Permissions match .4.
+One preceding emulator run timed out waiting for a new decoded-frame notice after clearing the
+optional video fixture; the unchanged APK passed the full rerun. This does not validate smooth
+video playback on the physical head unit.
+
+This is a visual/app-drawer update, **not app UI embedding**. The .3 runtime sample below is
+historical; .5 has no new physical-head-unit RAM/CPU or playback measurement.
+
+## App-panel diagnostics checkpoint (.4)
+
+The .4 update adds an on-demand, read-only **Settings > App panel compatibility** report. It does not
+implement app embedding, run root commands, change system settings or upload the report. Package/app
+inspection runs on the existing worker only when requested; no new idle polling, player or WebView
+is added. Declared PiP/freeform or activity-embedding flags are not proof that hosting will work.
+See [the head-unit report instructions](APP_PANELS_MS.md).
+
+Android Studio debug/release assembly and distributable signature verification passed. **603 integration
+assertions passed** on the Android 10/API29 software emulator, including API-gated manifest reporting,
+app discovery, no launches or assignment changes, cancelled/stale report handling, dialog coalescing
+and the actual Copy report clipboard action. No Android permission was added. The latest
+runtime measurement below belongs to **.3**, not a new .4 measurement or in-panel playback claim.
+Physical head-unit compatibility remains untested.
+
+## Validation checkpoint (.3)
+
+- Android Studio **debug and release assembly passed** with SDK 35/JDK 17, Gradle 8.9 and AGP 8.7.3.
+- The distributable APK signature is verified; package/version are `com.shazwan.sagadash`, code **27**.
+- **547 integration assertions passed** on the Android 10/API 29 software emulator. Added checks cover
+  in-place Original/Synthwave changes, preserved geometry/car angle/zoom/media/prayer state, bounded
+  RGB565 wallpaper, Static/Reduce motion, animation cancellation, compact controls, dock sizing,
+  repeated Apps taps and decoded-frame notification gating.
+- The frame-flow regression uses a decoded **64×64 synthetic fixture**, temporarily looping only
+  inside the test and restoring the production no-loop setting. The bundled 1280×360 car clip still
+  receives metadata/opening/prepare/start/pause/release checks. In this software emulator its decoder
+  took roughly 0.8–1.0s per frame and dropped nearly all late frames; full-resolution smooth playback
+  cannot be validated here. This is not a claim about the head unit's hardware decoder.
+- No new Android permissions, UI framework, runtime blur or custom GL renderer was added for the theme.
+- Physical TEST9278B behavior and total-device resource use remain unmeasured.
+
+## Latest measured runtime (.3)
+
+Measured on **2026-10-27** using the code27 APK: fresh normal process after instrumentation, 45-second
+warm-up, **Synthwave / Static / Reduce motion**, image angles, idle media, no map/GPS/media playback,
+confirmed device clock and real cached manual SGR02 countdown. No forced GC was used.
+
+| Process PSS | CPU, one virtual core | Guest interval | Custom GL threads | WebViews |
+| ---: | ---: | ---: | ---: | ---: |
+| **40.09 MiB** | **1.69%** | **20.69s** | **0** | **0** |
+
+[Counter evidence](performance/synthwave-v3.json) · [Actual UI screenshot](img/saga-dash-synthwave.png).
+CPU was sampled before the memory dump (35ticks at100Hz). This is one short software-emulator sample,
+not a physical-head-unit measurement or total device load. Optional Ambient/Cinematic and external
+YouTube/Maps/TizenTube have additional costs not covered by this Static sample. No Saga Dash
+crash/ANR markers appeared in the reviewed retained logs. Startup and retained allocator pages vary;
+comparisons with the older post-test process below do not establish a memory or CPU speedup.
+
+## Validation checkpoint (.2)
+
+- Android Studio/Gradle 8.9 + AGP 8.7.3: debug and release assembly passed with SDK 35/JDK 17.
+- Release lint retains the intentional sideload-only target 29. Only GooglePlay's expired-target policy
+  check is disabled; release lint otherwise runs. This APK is not a GooglePlay submission.
+- The signed shell APK passed signature verification and 403 integration assertions on Android 10/API 29,
+  x86_64 software emulation at 1024×600. Tests cover real MediaSession control, prayer/time/cache handling,
+  image gestures/lifecycle, removed old resources, panel choices, layout geometry/persistence and video import.
+- TizenTube helper syntax and API <24 rejection passed; the owner's head unit was not connected.
+- No SagaDash FATAL/ANR marker was found in the reviewed final-run logcat. The cold software emulator
+  had an unrelated SystemUI startup ANR; this is not counted as successful physical-device validation.
+
+## Method and limits
+
+Memory is process PSS from `dumpsys meminfo`, not Java heap, RSS or the `top` percent-memory column.
+CPU is `(delta utime + delta stime) / 100 / delta guest uptime ×100` over a 20-second interval,
+expressed as percent of **one virtual core**. The emulator has 2 virtual cores and 2GiB RAM; it uses
+software CPU/GPU emulation. These numbers do not predict Cortex-A7 timing or the head unit's total load.
+
+Measurements use the default image/native-media panels, static neon, no GPS, no map tiles, no actual
+media playback and lyrics off. The active-countdown condition has confirmed-correct device time and
+manual SGR02 with the real bundled 2026 JAKIM timetable. All app downloads/cache files remain separate
+from the synthetic instrumentation fixtures. Startup and optional video/map/source-app work can cost more.
+
+## Runtime checkpoint (.2)
+
+Measured on 2026-10-26. Both samples have the real SGR02 countdown active and an idle media panel.
+The .2 sample followed the integration suite and a normal warm launch with 45 seconds to settle.
+No forced GC or allocator trimming was used.
+
+| Active countdown sample | PSS | CPU, one virtual core | Guest interval |
+| --- | ---: | ---: | ---: |
+| Before countdown date-format optimization | 34.59 MiB | 2.64% | 20.87s |
+| **1.6.7-sagadash.2 checkpoint** | **48.15 MiB** | **2.13%** | **20.69s** |
+
+Counter evidence: [final sample](performance/final-countdown.json),
+[before optimization](performance/before-countdown-optimization.json).
+The CPU reading decreased in these short samples; they do not establish a guaranteed speedup.
+The final PSS is higher: its native allocator reported about 17.2MiB free but retained pages.
+Heap/GC/cache state differs after tests, so no memory improvement or memory-leak diagnosis is inferred.
+The final result is reported as observed rather than substituting an earlier lower snapshot.
+
+48.15MiB is approximately 1.18% of a **4GiB reference total**, by arithmetic only; the measured emulator
+has 2GiB, and the physical head unit's available RAM was not measured. Additional source apps use more.
+Both countdown samples had **zero custom GL threads and zero WebViews**. This covers the default image
+mode; optional video playback deliberately creates its decoder/GLES resources.
+
+Earlier image-mode startup/no-zone and countdown snapshots ranged from 33.81 to 36.48MiB; startup CPU
+was temporarily higher. Those are earlier checkpoints, not the final APK's memory claim.
+[Earlier .2 dashboard screenshot](img/saga-dash-final.png).
+
+Upstream KlikDash's approximate 30MB / 0–1% CPU README statement is the author's result for that app/device,
+not a SagaDash guarantee. A percentage of the advertised 4GB cannot substitute for a physical PSS sample.
+Apps such as YouTube, Maps, Spotify and TizenTube consume additional memory/CPU in their own processes.
+
+## Check on the actual head unit later
+
+Use the native image mode first; verify installed apps, GPS/zone/countdown, Bluetooth/radio metadata,
+reverse camera, steering keys and sleep/wake. Capture PSS/CPU after startup settles, then separately while
+playing media and navigating. Keep the existing launcher available until these checks pass.
+No firmware/MCU/CAN change is required to install SagaDash. Physical TEST9278B validation remains pending.

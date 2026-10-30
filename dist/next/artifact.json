@@ -1,0 +1,28 @@
+{
+  "file": "NexaDash-Next-1.2.apk",
+  "label": "NexaDash Next",
+  "application_id": "com.shazwan.nexadash.next",
+  "version_name": "1.2-next3",
+  "version_code": 3,
+  "source_version": "1.6.7-nexadash.8-native13",
+  "min_sdk": 24,
+  "target_sdk": 29,
+  "size_bytes": 3066765,
+  "sha256": "18c7ade9cd3fa731336adfe3417834e78454d73ad47c94e1870706bf96205d1d",
+  "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
+  "home_candidate": true,
+  "old_launcher_replaced_or_data_migrated": false,
+  "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
+  "validation": "Signed APK/CRC/alignment/API27 signature validation; 12 JVM raster boundary/aspect/touch-extent cases passed; Android build and test-source compilation checked. No runtime head-unit/Maps validation.",
+  "radio_native_controller_delivered": false,
+  "radio_runtime_probe": "Read-only source/native-library/OAT/shared-library/bootclasspath paths; no tuner commands",
+  "maps_panel_status": "Host target integrated; separate experimental real-Maps companion statically verified, runtime navigation unverified.",
+  "fixes": [
+    "Reject queued Back/text commands from stopped or replaced sessions",
+    "Cancel active gesture on raster resize/queue overflow; wait for fresh Down",
+    "Require confirmed companion display before forwarding input",
+    "Keyboard Send and IME cleanup; one Next native Maps selector",
+    "Always attempt browser destroy after OEM stop/pause failure"
+  ],
+  "privacy": "Blank plate image atlas and wallpaper. Bundled car video and old screenshot/APK downloads withdrawn."
+}

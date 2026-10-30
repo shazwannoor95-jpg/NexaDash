@@ -1,0 +1,14 @@
+{
+  "asset": "res/drawable-nodpi/saga_angles.png",
+  "kind": "eight rendered image views, not a 3D mesh",
+  "basis": "User-supplied red Proton Saga photo/render references; additional viewpoints generated using image generation.",
+  "registration": "",
+  "angles": 8,
+  "default_angle": 7,
+  "runtime_decode": "ARGB_8888, inSampleSize=2, maximum retained atlas 2 MiB",
+  "notes": [
+    "Generated viewpoints may differ in trim/reflections from the supplied car.",
+    "Frames are changed on touch; no autoplay, WebView or 3D renderer is used for image angles."
+  ],
+  "privacy": "Visible plate text removed from all eight views with image editing. Source photo not distributed."
+}
