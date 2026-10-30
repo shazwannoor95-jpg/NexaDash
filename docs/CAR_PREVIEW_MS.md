@@ -1,5 +1,9 @@
 # Preview kereta sendiri dalam NexaDash
 
+![Contoh dashboard dengan panel preview kereta](img/nexadash-dashboard-public.png)
+
+*Contoh reka bentuk versi terdahulu, plat disunting untuk privasi. Untuk pemasangan launcher, mula dengan [panduan head unit](PUBLIC_BETA_MS.md).*
+
 Preview Saga merah yang disertakan menggunakan **8 imej sudut**, bukan model 3D. Pengguna boleh drag untuk tukar sudut, pinch untuk zoom dan double-tap untuk reset. Imej tidak bergerak ketika idle. Untuk preview kereta sendiri, pilih cara yang sesuai:
 
 | Mahu buat apa? | Cara yang ada sekarang | Perlu bina APK? |
