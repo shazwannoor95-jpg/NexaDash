@@ -4,11 +4,11 @@
 
 *Contoh reka bentuk daripada screenshot versi terdahulu yang telah disunting untuk mengosongkan plat. Susunan versi Next semasa mungkin berbeza. Ini menunjukkan dashboard launcher; bukan bukti Maps/Radio native berfungsi.*
 
-NexaDash ialah launcher Android dengan dashboard panel kaca. Versi untuk percubaan komuniti sekarang: **Next 1.2 (`1.2-next3`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
+NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [shazwannoor95-jpg](https://github.com/shazwannoor95-jpg). Versi untuk percubaan komuniti sekarang: **Next 1.2 (`1.2-next3`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
 
 ## Install
 
-[Download NexaDash Next 1.2](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.2.apk).
+[Download NexaDash Next 1.2](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/main/dist/next/NexaDash-Next-1.2.apk).
 
 Android minimum API24 (Android7.0). Native-display experiment memerlukan API26+. Syarat minimum bukan jaminan keserasian firmware OEM. Install APK melalui file manager, buka **NexaDash Next** dari Apps dahulu. Selepas menguji, pengguna boleh memilihnya dalam Android Default launcher jika firmware menyediakan pilihan itu. Ia tidak perlu dijadikan Home untuk dicuba. Kekalkan app launcher asal.
 
@@ -40,6 +40,6 @@ Buka/tutup launcher, tekan Home dan kembali ke launcher asal; uji Apps/Settings 
 
 ## Source dan lesen
 
-[Source branch](https://github.com/shazwannoor95-jpg/klikdash/tree/nexadash-native-panel-experiment) · [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment) · [Lesen projek](../LICENSE) · [Kredit dan lesen komponen](../ATTRIBUTIONS.md).
+[Source branch](https://github.com/shazwannoor95-jpg/klikdash/tree/main) · [Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/main) · [Lesen projek](../LICENSE) · [Kredit dan lesen komponen](../ATTRIBUTIONS.md).
 
 Lesen MIT projek tidak memberikan lesen kepada APK Google Maps/YouTube atau aset pihak ketiga. Eksperimen companion tidak patut dianggap sebahagian daripada pelepasan open-source berlesen MIT; hak pengedaran pihak ketiga perlu disemak sebelum pengedaran awam lanjut. Private signing backup mesti disimpan di luar repo. Source Android Studio menggunakan identiti Lab secara lalai; [build Next](../tools/next/README.md) menghasilkan identiti Next dengan signing key sendiri.

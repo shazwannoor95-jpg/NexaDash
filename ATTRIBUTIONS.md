@@ -1,6 +1,6 @@
 # Kredit dan lesen NexaDash
 
-NexaDash dibangunkan daripada [KlikDash](https://github.com/ashafizullah/klikdash), projek asal oleh **Adam Suchi Hafizullah**. Copyright asal **Copyright (c) 2026 Adam Suchi Hafizullah** dan teks lesen dikekalkan dalam [LICENSE](LICENSE). Pengubahsuaian NexaDash dan dokumentasi dashboard diuruskan melalui [repo NexaDash](https://github.com/shazwannoor95-jpg/klikdash).
+NexaDash dibangunkan daripada [KlikDash](https://github.com/ashafizullah/klikdash), projek asal oleh **Adam Suchi Hafizullah**. Copyright asal **Copyright (c) 2026 Adam Suchi Hafizullah** dan teks lesen dikekalkan dalam [LICENSE](LICENSE). Pengembangan NexaDash, penyesuaian dashboard dan dokumentasi projek diselenggara oleh **[shazwannoor95-jpg](https://github.com/shazwannoor95-jpg)** melalui [repo NexaDash](https://github.com/shazwannoor95-jpg/klikdash).
 
 Nama produk dan panduan pengguna bagi fork ini ialah **NexaDash**. Tutorial, APK, badge prestasi dan status peranti projek asal tidak dianggap bukti untuk build NexaDash. Gunakan panduan pemasangan NexaDash semasa.
 
