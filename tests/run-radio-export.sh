@@ -20,7 +20,7 @@ javac --release 8 -encoding UTF-8 -cp "$JAR:build/next/classes" -d "$OUT/classes
 (cd "$OUT/dex" && zip -q "$OUT/base.apk" classes.dex)
 "$BT/zipalign" -f 4 "$OUT/base.apk" "$OUT/aligned.apk"
 "$BT/apksigner" sign --ks "$NEXADASH_NEXT_KEYSTORE" --ks-key-alias webtest --ks-pass env:NEXADASH_NEXT_KS_PASS --out "$OUT/checks.apk" "$OUT/aligned.apk"
-adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.5.apk}"
+adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.6.apk}"
 adb -s "$DEVICE" install -r "$OUT/checks.apk"
 adb -s "$DEVICE" shell am instrument -w com.shazwan.nexadash.radiochecks/com.shazwan.sagadash.RadioExportChecks | tee "$OUT/result.txt"
 rg -q '^PASS: [1-9][0-9]* Radio export API27 assertions' "$OUT/result.txt"

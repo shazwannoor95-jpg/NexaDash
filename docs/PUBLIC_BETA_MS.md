@@ -4,19 +4,19 @@
 
 *Contoh reka bentuk daripada screenshot versi terdahulu yang telah disunting untuk mengosongkan plat. Susunan versi Next semasa mungkin berbeza. Ini menunjukkan dashboard launcher; bukan bukti Maps/Radio native berfungsi.*
 
-NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [shazwannoor95-jpg](https://github.com/shazwannoor95-jpg). Versi untuk percubaan komuniti sekarang: **Next 1.5 (`1.5-next6`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
+NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [shazwannoor95-jpg](https://github.com/shazwannoor95-jpg). Versi untuk percubaan komuniti sekarang: **Next 1.6 (`1.6-next7`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
 
 ## Install
 
-[Download NexaDash Next 1.5](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.5.apk).
+[Download NexaDash Next 1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk).
 
 Android minimum API24 (Android7.0). Native-display experiment memerlukan API26+. Syarat minimum bukan jaminan keserasian firmware OEM. Install APK melalui file manager, buka **NexaDash Next** dari Apps dahulu. Selepas menguji, pengguna boleh memilihnya dalam Android Default launcher jika firmware menyediakan pilihan itu. Ia tidak perlu dijadikan Home untuk dicuba. Kekalkan app launcher asal.
 
-Next1.5 mengemas kini Next1.0–1.4 dengan package/signing key sama. Ia dipasang berasingan daripada NexaDash lama/Native Lab; data lama tidak dipindahkan. APK GitHub dan build Android Studio dengan signing key sendiri tidak semestinya boleh update antara satu sama lain.
+Next1.6 mengemas kini Next1.0–1.5 dengan package/signing key sama. Ia dipasang berasingan daripada NexaDash lama/Native Lab; data lama tidak dipindahkan. APK GitHub dan build Android Studio dengan signing key sendiri tidak semestinya boleh update antara satu sama lain.
 
 ## Dua panel native
 
-Next1.4 membenarkan dua companion native berbeza tanpa menutup panel sebelah. Host Next1.4 lulus47 assertions dengan dua app ujian pada emulator API27 yang diiklankan secondary-display-capable; Maps/TizenTube ARM dan firmware fizikal belum disahkan. [Panduan, APK companion dan ujian tanpa ADB](DUAL_NATIVE_MS.md). App asal WhatsApp/Spotify tidak menjadi embeddable secara automatik.
+Next1.4 membenarkan dua companion native berbeza tanpa menutup panel sebelah. Host Next1.4 lulus47 assertions dengan dua app ujian pada emulator API27 yang diiklankan secondary-display-capable; Rakaman pemilik kini menunjukkan video TizenTube bergerak dalam panel; fungsi lain belum disahkan. Peta/carian Maps masih kosong dalam panel. [Panduan, APK companion dan ujian tanpa ADB](DUAL_NATIVE_MS.md). App asal WhatsApp/Spotify tidak menjadi embeddable secara automatik.
 
 ## Status ciri
 
@@ -25,7 +25,7 @@ Next1.4 membenarkan dua companion native berbeza tanpa menutup panel sebelah. Ho
 | Dashboard, glass panels, Apps/Settings, susunan ikon | Tersedia; keserasian/performance peranti perlu diuji |
 | Local video / YouTube web | Tersedia; playback dan fullscreen bergantung WebView/peranti/rangkaian |
 | Navigation shortcut | Membuka Maps/Waze sebagai app berasingan |
-| Maps native dalam panel | Eksperimen companion berasingan; rendering, carian, route dan suara pada head unit belum disahkan |
+| Maps native dalam panel | UI app muncul tetapi peta/carian masih kosong dalam ujian pemilik; route/suara belum disahkan |
 | Radio FM native dalam panel | Belum siap; bukan ciri public beta yang berfungsi |
 | Waze / WhatsApp / sebarang app asal dalam panel | Belum disediakan sebagai hosting umum |
 | CPU/RAM check | Ukuran proses launcher sendiri, bukan keseluruhan sistem/companion |
@@ -55,3 +55,7 @@ Pembaca/pemain Quran offline tidak disertakan. Menu dashboard memang tidak menaw
 ## Radio follow-up Next1.5
 
 **Settings → Export Radio files** menyimpan lima binary firmware yang sudah dikenal pasti dan laporan hasil bacaan ke ZIP pilihan pengguna. Update ini membantu mendapatkan kod/library yang tidak dibawa oleh backup APK; ia belum menambah kawalan atau hosting Radio FM. [Panduan export](RADIO_EXPORT_MS.md).
+
+## Radio follow-up Next1.6
+
+Lima fail export pemilik lengkap dan kod dispatcher Radio berjaya dipulihkan. **Settings → Radio runtime paths → Copy report** kini membaca satu property pemilih FM dan metadata tiga driver tanpa membuka driver atau mengawal tuner. Report itu menentukan app FM sebenar yang dipilih firmware dan izin akses yang kelihatan kepada UID launcher. [Penemuan dan langkah berikutnya](RADIO_RUNTIME_FILES_REVIEW.md). Companion/native host, saiz panel dan fungsi Maps tidak berubah dalam update ini.

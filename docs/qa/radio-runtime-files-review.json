@@ -1,0 +1,114 @@
+{
+  "review_date": "2026-10-30",
+  "source": "Owner-provided NexaDash-Radio-files.zip",
+  "zip_bytes": 71388,
+  "zip_sha256": "c74841ae040a79dfd060eb8cee551ebb365937686fa3d773075df07353905add",
+  "zip_crc_passed": true,
+  "all_five_file_sizes_and_hashes_match_export_report": true,
+  "firmware_binary_bytes": 127711,
+  "input_files": [
+    {
+      "path": "files/system/app/GalaRadio_integrate/GalaRadio_integrate.apk",
+      "bytes": 21049,
+      "sha256": "18454efc37917db1981b0e12da7fca99d2b99daecb2122e72daae612c1009eec"
+    },
+    {
+      "path": "files/system/app/GalaRadio_integrate/oat/arm/GalaRadio_integrate.odex",
+      "bytes": 16864,
+      "sha256": "726146ffa0eb4ace2ca28cc1a7484cdcc8bfc30f59f2925dd738c52608544ba7"
+    },
+    {
+      "path": "files/system/app/GalaRadio_integrate/oat/arm/GalaRadio_integrate.vdex",
+      "bytes": 2478,
+      "sha256": "b0ef47263000de64407e7965230e1583f736997af88bcce3a4884d5e02d90893"
+    },
+    {
+      "path": "files/system/lib/libRadioInterface.so",
+      "bytes": 37244,
+      "sha256": "c56737d7e1cac40d49c5a96e4e554ce250df0bd535c88a00909137fd9602bfc6"
+    },
+    {
+      "path": "files/system/lib/libfmjni.so",
+      "bytes": 50076,
+      "sha256": "4795ff9eea41934ea70ad8390413b1cd0ddbecf873f08c59f324fa97b39b064a"
+    }
+  ],
+  "vdex_version": "010",
+  "recovery_tool": {
+    "name": "anestisb/vdexExtractor",
+    "revision": "78f283b60ab6991fa27eeaff7d7be16409401c08",
+    "method": "VDEX unquickening using stored quickening metadata, not checksum-only repair"
+  },
+  "recovered_dex": {
+    "bytes": 2296,
+    "sha256": "35d529558806923d80ad80d4f1bde50dfa6dc8f0416c7c7e6c3c81cbf0be906b",
+    "adler32_valid": true,
+    "sha1_signature_valid": true,
+    "classes": 1,
+    "class": "com.acloud.stub.localradio.QtActivity",
+    "methods": [
+      "<init>",
+      "onCreate",
+      "onDestroy",
+      "onStop"
+    ]
+  },
+  "selector": {
+    "property": "persist.sys.xy.proinfo.exfm",
+    "default_when_unset": "0",
+    "external_condition": "integer > 0 and < 255 and != 43",
+    "external_component": "com.acloud.stub.extradio/com.acloud.stub.extradio.QtActivity",
+    "otherwise_component": "com.android.fmradio/com.android.fmradio.FmMainActivity",
+    "invalid_integer": "Exception path finishes dispatcher; no backend fallback",
+    "launch": "NEW_TASK, category LAUNCHER, then finishAndRemoveTask",
+    "owner_actual_property_value": "not included in supplied ZIP; new read-only runtime report needed"
+  },
+  "native_dependencies": {
+    "libRadioInterface.so": {
+      "elf": "ELF32 ARM",
+      "dt_needed": [
+        "libui.so",
+        "libutils.so",
+        "libcutils.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "device_path_strings": [
+        "/dev/tef6606_i2c",
+        "/dev/keypad"
+      ],
+      "jni_class": "Interface.RadioInterface"
+    },
+    "libfmjni.so": {
+      "elf": "ELF32 ARM",
+      "dt_needed": [
+        "libandroid_runtime.so",
+        "libcutils.so",
+        "libmedia.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "device_path_strings": [
+        "/dev/fm"
+      ],
+      "jni_class_reference": "com/android/fmradio/FmNative"
+    }
+  },
+  "not_established": [
+    "Which selector branch the physical unit currently uses",
+    "Whether a normal-UID companion can link private platform dependencies",
+    "Driver open/ioctl permissions and SELinux behavior",
+    "Radio status/control protocol across processes",
+    "Original Radio native hosting and FM/audio control in panel"
+  ],
+  "raw_owner_binaries_or_media_published": false,
+  "oem_code_executed": false,
+  "driver_opened_or_tuner_commands_sent": false,
+  "radio_native_controller_delivered": false
+}

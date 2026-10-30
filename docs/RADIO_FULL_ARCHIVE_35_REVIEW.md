@@ -2,6 +2,8 @@
 
 > Follow-up30 October: both later `fm.part1/2.rar` volumes extracted successfully. All five APKs are identical to this export, and the App Manager Radio backup's `oat` directory is empty. Next1.5 adds a fixed-path local firmware-file exporter to obtain the omitted binaries. [Results and steps](RADIO_EXPORT_MS.md).
 
+> Later30 October: **the five-file runtime export is complete**. VDEX recovery supplies the missing dispatcher and both tuner libraries are present. The earlier absent-from-APK findings below remain historical; see [the new review](RADIO_RUNTIME_FILES_REVIEW.md) for the current evidence.
+
 Read-only static analysis. No APK or OEM library executed, no head-unit command/broadcast sent, no original modified. This analysis uses only `/workspace/headunit35/extracted`, the new35-part set; the older16-part set was kept separate.
 
 ## Completed scope

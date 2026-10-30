@@ -1,0 +1,32 @@
+{
+  "review_date_local": "2026-10-30",
+  "device": "TEST9278B / alps",
+  "api": 27,
+  "abi": "ARM32",
+  "display": "1024x600 @160dpi",
+  "ram_from_owner_report_mib": 1024,
+  "evidence": "Four owner-supplied head-unit videos reviewed locally; raw videos/frames not published.",
+  "host_exact_version": "Not readable in supplied clips; no exact installed build hash inferred.",
+  "observed": [
+    "TizenTube native video frames advance in left panel while Maps app UI is visible in right panel",
+    "Host startup messages report left companion display3 and right companion display4 in the supplied session",
+    "Maps Explore/Latest in the area UI and bottom navigation render, but content remains blank/placeholder in these clips"
+  ],
+  "owner_reports": [
+    "Maps companion works when opened outside panel, with some stuttering",
+    "Search/destination suggestions do not work in the panel",
+    "Opening a full-screen external app stops both panel sessions",
+    "Maps remains blank inside right panel even when TizenTube is stopped; reported during follow-up."
+  ],
+  "not_established": [
+    "Why Maps map/search content is absent inside the panel",
+    "Whether collapsing the Explore sheet resolves hidden map/search UI",
+    "Maps original installed package standalone behavior; owner has not tested it",
+    "Google Maps routing/voice or location correctness inside panel",
+    "TizenTube search/keyboard, all playback controls/audio focus, long sessions, restart/sleep/wake",
+    "Actual per-companion or total-system peak CPU/RAM, frame pacing or OOM cause"
+  ],
+  "next_host_change": "Next1.6 is a Radio report follow-up only; Maps/TizenTube companions and native host are unchanged. UI sizing experiments are preserved locally as unreleased work because touch/startup checks did not pass. No Maps map/search fix is claimed.",
+  "diagnostic_limits": "Standalone success narrows investigation to panel layout/input/lifecycle or setup state; it does not prove a specific cause. 1GB RAM alone does not prove the stutter is memory pressure.",
+  "external_app_lifecycle": "Host releases both virtual displays/input workers/service bindings when dashboard stops. It does not force-stop app processes/services or guarantee immediate RAM reclamation."
+}

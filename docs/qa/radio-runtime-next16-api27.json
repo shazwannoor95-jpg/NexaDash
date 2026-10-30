@@ -1,0 +1,38 @@
+{
+  "host_version": "1.6-next7",
+  "host_sha256": "64fbe9741c6cfab6fe3a97d53f57ec0883317b3723464ef3b2b9bed2bfa68685",
+  "device": "isolated AOSP API27 x86_64 software emulator",
+  "resolution": "1024x600",
+  "density_dpi": 160,
+  "jvm_file_checks": 30,
+  "jvm_selector_boundary_checks": 18,
+  "android_assertions_passed": 23,
+  "verified": [
+    "Existing five-file exporter JVM checks still pass: bytes/hash, missing/denied/partial read, budgets/cancellation and cleanup",
+    "Recovered selector branch boundaries, negative and overflow/malformed values: no unknown-value backend guess",
+    "Actual API27 framework-property read resolves default0 to com.android.fmradio component",
+    "Normal host UID reported; all three fixed driver metadata paths and no-driver-open limitation included",
+    "Settings action, save-picker request/cancellation, local content-provider ZIP/report and temporary cleanup",
+    "Signed APK API27 verification, ZIP CRC/alignment and no legacy Quran classes/assets",
+    "Android Studio offline debug/release builds; all Android test sources compile"
+  ],
+  "limits": [
+    "No firmware/OEM native library executed or driver opened/read/written/ioctl sent",
+    "No physical head-unit property/driver permission report yet; selector remains unknown for owner unit until new report",
+    "Emulator firmware paths absent; device metadata covers unavailable paths, not live tuner I/O",
+    "Save-picker request intercepted by instrumentation; content-provider ZIP write tested",
+    "Original five-file physical export success established separately by received ZIP and checksum comparison",
+    "Native host and Maps/TizenTube companions unchanged; earlier host integration evidence remains separate",
+    "Maps map/search inside panel unresolved; unreleased UI sizing prototype excluded"
+  ],
+  "gradle": "BUILD SUCCESSFUL; release lint0 errors,4 existing warnings",
+  "all_android_test_sources_compile": true,
+  "raw_owner_binaries_or_media_published": false,
+  "source": [
+    "../../src/com/shazwan/sagadash/DashRadioBackend.java",
+    "../../src/com/shazwan/sagadash/DashRadioRuntime.java",
+    "../../tests/jvm/RadioBackendChecks.java",
+    "../../tests/RadioExportChecks.java",
+    "../../tests/run-radio-export.sh"
+  ]
+}

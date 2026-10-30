@@ -53,6 +53,10 @@ public class RadioExportChecks extends Instrumentation {
         }
         check(report.contains("Files copied: "+binaryFiles+"/5"),"ZIP report agrees with actual binary entries");
         check(report.contains("NEXADASH — RADIO RUNTIME PATHS")&&report.contains("API: 27"),"runtime path report included");
+        check(report.contains("Property: "+DashRadioBackend.PROPERTY)&&report.contains("Selected component: "+DashRadioBackend.INTERNAL),"unset API27 selector reads firmware default and resolves actual FM component");
+        check(report.contains("Host UID: "+getTargetContext().getApplicationInfo().uid),"device access flags identify the current normal host UID");
+        for(String path:new String[]{"/dev/tef6606_i2c","/dev/keypad","/dev/fm"})check(report.contains(path+":"),"fixed driver metadata path included: "+path);
+        check(report.contains("drivers not opened")&&report.contains("do not prove that a different companion UID"),"metadata check distinguished from tested driver access");
         check(report.contains("NOT INCLUDED")&&report.contains("FileNotFoundException"),"unavailable emulator firmware recorded without crashing");
         check(report.contains("does not prove FM control or native panel hosting"),"export not reported as working FM");
         File[] snapshots=getTargetContext().getCacheDir().listFiles((dir,name)->name.startsWith("radio-source-")||name.startsWith("nexadash-radio-"));

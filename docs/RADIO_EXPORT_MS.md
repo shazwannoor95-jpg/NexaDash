@@ -2,7 +2,19 @@
 
 **Next1.5 menambah alat export, bukan player/kawalan Radio FM.** Radio asal masih belum boleh dijanjikan berjalan dalam panel. Tiada arahan tuner, bind servis OEM, root, penggantian app sistem atau upload automatik dibuat oleh alat ini.
 
-## Apa yang ditemui dalam upload FM?
+## ZIP export pemilik sudah diterima — 5/5
+
+**NexaDash-Radio-files.zip lengkap, CRC/SHA256 sepadan dan semua lima fail berjaya disalin pada head unit.** VDEX sudah dipulihkan kepada DEX sah dan dua library ARM32 sudah dianalisis. Radio asal ialah dispatcher kepada dua implementation FM sebenar. [Penemuan lengkap](RADIO_RUNTIME_FILES_REVIEW.md).
+
+Untuk sambungan semakan ini, **tidak perlu export ZIP atau APK sekali lagi**:
+
+1. Update kepada **[NexaDash Next1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** atas Next sedia ada; package/key sama.
+2. Buka **Settings → Radio runtime paths → Copy report**.
+3. Hantar teks report. Ia kini merekod property pemilih FM, komponen yang dipilih firmware, UID app dan metadata/flag akses bagi tiga driver yang dikenal pasti.
+
+Semakan itu tidak membuka driver, menukar frekuensi, menjalankan library OEM atau menulis setting. Property/metadata tidak boleh mengesahkan kawalan hardware atau hosting. Jika property ditolak, backend dilaporkan belum diketahui. Tiada app tambahan atau ADB diperlukan. Companion Maps/TizenTube tidak perlu dipasang semula untuk update laporan ini.
+
+## Apa yang ditemui dalam upload FM terdahulu?
 
 Kedua-dua `fm.part1.rar` dan `fm.part2.rar` lengkap dan lulus extraction/CRC. Lima APK di dalamnya **identik byte demi byte** dengan export35-part terdahulu. Backup App Manager Radio mempunyai APK dan direktori `oat` kosong; fail `.odex/.vdex` tidak berada dalam backup itu. Dua library FM juga tidak disertakan. `am.jar`/`main.jar` ialah alat sokongan App Manager, bukan implementation Radio.
 
@@ -12,7 +24,7 @@ Laporan runtime daripada TEST9278B menunjukkan lokasi APK, dua fail preoptimized
 
 ## Langkah pada head unit
 
-1. Install **[NexaDash Next1.5](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.5.apk)** atas Next1.4. Package dan key sama; tidak perlu uninstall atau pasang semula companion Maps/TizenTube.
+1. Install **[NexaDash Next1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** atas Next sedia ada. Package dan key sama; tidak perlu uninstall atau pasang semula companion Maps/TizenTube.
 2. Buka **Settings → Export Radio files**.
 3. Dalam pemilih simpan Android, pilih folder **Download** pada storan tempatan dan tekan **Save**. Nama fail: **`NexaDash-Radio-files.zip`**.
 4. Tunggu mesej **Radio files saved**. Ia menunjukkan berapa daripada lima fail berjaya disalin.
@@ -38,8 +50,8 @@ Had bacaan64MiB setiap fail dan128MiB keseluruhan. Fail besar/ditolak akses dire
 
 ## Selepas fail diterima
 
-Analisis seterusnya ialah memulihkan kod Radio daripada ODEX/VDEX jika formatnya disokong, mengenal pasti API/dependency JNI dan keperluan identity/permission sebenar. Hanya selepas itu boleh ditentukan sama ada sesuai membuat companion UI asal atau controller FM dalam panel. **Lima fail lengkap sekalipun belum menjamin app biasa mendapat akses hardware.**
+Bagi ZIP pemilik, recovery VDEX dan analisis dependency JNI telah selesai. Semakan seterusnya mengenal pasti cabang FM sebenar pada peranti dan akses yang kelihatan kepada UID app biasa. Companion/controller Radio belum dibina atau disahkan. **Lima fail lengkap sekalipun belum menjamin app biasa mendapat akses hardware.**
 
 ## Semakan update
 
-Semakan JVM menguji allowlist, integriti byte/SHA256, fail hilang/ditolak akses, bacaan separuh, had saiz, pembatalan dan cleanup. Semakan Android API27 menguji tile Settings, handoff pemilih simpan dan penulisan ZIP ke content provider. Tiada library OEM atau perkakasan FM dijalankan dalam ujian ini. [Rekod QA](qa/radio-export-api27.json).
+Semakan JVM menguji allowlist, integriti byte/SHA256, fail hilang/ditolak akses, bacaan separuh, had saiz, pembatalan dan cleanup. Semakan Android API27 menguji tile Settings, handoff pemilih simpan dan penulisan ZIP ke content provider. Tiada library OEM atau perkakasan FM dijalankan dalam ujian ini. [Rekod QA exporter1.5](qa/radio-export-api27.json) · [Laporan tambahan Next1.6](qa/radio-runtime-next16-api27.json).
