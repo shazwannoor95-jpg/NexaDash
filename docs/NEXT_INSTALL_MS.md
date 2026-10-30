@@ -1,9 +1,11 @@
+> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use only the sanitised Next1.2 build. Old feature/build instructions below may refer to withdrawn media.
+
 # NexaDash Next + Maps companion — install/status
 
 ## APKs
 
 1. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install **first**.
-2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.1.apk) — install after the companion, then open from Apps.
+2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.2.apk) — install after the companion, then open from Apps.
 
 Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.next`. Both use the same new signing key and a dedicated signature permission, different from old Native Lab. The original Google Maps and old NexaDash are not replaced or uninstalled; their data remains. Next starts with its own settings.
 

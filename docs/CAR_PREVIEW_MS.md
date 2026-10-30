@@ -43,7 +43,7 @@ Sediakan **lapan fail PNG berasingan dengan background transparent**. Bahagian t
 
 Contoh susunan asal: baca baris atas dari kiri ke kanan, kemudian baris bawah. Ia **bukan** grid dengan petak yang semuanya sama besar.
 
-![Contoh atlas 8 sudut Saga, baris atas01–04 dan bawah05–08](../res/drawable-nodpi/saga_angles.png)
+[Contoh atlas dengan plat kosong](../res/drawable-nodpi/saga_angles.png)
 
 ### Contoh prompt untuk sediakan gambar
 

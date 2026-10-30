@@ -512,12 +512,11 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     void vehicleDialog(){
         String[] modes=SagaShowroom.hasImportedVideo(this)
-            ?new String[]{"Saga image angles (lightweight)","Transparent Saga video","Choose car video…","Imported video preview"}
-            :new String[]{"Saga image angles (lightweight)","Transparent Saga video","Choose car video…"};
+            ?new String[]{"Car image angles (lightweight)","Choose car video…","Imported video preview"}
+            :new String[]{"Car image angles (lightweight)","Choose car video…"};
         new AlertDialog.Builder(this).setTitle("Vehicle view").setItems(modes,(d,index)->{
             if(index==0)setVehicleVideo(false);
-            else if(index==1)selectVehicleVideo("transparent");
-            else if(index==2){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
+            else if(index==1){try{startActivityForResult(SagaShowroom.pickIntent(),SagaShowroom.PICK_CAR_VIDEO);}catch(ActivityNotFoundException|SecurityException e){toast("No file picker is available on this device");}}
             else selectVehicleVideo("imported");
         }).setNegativeButton("Close",null).show();
     }

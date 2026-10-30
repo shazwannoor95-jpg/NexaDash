@@ -1,10 +1,12 @@
+> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use only the sanitised Next1.2 build. Old feature/build instructions below may refer to withdrawn media.
+
 # NexaDash Next — public beta
 
 NexaDash ialah launcher Android yang dibangunkan daripada KlikDash. Versi untuk percubaan komuniti sekarang: **Next 1.1 (`1.1-next2`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
 
 ## Install
 
-[Download NexaDash Next 1.1](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.1.apk).
+[Download NexaDash Next 1.1](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/next/NexaDash-Next-1.2.apk).
 
 Android minimum API24 (Android7.0). Native-display experiment memerlukan API26+. Syarat minimum bukan jaminan keserasian firmware OEM. Install APK melalui file manager, buka **NexaDash Next** dari Apps dahulu. Selepas menguji, pengguna boleh memilihnya dalam Android Default launcher jika firmware menyediakan pilihan itu. Ia tidak perlu dijadikan Home untuk dicuba. Kekalkan app launcher asal.
 
