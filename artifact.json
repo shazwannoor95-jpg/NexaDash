@@ -1,0 +1,22 @@
+{
+  "file": "TizenTube-NexaDash-Next-arm32.apk",
+  "application_id": "com.shazwan.nexadash.tizentube.next",
+  "label": "TizenTube \u00b7 NexaDash Next",
+  "version_name": "2.0.3-next1",
+  "version_code": 204,
+  "min_sdk": 24,
+  "host_native_min_sdk": 26,
+  "target_sdk": 36,
+  "abi": "armeabi-v7a",
+  "size_bytes": 80690527,
+  "sha256": "48260595ac9b87c2699d5f90435789dbe16a876e498cff8f891e7f693257b1f5",
+  "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
+  "source_export_sha256": "097530c5403f1ebba0db24e2cfcc4b3b33d3ca55ea0724364ed57e976185ba40",
+  "dex_preserved_byte_for_byte": 4,
+  "native_libraries_preserved_byte_for_byte": 2,
+  "main_launch_mode": "standard",
+  "allow_embedded": true,
+  "bridge_permission": "com.shazwan.nexadash.next.permission.CONTROL",
+  "validation": "API27 v2 signature, alignment, CRC and DEX/native payload preservation pass. No ARM/head-unit rendering/playback runtime test. Host dual-native test Apps A/B are not TizenTube certification.",
+  "source": "https://github.com/shazwannoor95-jpg/NexaDash/tree/main/tools/tizentube-next"
+}
