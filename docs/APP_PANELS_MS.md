@@ -1,5 +1,7 @@
 # App asal dalam panel — semak head unit dahulu
 
+> Nota versi semasa: gunakan [NexaDash Next](NEXT_INSTALL_MS.md). [Radio FM dalam panel](RADIO_PANEL_MS.md) tersedia sebagai client servis firmware dalam Next1.8; bunyi sebenar belum disahkan. Arahan versi lama di bawah ialah rekod terdahulu.
+
 Versi **1.6.7-sagadash.4 (version code 28)** menambah **App panel compatibility** untuk menyemak
 kemampuan sebenar head unit. Ia **belum menambah paparan app asal dalam panel**. YouTube, TizenTube
 dan Radio pada panel sekarang masih menunjukkan metadata/kawalan daripada app asal apabila tersedia;

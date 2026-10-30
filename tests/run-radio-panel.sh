@@ -29,8 +29,20 @@ mapfile -d '' CLASSES < <(find "$OUT/classes" -name '*.class' -print0)
 (cd "$OUT/dex" && zip -q "$OUT/base.apk" classes.dex)
 "$BT/zipalign" -f 4 "$OUT/base.apk" "$OUT/aligned.apk"
 "$BT/apksigner" sign --ks "$NEXADASH_NEXT_KEYSTORE" --ks-key-alias webtest --ks-pass env:NEXADASH_NEXT_KS_PASS --out "$OUT/checks.apk" "$OUT/aligned.apk"
-cleanup(){ adb -s "$DEVICE" uninstall com.android.fmradio >/dev/null 2>&1 || true; adb -s "$DEVICE" uninstall com.acloud.stub.extradio >/dev/null 2>&1 || true; }
+# Avoid firing touches into a closing dialog's animation on a software-emulated CPU.
+ANIMATION_KEYS=(window_animation_scale transition_animation_scale animator_duration_scale)
+ANIMATION_BEFORE=()
+for KEY in "${ANIMATION_KEYS[@]}";do ANIMATION_BEFORE+=("$(adb -s "$DEVICE" shell settings get global "$KEY" | tr -d '\r')");done
+cleanup(){
+ adb -s "$DEVICE" uninstall com.android.fmradio >/dev/null 2>&1 || true
+ adb -s "$DEVICE" uninstall com.acloud.stub.extradio >/dev/null 2>&1 || true
+ for INDEX in "${!ANIMATION_KEYS[@]}";do
+  if [[ "${ANIMATION_BEFORE[$INDEX]}" == null ]];then adb -s "$DEVICE" shell settings delete global "${ANIMATION_KEYS[$INDEX]}" >/dev/null 2>&1 || true
+  else adb -s "$DEVICE" shell settings put global "${ANIMATION_KEYS[$INDEX]}" "${ANIMATION_BEFORE[$INDEX]}" >/dev/null 2>&1 || true;fi
+ done
+}
 trap cleanup EXIT
+for KEY in "${ANIMATION_KEYS[@]}";do adb -s "$DEVICE" shell settings put global "$KEY" 0;done
 adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.8.apk}"
 adb -s "$DEVICE" install -r build/radio-fixtures/internal.apk
 adb -s "$DEVICE" install -r build/radio-fixtures/external.apk

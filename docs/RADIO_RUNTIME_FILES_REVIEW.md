@@ -1,6 +1,6 @@
 # Radio FM — hasil export runtime 30 Oktober 2026
 
-**Lima fail lengkap. Kod dispatcher Radio dan dua library tuner yang hilang daripada export APK dahulu kini sudah diterima dan dianalisis. Radio dalam panel belum berfungsi/disahkan.** Tiada keperluan mengulang APK Extractor atau ZIP export untuk fail-fail ini.
+**Lima fail lengkap. Kod dispatcher Radio dan dua library tuner yang hilang daripada export APK dahulu kini sudah diterima dan dianalisis. Kawalan native Radio dalam panel kini tersedia dalam Next1.8; bunyi/tuner fizikal belum disahkan.** Tiada keperluan mengulang APK Extractor atau ZIP export untuk fail-fail ini.
 
 ## Apa yang berjaya dipulihkan?
 
@@ -15,6 +15,8 @@ ZIP `NexaDash-Radio-files.zip` berukuran71,388 bytes, lulus CRC dan padanan SHA2
 | `libfmjni.so` |50,076|ELF32 ARM; MediaTek/FM JNI termasuk `com/android/fmradio/FmNative` |
 
 VDEX dipulihkan dengan [vdexExtractor](https://github.com/anestisb/vdexExtractor), revision yang direkod dalam QA. Ia bukan sekadar menukar checksum pada bytecode quickened. DEX asal dan semua input dikekalkan setempat; tiada kod OEM dijalankan.
+
+> **Susulan Next1.8:** [UI Radio FM dalam panel](RADIO_PANEL_MS.md) sudah dibina melalui servis asal, tanpa memuat library OEM dalam NexaDash. Bahagian semakan1.6 di bawah ialah rekod langkah terdahulu; pengesahan bunyi FM sebenar masih menunggu ujian pemilik.
 
 ## Ikon Radio asal sebenarnya pembuka dua app
 
@@ -34,11 +36,11 @@ Ia memanggil `startActivity` dengan `FLAG_ACTIVITY_NEW_TASK` dan kategori LAUNCH
 
 `libfmjni.so` mempunyai `/dev/fm` dan FM JNI; `DT_NEEDED` termasuk `libandroid_runtime`, `libcutils`, `libmedia`, `liblog`, `libc++`, `libc`, `libm` dan `libdl`. Path dalam string bukan bukti driver itu wujud atau digunakan oleh cabang aktif.
 
-Sebahagian dependency ialah library platform persendirian. Ketersediaan namespace linker, identity sistem asal, permission driver/SELinux dan laluan audio belum diuji daripada app biasa. Salin library sahaja tidak memberikan izin tersebut. Servis Radio/FM yang dianalisis dahulu masih menggunakan local Binder; ia belum menjadi protokol kawalan rentas proses yang boleh terus digunakan NexaDash. [Semakan APK35-part](RADIO_FULL_ARCHIVE_35_REVIEW.md).
+Sebahagian dependency ialah library platform persendirian. Ketersediaan namespace linker, identity sistem asal, permission driver/SELinux dan laluan audio belum diuji daripada app biasa. Salin library sahaja tidak memberikan izin tersebut. Binder yang disemak dahulu masih local-only. Semakan lanjut menemui laluan berasingan melalui Intent `onStartCommand`; client Next1.8 menggunakan laluan itu, bukan cast kepada Binder tempatan. [Protokol servis](RADIO_SERVICE_PROTOCOL.md). [Semakan APK35-part](RADIO_FULL_ARCHIVE_35_REVIEW.md).
 
 ## Langkah pemilik sekarang — tanpa ADB
 
-1. Install **[NexaDash Next1.7](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk)** atas Next sedia ada. Package/key sama; tidak perlu uninstall atau reinstall Maps/TizenTube.
+1. Install **[NexaDash Next1.8](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk)** atas Next sedia ada. Package/key sama; tidak perlu uninstall atau reinstall Maps/TizenTube.
 2. Buka **Settings → Radio runtime paths → Copy report**.
 3. Hantar teks report. Bahagian baharu menunjukkan nilai selector/komponen terpilih, UID launcher/app Radio, serta mode/UID/GID dan flag read/write bagi tiga path driver tetap.
 

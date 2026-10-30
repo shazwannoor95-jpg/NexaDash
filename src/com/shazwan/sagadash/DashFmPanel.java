@@ -56,9 +56,12 @@ final class DashFmPanel extends LinearLayout {
         for(int i=0;i<presets.length;i++){int value=preset(i);presets[i].setText(DashFmBand.valid(value)?DashFmBand.text(value):"P"+(i+1)+" +");}
     }
     private void show(AlertDialog shown){
-        if(dialog!=null)dialog.dismiss();dialog=shown;shown.setOnDismissListener(d->{if(dialog==shown)dialog=null;});shown.show();
+        show(shown,()->{});
     }
-    private void chooseSource(){
+    private void show(AlertDialog shown,Runnable dismissed){
+        if(dialog!=null)dialog.dismiss();dialog=shown;shown.setOnDismissListener(d->{if(dialog==shown)dialog=null;dismissed.run();});shown.show();
+    }
+    void chooseSource(){
         String[] modes={"auto","internal","external"};String[] names={"Auto · use head-unit FM selection","Built-in FM · MediaTek","External FM · GalaRadio"};
         int selected="internal".equals(controller.sourceMode)?1:"external".equals(controller.sourceMode)?2:0;
         show(new AlertDialog.Builder(owner).setTitle("FM source").setSingleChoiceItems(names,selected,(d,index)->{controller.source(modes[index]);d.dismiss();}).setNegativeButton("Cancel",null).create());
@@ -66,8 +69,11 @@ final class DashFmPanel extends LinearLayout {
     private void editFrequency(){
         EditText input=new EditText(owner);input.setSingleLine(true);input.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);input.setText(DashFmBand.text(controller.frequency));input.selectAll();
         input.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(8)});
-        AlertDialog editor=new AlertDialog.Builder(owner).setTitle("FM frequency · MHz").setView(input).setPositiveButton("Tune",null).setNegativeButton("Cancel",null).create();
-        show(editor);editor.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{controller.frequency(DashFmBand.parse(input.getText().toString()));editor.dismiss();}catch(IllegalArgumentException invalid){input.setError(invalid.getMessage());}});
+        LinearLayout body=new LinearLayout(owner);body.setOrientation(VERTICAL);body.setPadding(p(16),p(4),p(16),p(4));body.addView(input,new LayoutParams(-1,-2));
+        TextView error=new TextView(owner);error.setTextSize(14);error.setTextColor(0xffffb4ab);error.setMaxLines(2);error.setTag("fm-frequency-error");error.setVisibility(GONE);body.addView(error,new LayoutParams(-1,-2));
+        Runnable clearInput=()->{error.setText("");error.setVisibility(GONE);android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)owner.getSystemService(Context.INPUT_METHOD_SERVICE);if(keyboard!=null&&input.getWindowToken()!=null)keyboard.hideSoftInputFromWindow(input.getWindowToken(),0);input.clearFocus();};
+        AlertDialog editor=new AlertDialog.Builder(owner).setTitle("FM frequency · MHz").setView(body).setPositiveButton("Tune",null).setNegativeButton("Cancel",(d,w)->clearInput.run()).create();
+        show(editor,clearInput);editor.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int khz=DashFmBand.parse(input.getText().toString());clearInput.run();controller.frequency(khz);editor.dismiss();}catch(IllegalArgumentException invalid){error.setText(invalid.getMessage());error.setVisibility(VISIBLE);}});
     }
     private void chooseStation(){
         int[] values=controller.stations.clone();if(values.length==0)return;String[] names=new String[values.length];for(int i=0;i<values.length;i++)names[i]=DashFmBand.text(values[i])+" MHz";

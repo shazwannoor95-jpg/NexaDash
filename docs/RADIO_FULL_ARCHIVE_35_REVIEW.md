@@ -1,5 +1,7 @@
 # Radio follow-up: full35-part export (29 October2026)
 
+> **Superseding Next1.8 follow-up:** the local-Binder limitation below remains true, but a later review recovered separate explicit Intent entry points in `onStartCommand`. The new [native FM client](RADIO_PANEL_MS.md) uses those services without loading OEM libraries into NexaDash. [Protocol details](RADIO_SERVICE_PROTOCOL.md). Real head-unit tuner/audio remains unverified.
+
 > Follow-up30 October: both later `fm.part1/2.rar` volumes extracted successfully. All five APKs are identical to this export, and the App Manager Radio backup's `oat` directory is empty. Next1.5 adds a fixed-path local firmware-file exporter to obtain the omitted binaries. [Results and steps](RADIO_EXPORT_MS.md).
 
 > Later30 October: **the five-file runtime export is complete**. VDEX recovery supplies the missing dispatcher and both tuner libraries are present. The earlier absent-from-APK findings below remain historical; see [the new review](RADIO_RUNTIME_FILES_REVIEW.md) for the current evidence.

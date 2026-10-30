@@ -1,4 +1,4 @@
-> **Semasa: Next1.7.** [Export fail Radio](RADIO_EXPORT_MS.md). Untuk dua native panel dan TizenTube companion, ikut [panduan dual native](DUAL_NATIVE_MS.md). Nota lama tentang satu inline player di bawah digantikan oleh polisi: dua companion native berbeza dibenarkan; web/file kekal eksklusif.
+> **Semasa: Next1.8.** [Export fail Radio](RADIO_EXPORT_MS.md). Untuk dua native panel dan TizenTube companion, ikut [panduan dual native](DUAL_NATIVE_MS.md). Nota lama tentang satu inline player di bawah digantikan oleh polisi: dua companion native berbeza dibenarkan; web/file kekal eksklusif.
 
 > Privacy update: old screenshots, video exports and APK downloads withdrawn. Next1.7 restores the original visible vehicle plate at the owner's request; use the current build. Old feature/build instructions below may refer to withdrawn media.
 
@@ -6,7 +6,7 @@
 
 ## APKs
 
-1. [NexaDash Next1.7 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk) — install **first**, then open from Apps.
+1. [NexaDash Next1.8 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk) — install **first**, then open from Apps.
 2. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install the matching companion if not already installed.
 
 Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.next`. Both use the same new signing key and a dedicated signature permission, different from old Native Lab. The original Google Maps and old NexaDash are not replaced or uninstalled; their data remains. Next starts with its own settings.
@@ -38,21 +38,19 @@ This companion contains the actual Maps25.32 base/ARM32/en/mdpi payload merged i
 
 After a failed Start, Settings → App panel compatibility → Copy report includes requested/proxy/reported display and last startup stage. A matched startup display is not proof of working search/navigation. Send screenshots of the actual error or blank panel and the report.
 
-## Radio: not delivered as a working native FM player
+## Radio FM in the panel — Next1.8
 
-The later **NexaDash-Radio-files.zip** contains all five expected firmware binaries. The VDEX has now been dequickened successfully: the original Radio icon is a dispatcher selecting either the external Radio Activity or Android FM Activity using one firmware property. The missing tuner libraries are also present in this new export. These findings supersede the earlier APK-only missing-code/library status. [Static review and checksums](RADIO_RUNTIME_FILES_REVIEW.md).
+Next1.8 provides a native NexaDash FM interface with Start/Stop, frequency entry, ±0.1MHz tuning and six presets. It sends explicit commands to the existing exported OEM Radio services; the original system apps keep their tuner/audio identity. The original Radio Activity is not embedded. No additional Radio companion, ADB or root is required by this client.
 
-**Next1.6 → Settings → Radio runtime paths → Copy report** adds the exact FM selector property, the component selected by the recovered branch, app/host UIDs, and metadata/access flags for three fixed driver paths. It does not launch Radio, open/read/write a driver, send ioctl/broadcast commands, bind an OEM service or load OEM code. An unknown property read stays unresolved; no backend is guessed.
+Install the host update, select **Radio** on the dock, keep **Auto**, then press **Start FM** and use **Tune**. Only the recovered internal FM3.1 and external Radio2.3.24 service contracts are supported. Manual source selection is available. [User guide and physical-test limits](RADIO_PANEL_MS.md) · [Recovered service protocol](RADIO_SERVICE_PROTOCOL.md).
 
-Next1.5's **Export Radio files** remains available; the owner's five-file export succeeded. **No need to repeat that export** for this investigation. [Guide and current next step](RADIO_EXPORT_MS.md).
-
-Radio hosting/control is still not delivered. The selected real FM app, system identity/native-library namespace and hardware access need to be established. Readable firmware files and access flags alone do not prove a normal app can control the tuner.
+Emulator checks use separate-UID firmware doubles. They establish native UI and command/lifecycle behavior, not real RF tuning, hardware audio or compatibility with every head unit. Those results still need an owner test on TEST9278B. The complete five-file export was received; it does not need to be repeated. [Earlier runtime analysis](RADIO_RUNTIME_FILES_REVIEW.md).
 
 ## Performance and validation
 
 Settings → Performance check provides the existing opt-in own-process30s sample. It excludes Maps/WebView companion processes; it is not a total memory/CPU measurement for the whole system. See [measurement guide](PREVIEW_PERFORMANCE_MS.md).
 
-Next resources/Java/DEX, signature/alignment/CRC, unique identity/HOME filter/task/control permission checks, Gradle compile and test-source compilation passed. Maps companion validation includes split/shared-UID cleanup, provider namespace, matching certificate, all original DEX/native libraries and resource IDs (only obsolete xml/splits0 removed). Rebuild from pinned APKEditor source succeeded. No head-unit or full runtime pass is claimed. Radio hardware control is explicitly not implemented.
+Next resources/Java/DEX, signature/alignment/CRC, unique identity/HOME filter/task/control permission checks, Gradle compile and test-source compilation passed. Maps companion validation includes split/shared-UID cleanup, provider namespace, matching certificate, all original DEX/native libraries and resource IDs (only obsolete xml/splits0 removed). Rebuild from pinned APKEditor source succeeded. No head-unit or full runtime pass is claimed. The Radio client is implemented in Next1.8; physical tuner/audio operation remains unverified.
 
 ## Next 1.1 update
 

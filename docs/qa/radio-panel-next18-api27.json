@@ -1,0 +1,60 @@
+{
+  "host_version": "1.8-next9",
+  "source_version": "1.6.7-nexadash.8-native19",
+  "source_version_code": 51,
+  "host_sha256": "c4cc1c79a10546112f8d11f132412a744a5f972621d3c5a2b81fac601c1033ad",
+  "date": "2026-10-31",
+  "device": "Disposable AOSP API27 x86_64 software emulator; no physical FM hardware",
+  "resolution": "1024x600",
+  "density_dpi": 160,
+  "android_assertions_passed": 133,
+  "android_result": "PASS: 133 Radio panel API27 assertions (native UI, two real service UIDs, units, presets, stop/lifecycle; firmware doubles, not FM hardware)",
+  "fm_band_jvm_assertions_passed": 25,
+  "real_firmware_executed": false,
+  "head_unit_fm_audio_verified": false,
+  "original_radio_activity_embedded": false,
+  "radio_companion_shipped": false,
+  "verified": [
+    "Native right-panel UI selected through Radio dock; opposite panel preserved",
+    "Host and both firmware doubles use distinct normal application UIDs",
+    "Internal flag0 initialization precedes flag1 MHz-float tune; partial callbacks ignored",
+    "Explicit frequency validation, valid Tune and 0.1MHz steps",
+    "Saved preset recall and six-preset row within the actual panel",
+    "Stop uses flag2; late callbacks and Stop-during-init cannot retune",
+    "External method_open then method_setFreq uses integer kHz",
+    "Compact panel retains readable frequency and power controls without tuner commands",
+    "Repeated Radio dock selection preserves active UI and sends no stop/retune",
+    "Leaving to actual Android Settings sends close; actual Back returns without auto-start",
+    "Disabled service reports error; no original OEM Activity launch",
+    "Only one FM panel may own a requested tuner session"
+  ],
+  "test_input_limits": [
+    "Core controls use actual Android input routing and test listeners confirm Down/Up delivery",
+    "Frequency text is set programmatically; full physical keyboard workflow not automated",
+    "Source list selection and preset hold are invoked through native view methods",
+    "Emulator window/transition/animator scales temporarily disabled and restored; keyboard window must close before the next dashboard control",
+    "A narrowly matched startup System UI ANR may be dismissed by preflight; NexaDash ANRs are not dismissed"
+  ],
+  "limits": [
+    "Firmware doubles record IPC and synthesize protocol replies; no driver, JNI tuner or audio implementation is executed",
+    "No TEST9278B RF reception, frequency changes, audio route, audio focus or long-session certification",
+    "OEM synchronous factory initialization may delay queued Stop; no immediate process/RAM reclamation guarantee",
+    "Station initialization can be empty/partial; no full-band auto-seek or RDS feature claim",
+    "Selecting the other native panel is tested; live Maps/TizenTube concurrency is not newly verified",
+    "Maps blank-panel issue remains unresolved"
+  ],
+  "gradle": "Offline Android Studio debug/release passed; lint0 errors,4 existing warnings",
+  "all_android_test_sources_compile": true,
+  "api27_signature_alignment_crc_passed": true,
+  "vehicle_resources_match_next17": true,
+  "raw_firmware_apks_or_runtime_zip_published": false,
+  "source": [
+    "../../src/com/shazwan/sagadash/DashFmPanel.java",
+    "../../src/com/shazwan/sagadash/DashFmController.java",
+    "../../tests/RadioPanelChecks.java",
+    "../../tests/jvm/FmBandChecks.java",
+    "../../tests/run-radio-panel.sh",
+    "../../tools/radio-fixture/README.md"
+  ],
+  "radio_export_regression_result": "PASS: 23 Radio export API27 assertions (settings, save-picker handoff, local ZIP and read failures; not FM control)"
+}

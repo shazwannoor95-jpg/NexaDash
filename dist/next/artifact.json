@@ -1,20 +1,20 @@
 {
-  "file": "NexaDash-Next-1.7.apk",
+  "file": "NexaDash-Next-1.8.apk",
   "label": "NexaDash Next",
   "application_id": "com.shazwan.nexadash.next",
-  "version_name": "1.7-next8",
-  "version_code": 8,
-  "source_version": "1.6.7-nexadash.8-native18",
+  "version_name": "1.8-next9",
+  "version_code": 9,
+  "source_version": "1.6.7-nexadash.8-native19",
   "min_sdk": 24,
   "target_sdk": 29,
-  "size_bytes": 3050310,
-  "sha256": "1542cde29ef689b6b32281f2e06c54e28ec13f80091a1e571a340b4b7d69f379",
+  "size_bytes": 3058502,
+  "sha256": "c4cc1c79a10546112f8d11f132412a744a5f972621d3c5a2b81fac601c1033ad",
   "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
   "home_candidate": true,
   "old_launcher_replaced_or_data_migrated": false,
   "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
-  "validation": "Original eight-view atlas restored byte-for-byte from previous preview build; exact packaged RGBA pixel match, transparency/dimensions and all eight frame bounds checked. Signed APK API27 verification, CRC/alignment, no-Quran guard and Android Studio debug/release builds passed. No new emulator/head-unit runtime test for this asset-only update. Earlier Radio1.6 and native1.4 checks remain separate.",
-  "radio_native_controller_delivered": false,
+  "validation": "PASS133 Radio native UI/IPC assertions on API27 emulator with two separate-UID firmware doubles; PASS25 frequency/unit JVM checks. Signed API27 APK verification, alignment/CRC, no-Quran build guard, Android Studio debug/release (lint0 errors,4 existing warnings) and all Android test-source compilation passed. Vehicle resources unchanged from Next1.7. No real tuner/audio or ARM/head-unit certification. Existing Radio report/export regression PASS23.",
+  "radio_native_controller_delivered": true,
   "radio_runtime_probe": "One fixed FM selector property, host/app UIDs, fixed device stat/access metadata and existing source/native-library/OAT/shared-library/bootclasspath paths; no driver open or tuner commands",
   "maps_panel_status": "Owner reports Maps companion works outside panel but map/search content stays blank inside, including when Maps alone is active. Routes/voice in panel remain unverified; this update does not fix Maps.",
   "fixes": [
@@ -33,16 +33,18 @@
     "QuranNotch"
   ],
   "release_changes": [
-    "Restore original plated eight-view red Saga atlas at the owner's explicit request",
-    "Preserve 1774x887 RGBA atlas, eight angle ordering and existing sampled bitmap budget",
-    "Use Red Proton Saga accessibility description and update source/build documentation",
-    "Radio diagnostics, Maps/TizenTube companions and native host are unchanged"
+    "Native in-panel FM UI controls the installed OEM Radio service without opening its Activity",
+    "Use recovered explicit service Intent contracts with distinct internal MHz/external kHz units",
+    "Wait for internal complete initialization reply before tuning; ignore partial and late replies",
+    "Preserve active FM on repeated Radio dock tap; source picker on long press",
+    "Stop owned FM request and release receiver/timer when leaving or replacing the panel",
+    "Retain original vehicle preview, native host and Maps/TizenTube companions"
   ],
   "active_native_panel_limit": 2,
   "active_web_or_file_panel_limit": 1,
   "mixed_native_web_file_concurrency": false,
   "same_native_package_in_two_panels": false,
-  "native_test_runtime": "Earlier Next1.4 PASS47 on API27 x86_64 software emulator with secondary-display feature enabled to match head-unit capability. Native implementation unchanged in1.7; no new dual-native runtime claim. Unreleased sizing work remains excluded. Not Maps/TizenTube/ARM certification.",
+  "native_test_runtime": "Earlier Next1.4 PASS47 on API27 software emulator. Native host implementation unchanged in1.8; no new live dual-native or Maps/TizenTube/ARM certification. Unreleased Maps sizing work remains excluded.",
   "tizentube_panel_status": "Owner videos show TizenTube native video advancing in left panel while Maps UI is visible in right. All controls, search/keyboard, audio focus and long-session stability are not established.",
   "control_permission_owner": "Next host declares its own signature permission; install host first for new deployments.",
   "radio_file_export": {
@@ -71,5 +73,29 @@
     "image_generation_or_plate_repainting_for_restoration": false,
     "sampled_argb_bytes_upper_bound": 1575312,
     "retained_atlas_limit_bytes": 2097152
-  }
+  },
+  "source_version_code": 51,
+  "radio_hardware_verified": false,
+  "radio_original_activity_embedded": false,
+  "radio_companion_required": false,
+  "radio_panel": {
+    "interface": "Native NexaDash widgets scaled to either panel",
+    "active_panel_limit": 1,
+    "services": {
+      "internal": "com.android.fmradio/com.android.fmradio.FmtestService; version3.1",
+      "external": "com.acloud.stub.extradio/com.radio.service.RadioService; version2.3.24"
+    },
+    "operations": [
+      "Explicit Start/Stop",
+      "87.50-108.00MHz bounded frequency entry",
+      "0.1MHz steps",
+      "Six local presets",
+      "Validated initialization-result station list"
+    ],
+    "auto_start_on_select_or_resume": false,
+    "physical_audio_test": "Pending TEST9278B owner test",
+    "verification_guide": "docs/RADIO_PANEL_MS.md",
+    "protocol": "docs/RADIO_SERVICE_PROTOCOL.md"
+  },
+  "radio_qa": "docs/qa/radio-panel-next18-api27.json"
 }

@@ -11,7 +11,7 @@ public class Events extends ContentProvider {
         if("reset".equals(method))getContext().getSharedPreferences(FixtureService.EVENTS,0).edit().putString("rows","[]").putString("mode",value==null?"normal":value).commit();
         else if("disable".equals(method)||"enable".equals(method)){
             String name=getContext().getPackageName().equals("com.android.fmradio")?"com.android.fmradio.FmtestService":"com.radio.service.RadioService";
-            getContext().getPackageManager().setComponentEnabledSetting(new ComponentName(getContext(),name),"disable".equals(method)?android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED:android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,android.content.pm.PackageManager.DONT_KILL_APP);
+            long identity=Binder.clearCallingIdentity();try{getContext().getPackageManager().setComponentEnabledSetting(new ComponentName(getContext(),name),"disable".equals(method)?android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED:android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,android.content.pm.PackageManager.DONT_KILL_APP);}finally{Binder.restoreCallingIdentity(identity);}
         }else throw new IllegalArgumentException("Unknown fixture operation");return new Bundle();
     }
     public Uri insert(Uri uri,ContentValues values){throw new UnsupportedOperationException();}

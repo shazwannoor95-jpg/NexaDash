@@ -1,5 +1,7 @@
 # Buka source NexaDash terkini dalam Android Studio — Windows
 
+> Nota versi semasa: gunakan [NexaDash Next](NEXT_INSTALL_MS.md). [Radio FM dalam panel](RADIO_PANEL_MS.md) tersedia sebagai client servis firmware dalam Next1.8; bunyi sebenar belum disahkan. Arahan versi lama di bawah ialah rekod terdahulu.
+
 Panduan ini untuk **1.6.7-nexadash.8 / version code 32**. Versi .6 menambah grid ikon
 **Dashboard settings**, mengekalkan grid ikon **Apps**, dan memaparkan versi pada footer/menu
 serta **About NexaDash** supaya build yang sedang berjalan mudah dikenal pasti.
