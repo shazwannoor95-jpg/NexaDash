@@ -16,7 +16,7 @@ folder itu. Memuat turun ZIP baharu tidak menukar projek yang sedang dibuka seca
 ## Muat turun dan buka folder baharu
 
 1. Dalam Android Studio, pilih **File > Close Project**.
-2. Download [source ZIP branch NexaDash terkini](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
+2. Download [source ZIP branch NexaDash terkini](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/saga-dash-android-studio).
 3. Extract ke folder baharu, contohnya `C:\NexaDash-v8`. Jangan salin atau extract bertindih
    ke folder projek lama.
 4. Dalam Android Studio, pilih **Open**. Buka folder di dalam hasil extract yang mengandungi
@@ -55,7 +55,7 @@ emulator pada masa yang sama.
 ## ZIP source dan APK ialah dua laluan berbeza
 
 - **Source ZIP** di atas ialah projek untuk dibuka dan dibina dalam Android Studio.
-- [APK siap .8](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
+- [APK siap .8](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
   ialah fail pemasangan terus; ia tidak dibuka sebagai projek Studio.
 
 Untuk update pemasangan sedia ada, gunakan signing key yang sama seperti sebelumnya. Jangan

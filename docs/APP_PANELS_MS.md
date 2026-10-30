@@ -7,7 +7,7 @@ butang Open membuka app itu dalam tetingkapnya sendiri.
 
 ## Dapatkan laporan tanpa coding
 
-1. Download [APK .4 dengan semakan keserasian](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.4.apk).
+1. Download [APK .4 dengan semakan keserasian](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.4.apk).
 2. Pasang sebagai update melalui File Manager, kemudian buka **Saga Dash**. Ikut
    [panduan pemasangan](HEAD_UNIT_INSTALL_MS.md) jika perlu. Gunakan laluan signing key yang sama
    seperti pemasangan sedia ada; jika Android menolak signature, jangan uninstall terus kerana
@@ -20,7 +20,7 @@ Tidak perlu Android Studio, ADB, root, flash firmware atau menukar MCU/CAN/facto
 semakan ini. Laporan hanya dibaca pada peranti; ia tidak dihantar secara automatik. Tiada app lain
 dilancarkan dan tiada percubaan mendapatkan akses root dibuat.
 
-[APK .3 terdahulu](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.3.apk)
+[APK .3 terdahulu](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/saga-dash-android-studio/dist/SagaDash-1.6.7-sagadash.3.apk)
 masih tersedia sebagai rujukan versi sebelum penambahan semakan ini. Android mungkin menolak
 pemasangan version code lebih rendah di atas .4; pautan lama bukan arahan untuk downgrade.
 

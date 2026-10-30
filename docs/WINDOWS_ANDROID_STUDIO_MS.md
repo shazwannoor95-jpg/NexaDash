@@ -21,8 +21,8 @@ Versi .7 menunjukkan nombor build pada footer/tajuk menu; Apps serta Dashboard s
 Untuk update ini, gunakan folder projek **baharu**. Copy/replace fail ke folder lama boleh meninggalkan
 kelas/asset model yang sudah dibuang. Folder lama boleh disimpan sebagai backup.
 
-1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/klikdash/tree/saga-dash-android-studio).
-2. Klik **Code > Download ZIP**, atau [download ZIP branch ini terus](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/saga-dash-android-studio).
+1. Buka [branch saga-dash-android-studio](https://github.com/shazwannoor95-jpg/NexaDash/tree/saga-dash-android-studio).
+2. Klik **Code > Download ZIP**, atau [download ZIP branch ini terus](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/saga-dash-android-studio).
 3. File Explorer > klik kanan ZIP > **Extract All** ke folder baharu, contoh `C:\Projects\NexaDash-v8`.
 4. Cari folder yang terus mengandungi `settings.gradle`, `build.gradle`, `gradlew.bat` dan `app`.
    ZIP kadang-kadang mempunyai satu folder tambahan di dalamnya; pilih folder dalaman itu.

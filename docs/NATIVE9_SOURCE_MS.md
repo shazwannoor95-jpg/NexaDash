@@ -27,7 +27,7 @@ Fail bernama `NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk` mengandungi manif
 
 ## Android Studio / signing
 
-[Source ZIP](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment). Open folder yang mempunyai `settings.gradle`, jalankan module **panelprobe** kemudian **app** pada emulator bersih untuk mencuba Demo dengan debug key yang sama. Companion ARM TizenTube tetap memerlukan device/ABI yang sesuai dan signing key sepadan; source host sahaja tidak menukar signature APK companion.
+[Source ZIP](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/nexadash-native-panel-experiment). Open folder yang mempunyai `settings.gradle`, jalankan module **panelprobe** kemudian **app** pada emulator bersih untuk mencuba Demo dengan debug key yang sama. Companion ARM TizenTube tetap memerlukan device/ABI yang sesuai dan signing key sepadan; source host sahaja tidak menukar signature APK companion.
 
 Debug APK yang dibina di komputer sendiri tidak semestinya boleh update APK GitHub pada head unit. Kunci private asal diperlukan untuk update yang sepadan. Kunci itu tidak boleh diperoleh daripada sijil awam dalam APK. Tiada arahan uninstall/reset data diberikan oleh perubahan ini.
 

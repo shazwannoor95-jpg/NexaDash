@@ -17,12 +17,12 @@ Windows release key boleh berbeza. Ini bukan ralat pada model head unit.
 
 ## A. Download APK signed yang disediakan
 
-Download [NexaDash-1.6.7-nexadash.8.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk).
+Download [NexaDash-1.6.7-nexadash.8.apk](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk).
 Fail ini berada dalam branch edisi NexaDash, bukan release APK KlikDash upstream.
 Versi .7 menambah [player video fail dan YouTube web beta dalam panel](INLINE_PLAYBACK_MS.md), tanpa ADB. Versi .6 menambah grid ikon Dashboard settings dan nombor versi pada footer/menu. Versi .5 menambah panel kaca statik dan grid ikon Apps. Versi .4 menambah [semakan app asal dalam panel](APP_PANELS_MS.md); embedding app belum ditambah.
 
 Simpan fail `.apk` itu pada komputer. Jika pautan raw disekat rangkaian, buka
-[halaman fail GitHub](https://github.com/shazwannoor95-jpg/klikdash/blob/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
+[halaman fail GitHub](https://github.com/shazwannoor95-jpg/NexaDash/blob/saga-dash-android-studio/dist/NexaDash-1.6.7-nexadash.8.apk)
 dan klik **Download raw file**. Jangan rename ZIP kepada APK. Private signing key tidak disertakan
 dalam download/projek. [Checksum dan maklumat build](../dist/build-info.json) disediakan untuk semakan.
 

@@ -69,7 +69,7 @@ Alat penjana mungkin mengubah detail atau menghasilkan latar walaupun diminta tr
 
 ## 3. Susun 8 PNG menjadi atlas
 
-Download [source branch NexaDash semasa](https://github.com/shazwannoor95-jpg/klikdash/tree/main) atau [ZIP source](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/main), kemudian extract ke folder baharu. Dari folder root yang mengandungi `settings.gradle` dan `tools`, gunakan Python3.10+ dengan Pillow:
+Download [source branch NexaDash semasa](https://github.com/shazwannoor95-jpg/NexaDash/tree/main) atau [ZIP source](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/main), kemudian extract ke folder baharu. Dari folder root yang mengandungi `settings.gradle` dan `tools`, gunakan Python3.10+ dengan Pillow:
 
 Windows PowerShell:
 

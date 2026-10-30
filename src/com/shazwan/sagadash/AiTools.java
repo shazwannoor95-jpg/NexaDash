@@ -191,7 +191,6 @@ final class AiTools {
             switch (name) {
                 case "open_app": return openApp(a, in.optString("app"));
                 case "navigate": return navigate(a, in.optString("destination"), in.optString("app", "maps"));
-                case "play_quran": return "This feature is not included in NexaDash.";
                 case "media_control": return media(a, in.optString("action"));
                 case "set_volume": return volume(a, in);
                 case "prayer_times": return prayerTimes(a);
@@ -212,7 +211,7 @@ final class AiTools {
 
     static void ui(Activity a, Runnable r) { a.runOnUiThread(r); }
 
-    /** Huruf kecil tanpa aksen dan tanda baca, untuk mencocokkan nama ("Al-Fātiḥah" ≈ "al fatihah"). */
+    /** Huruf kecil tanpa aksen dan tanda baca, untuk mencocokkan nama ("Café" ≈ "cafe"). */
     static String norm(String s) {
         s = Normalizer.normalize(s == null ? "" : s, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
         return s.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
@@ -258,35 +257,7 @@ final class AiTools {
         return AiStore.inLang(a).getString(R.string.as_res_navigating, dest);
     }
 
-    static String playQuran(Activity a, String surah, int ayah) throws Exception {
-        int s = -1;
-        try {
-            s = Integer.parseInt(surah.trim());
-        } catch (NumberFormatException e) {
-            if (QuranData.available(a)) {
-                QuranData.load(a);
-                String q = norm(surah.replaceFirst("(?i)^(surah|surat|qs\\.?)\\s+", ""));
-                for (int i = 1; i <= QuranData.SURAH_COUNT && s < 0; i++) if (norm(QuranData.get(i).latin).equals(q)) s = i;
-                for (int i = 1; i <= QuranData.SURAH_COUNT && s < 0; i++) if (norm(QuranData.get(i).latin).contains(q)) s = i;
-            }
-        }
-        Context t = AiStore.inLang(a);
-        if (s < 1 || s > QuranData.SURAH_COUNT) return t.getString(R.string.as_res_surah_not_found, surah);
-        final int fs = s, fa = Math.max(1, Math.min(ayah, QuranData.count(s)));
-        ui(a, () -> QuranService.play(a, fs, fa));
-        String nm = QuranData.loaded() ? QuranData.get(fs).latin : "surah " + fs;
-        return t.getString(R.string.as_res_playing, nm, fa);
-    }
-
     static String media(Activity a, String action) {
-        // Murattal KlikDash: perintah langsung ke layanannya. Tombol media biasa tidak membatalkan "lanjut otomatis"
-        // setelah asisten selesai bicara, sehingga murattal bisa jalan lagi padahal diminta berhenti.
-        if (QuranService.active) {
-            String act = "pause".equals(action) ? QuranService.ACTION_PAUSE : "next".equals(action) ? QuranService.ACTION_NEXT
-                    : "previous".equals(action) ? QuranService.ACTION_PREV : QuranService.ACTION_RESUME;
-            Compat.startForegroundService(a, new Intent(a, QuranService.class).setAction(act));
-            return "Murattal: " + action + ".";
-        }
         int code = "pause".equals(action) ? KeyEvent.KEYCODE_MEDIA_PAUSE : "next".equals(action) ? KeyEvent.KEYCODE_MEDIA_NEXT
                 : "previous".equals(action) ? KeyEvent.KEYCODE_MEDIA_PREVIOUS : KeyEvent.KEYCODE_MEDIA_PLAY;
         AudioManager am = (AudioManager) a.getSystemService(Activity.AUDIO_SERVICE);

@@ -9,7 +9,7 @@ python3 tools/next/manifest.py "$OUT/AndroidManifest.xml"
 "$BT/aapt2" compile --dir res -o "$OUT/res.zip"
 cp -R assets/. "$OUT/assets/"
 rm -f "$OUT/assets/quran.txt" "$OUT/assets/quran-en.txt"
-"$BT/aapt2" link -o "$OUT/base.apk" -I "$JAR" --manifest "$OUT/AndroidManifest.xml" -A "$OUT/assets" -0 ttf --rename-manifest-package com.shazwan.nexadash.next --min-sdk-version 24 --target-sdk-version 29 --replace-version --version-code 3 --version-name 1.2-next3 --java "$OUT/gen" "$OUT/res.zip"
+"$BT/aapt2" link -o "$OUT/base.apk" -I "$JAR" --manifest "$OUT/AndroidManifest.xml" -A "$OUT/assets" -0 ttf --rename-manifest-package com.shazwan.nexadash.next --min-sdk-version 24 --target-sdk-version 29 --replace-version --version-code 4 --version-name 1.3-next4 --java "$OUT/gen" "$OUT/res.zip"
 mapfile -d '' SOURCES < <(find src "$OUT/gen" -name '*.java' -print0)
 javac --release 8 -encoding UTF-8 -classpath "$JAR" -d "$OUT/classes" "${SOURCES[@]}"
 mapfile -d '' CLASSES < <(find "$OUT/classes" -name '*.class' -print0)
@@ -17,6 +17,8 @@ mapfile -d '' CLASSES < <(find "$OUT/classes" -name '*.class' -print0)
 cp "$OUT/base.apk" "$OUT/unaligned.apk"
 (cd "$OUT/dex" && zip -q "$OUT/unaligned.apk" classes.dex)
 "$BT/zipalign" -f -p 4 "$OUT/unaligned.apk" "$OUT/aligned.apk"
-"$BT/apksigner" sign --ks "$NEXADASH_NEXT_KEYSTORE" --ks-key-alias webtest --ks-pass env:NEXADASH_NEXT_KS_PASS --out "$OUT/NexaDash-Next-1.2.apk" "$OUT/aligned.apk"
-"$BT/apksigner" verify --print-certs "$OUT/NexaDash-Next-1.2.apk"
-"$BT/zipalign" -c 4 "$OUT/NexaDash-Next-1.2.apk"
+"$BT/apksigner" sign --ks "$NEXADASH_NEXT_KEYSTORE" --ks-key-alias webtest --ks-pass env:NEXADASH_NEXT_KS_PASS --out "$OUT/NexaDash-Next-1.3.apk" "$OUT/aligned.apk"
+"$BT/apksigner" verify --print-certs "$OUT/NexaDash-Next-1.3.apk"
+"$BT/zipalign" -c 4 "$OUT/NexaDash-Next-1.3.apk"
+
+python3 tests/check_no_quran.py "$OUT/NexaDash-Next-1.3.apk"

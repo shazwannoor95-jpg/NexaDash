@@ -84,7 +84,6 @@ final class Lang {
         NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
         Context w = wrap(c, code);
         rename(nm, PrayerAlarm.CHANNEL, w.getString(R.string.channel_prayer));
-        rename(nm, QuranService.CHANNEL, w.getString(R.string.channel_quran));
         rename(nm, BeamService.CHANNEL, w.getString(R.string.beam_channel));
     }
 

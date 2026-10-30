@@ -1,11 +1,11 @@
-> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use only the sanitised Next1.2 build. Old feature/build instructions below may refer to withdrawn media.
+> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use only the sanitised Next1.3 build. Old feature/build instructions below may refer to withdrawn media.
 
 # NexaDash Next + Maps companion — install/status
 
 ## APKs
 
-1. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install **first**.
-2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/main/dist/next/NexaDash-Next-1.2.apk) — install after the companion, then open from Apps.
+1. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install **first**.
+2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.3.apk) — install after the companion, then open from Apps.
 
 Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.next`. Both use the same new signing key and a dedicated signature permission, different from old Native Lab. The original Google Maps and old NexaDash are not replaced or uninstalled; their data remains. Next starts with its own settings.
 
@@ -15,7 +15,7 @@ Next is a HOME candidate, not an in-place signed upgrade of the old cloud APK. I
 
 **Companion ini memang berasal daripada Google Maps dalam arkib head unit yang dibekalkan**, versi **25.32.00.790560726**, minimum API26, ARM32. Ia bukan Maps26.42/26.43 minimum API29 yang dihantar sebelum eksport sistem.
 
-Semakan semula membandingkan keempat-empat fail `Maps_base.apk`, `Maps_split_config.armeabi_v7a.apk`, `Maps_split_config.en.apk` dan `Maps_split_config.mdpi.apk` dalam eksport 35 bahagian dengan hash input companion yang telah diterbitkan: semuanya sepadan. Kesemua 9 DEX asal dan 10 library ARM32 dibandingkan byte demi byte dengan companion; semuanya dikekalkan. Semakan manifest, resource IDs, bridge, tandatangan API27, alignment dan CRC juga lulus semula. [Metadata/hash companion](https://github.com/shazwannoor95-jpg/klikdash/blob/nexadash-maps-next-companion/artifact.json).
+Semakan semula membandingkan keempat-empat fail `Maps_base.apk`, `Maps_split_config.armeabi_v7a.apk`, `Maps_split_config.en.apk` dan `Maps_split_config.mdpi.apk` dalam eksport 35 bahagian dengan hash input companion yang telah diterbitkan: semuanya sepadan. Kesemua 9 DEX asal dan 10 library ARM32 dibandingkan byte demi byte dengan companion; semuanya dikekalkan. Semakan manifest, resource IDs, bridge, tandatangan API27, alignment dan CRC juga lulus semula. [Metadata/hash companion](https://github.com/shazwannoor95-jpg/NexaDash/blob/nexadash-maps-next-companion/artifact.json).
 
 | Pemasangan | Untuk apa |
 |---|---|
@@ -55,3 +55,7 @@ Install Next1.1 over Next1.0: same package/key, versionCode2, existing Next sett
 Queued Back/text actions now check their original session before dispatch. Native touches wait for companion display confirmation. An active gesture is cancelled on raster resize or queue overflow; remaining fingers are ignored until a new Down. Text tools support keyboard Send, hide the host keyboard afterwards, and release host input focus on Stop. Next removes the duplicate generic-native menu entry. Browser cleanup always attempts destroy after an OEM renderer stop/pause exception.
 
 Twelve JVM geometry cases passed, covering bounds/aspect/mapped extents including tiny, portrait and extreme sizes. They do not exercise Android MotionEvent/Binder or Maps UI. Signed APK, API27 signature/alignment/CRC, Android compilation and existing test-source compilation checked. No emulator/head-unit runtime test ran; synthetic fullscreen instrumentation exists but was not executed in this environment. Physical Maps search/navigation and Radio hardware control remain unverified/not delivered respectively.
+
+## Next1.3 — pembersihan fungsi lama
+
+Package/signing key Next kekal; versionCode4 membolehkan update daripada Next1.2 tanpa uninstall. Pembaca Quran, pemain/service, data loader, notch dan pautan AI/media lama telah dibuang daripada source dan APK. `tests/check_no_quran.py` memeriksa semua DEX APK dan menolak kelas/fail data lama jika terbawa semula. Pemeriksaan itu gagal pada APK1.2 dan lulus pada1.3. Build Android debug/release, kompilasi sumber ujian, tandatangan API27, alignment dan CRC diperiksa; tiada runtime emulator/head-unit yang dijalankan untuk update ini. Permission/komponen Quran memang tidak berdaftar dalam manifest dashboard sebelumnya. Masa solat/dashboard tidak dibuang.

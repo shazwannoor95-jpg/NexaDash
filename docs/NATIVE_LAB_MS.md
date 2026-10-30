@@ -8,16 +8,16 @@
 
 ## Download
 
-- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk)
-- [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-native-panel-experiment)
+- [NexaDash Native Lab APK (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-NativeLab-1.6.7-nexadash.8-native8.apk)
+- [Source ZIP Android Studio](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/nexadash-native-panel-experiment)
 
 Pilih companion yang hendak diuji, **install companion dahulu, kemudian Lab**. APK download cloud menggunakan sijil sama. APK asal tanpa bridge tidak akan menjadi native player melalui pilihan ini.
 
 | Companion | Download / keperluan | Status |
 |---|---|---|
-| Demo | [APK kecil](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-DemoCompanion-native1.apk); API26+ | Counter, input teks dan video ujian sintetik; bukan YouTube. Diuji dalam panel sebenar pada emulator API29 |
-| TizenTube ARM | [APK](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-companions/TizenTube-NativeLab-arm.apk); minAPI24, ARM32 | Fork berasingan; manifest/signature/CRC diperiksa. Rendering/playback/touch belum diuji pada hardware ARM. Calon ujian head unit API27 |
-| YouTube V58 | [ZIP companion](https://codeload.github.com/shazwannoor95-jpg/klikdash/zip/refs/heads/nexadash-v58-companion); **minAPI29** | Extract semua, jalankan `Join-V58-Windows.cmd`, dapat `YouTube-V58-native1.apk`. Original V58 tidak mempunyai bridge. MicroG/setup masih diperlukan |
+| Demo | [APK kecil](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-native-panel-experiment/dist/native-lab/NexaDash-DemoCompanion-native1.apk); API26+ | Counter, input teks dan video ujian sintetik; bukan YouTube. Diuji dalam panel sebenar pada emulator API29 |
+| TizenTube ARM | [APK](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-native-companions/TizenTube-NativeLab-arm.apk); minAPI24, ARM32 | Fork berasingan; manifest/signature/CRC diperiksa. Rendering/playback/touch belum diuji pada hardware ARM. Calon ujian head unit API27 |
+| YouTube V58 | [ZIP companion](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/nexadash-v58-companion); **minAPI29** | Extract semua, jalankan `Join-V58-Windows.cmd`, dapat `YouTube-V58-native1.apk`. Original V58 tidak mempunyai bridge. MicroG/setup masih diperlukan |
 
 API host untuk native display: **API26+**. Minimum Lab APK kekal API24, tetapi ciri native disekat secara jelas sebelum API26. **V58 tetap tidak boleh dipasang secara biasa pada head unit API27.** Menukar APK launcher tidak mengubah minimum SDK companion. Untuk hardware API27, mula dengan Demo atau calon TizenTube ARM. Cobalt ARM tidak berjalan pada emulator x86-only.
 

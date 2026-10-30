@@ -77,7 +77,7 @@ public class HomeActivity extends Activity {
             {"com.nwd.android.phone/.home_horizontalActivity", "TELEPON"},
             {"com.nwd.android.video.ui/.home_horizontalActivity", "VIDEO"},
             {"com.shazwan.sagadash/.DzikirActivity", "DZIKIR"},
-            {"com.shazwan.sagadash/.QuranActivity", "AL-QUR'AN"},
+            {"com.android.music/.MusicBrowserActivity", "MUSIC"},
             {"com.nwd.carkit360camera/.home_horizontalActivity", "KAMERA 360"},
             {"com.android.car.setting/.home_horizontalActivity", "SISTEM"},
             {"com.shazwan.sagadash/.AskActivity", "TANYA"}, // asisten AI suara; Radio tetap ada di Semua
@@ -88,7 +88,7 @@ public class HomeActivity extends Activity {
      * label Indonesia sebagai kunci (ikut berpindah saat ubin ditukar), dan baru diterjemahkan saat digambar.
      */
     static final int[] DEFAULT_TEXT = {0, 0, 0, 0, R.string.home_tile_phone, 0, R.string.home_tile_dzikir,
-            R.string.home_tile_quran, R.string.home_tile_camera, R.string.home_tile_system, R.string.home_tile_ask};
+            0, R.string.home_tile_camera, R.string.home_tile_system, R.string.home_tile_ask};
     /**
      * Pilihan jumlah ubin home (slot + ubin "Semua"), diatur di Pengaturan. Lebih sedikit = ubin, ikon, dan tulisan
      * lebih besar. Slot yang tidak tampil tetap tersimpan dan muncul lagi bila jumlahnya ditambah.
@@ -328,8 +328,6 @@ public class HomeActivity extends Activity {
         drawer = buildDrawer();
         drawer.setVisibility(View.GONE);
         root.addView(home, MATCH, MATCH);
-        notch = new QuranNotch(this, fBold, fMonoBold);
-        root.addView(notch, QuranNotch.params(dp)); // di bawah laci aplikasi, yang menutupinya saat dibuka
         root.addView(drawer, MATCH, MATCH);
         setContentView(root);
         // Keyboard hanya untuk kolom cari di laci: tidak muncul sendiri, dan laci menyusut di atasnya.
@@ -380,17 +378,9 @@ public class HomeActivity extends Activity {
         if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) startLocation();
     }
 
-    QuranNotch notch;
-    /** Murattal berganti ayat atau status: hanya ubin Al-Qur'an ("▶ surah : ayat") dan notch yang berubah. */
-    final Runnable onQuran = () -> {
-        for (Tile t : tiles) if (t != null && t.quran()) t.invalidate();
-        notch.refresh();
-    };
-
-    /** Semua ubin dan notch: saat home tampil lagi (dzikir pagi/petang, murattal bisa berubah selama di latar). */
+    /** Refresh the visible legacy tiles when the home resumes. */
     void refreshTiles() {
         for (Tile t : tiles) if (t != null) t.invalidate();
-        notch.refresh();
     }
 
     @Override protected void onResume() {
@@ -400,7 +390,6 @@ public class HomeActivity extends Activity {
         if (tileCount(prefs) != shown + 1) { recreate(); return; } // jumlah ubin diganti di Pengaturan
         refreshLock(); // PIN bisa diatur atau dihapus di Pengaturan
         keepOrientation();
-        QuranService.listeners.add(onQuran);
         PrayerAlarm.home = new java.lang.ref.WeakReference<>(this);
         PrayerAlarm.schedule(this);
         if (iconsTrimmed) { // ikon laci dilepas onTrimMemory selama di latar
@@ -599,7 +588,6 @@ public class HomeActivity extends Activity {
         stopSpeed();
         prayerView.stopTicking();
         temp.removeCallbacks(tempTick);
-        QuranService.listeners.remove(onQuran);
         if (PrayerAlarm.home.get() == this) PrayerAlarm.home.clear();
         super.onPause();
     }
@@ -842,7 +830,6 @@ public class HomeActivity extends Activity {
      * Pengaturan. 0 untuk aplikasi lain.
      */
     static int ownLabel(String activity) {
-        if (QuranActivity.class.getName().equals(activity)) return R.string.app_quran;
         if (DzikirActivity.class.getName().equals(activity)) return R.string.app_dzikir;
         if (AskActivity.class.getName().equals(activity)) return R.string.app_ask;
         if (BeamActivity.class.getName().equals(activity)) return R.string.app_beam;
@@ -1538,11 +1525,6 @@ public class HomeActivity extends Activity {
 
         boolean dragging, target;
 
-        boolean quran() {
-            App a = idx < SLOTS ? appFor(idx) : null;
-            return a != null && QuranActivity.class.getName().equals(a.cn.getClassName());
-        }
-
         /** Ubin asal saat diseret: diredupkan. Ubin tujuan: bingkai amber tebal. */
         void drawDragState(Canvas c) {
             int w = getWidth(), h = getHeight();
@@ -1594,9 +1576,6 @@ public class HomeActivity extends Activity {
                     sub = dzikirPagi() ? tMorning : tEvening;
                 }
                 if (AskActivity.class.getName().equals(a.cn.getClassName())) sub = tAssistant;
-                if (QuranActivity.class.getName().equals(a.cn.getClassName()) && QuranService.playing) {
-                    sub = String.format(Locale.US, "▶ %d : %d", QuranService.surah, QuranService.ayah);
-                }
             } else if (loading) {
                 name = slotLabel[idx] != null ? labelText(slotLabel[idx]) : ""; // daftar aplikasi belum termuat, ikon menyusul
             } else {

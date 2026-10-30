@@ -1,6 +1,6 @@
 # Cuba fullscreen pada head unit — NexaDash Web Test1.0
 
-[Download APK](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/web-test/NexaDash-WebTest-1.0.apk) (~21KB).
+[Download APK](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-native-panel-experiment/dist/web-test/NexaDash-WebTest-1.0.apk) (~21KB).
 
 Install sebagai **app baharu** bernama **NexaDash Web Test**. Package berbeza, bukan update atau pengganti Native Lab. App lama, default launcher dan datanya tidak diubah. Jika diminta, benarkan browser/file manager memasang APK. Buka ikon NexaDash Web Test daripada Apps.
 

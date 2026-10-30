@@ -190,7 +190,7 @@ public class AskActivity extends Activity {
         who.setText(info());
         again.setLabel(getString(R.string.ask_again));
         again.setOnClickListener(v -> listen());
-        // Uji tanpa mikrofon: adb shell am start -n com.shazwan.sagadash/.AskActivity --es q "putar surat Yasin"
+        // Uji tanpa mikrofon: adb shell am start -n com.shazwan.sagadash/.AskActivity --es q "buka Maps"
         // Hanya di build debuggable (DEBUGGABLE=1 ./build.sh install): TANYA bisa dibuka aplikasi lain, jadi di APK rilis aplikasi lain
         // tidak boleh menitipkan perintah teks untuk dijalankan AI.
         String typed = dev ? getIntent().getStringExtra("q") : null;

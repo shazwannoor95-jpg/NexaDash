@@ -2,7 +2,6 @@
 <resources>
     <string name="home_tile_phone">PHONE</string>
     <string name="home_tile_dzikir">DHIKR</string>
-    <string name="home_tile_quran">QURAN</string>
     <string name="home_tile_camera">360 CAMERA</string>
     <string name="home_tile_system">SYSTEM</string>
     <string name="home_tile_ask">ASK AI</string>
@@ -49,11 +48,6 @@
     <string name="home_setprop_failed">Not done yet: this headunit refuses to change the home screen over ADB.</string>
     <string name="home_restore_message">Go back to the stock launcher? NexaDash stays installed and can be made the home screen again from the button on its home screen.</string>
     <string name="home_restore_confirm">Go back</string>
-
-    <string name="home_notch_surah">SURAH %1$d</string>
-    <string name="home_notch_paused">PAUSED</string>
-    <string name="home_notch_playing">RECITATION</string>
-    <string name="home_notch_basmalah">"%1$s  ·  BASMALAH"</string>
 
     <string name="welcome_head">SAFE JOURNEY</string>
     <string name="welcome_head_title">"%1$s  ·  %2$s"</string>

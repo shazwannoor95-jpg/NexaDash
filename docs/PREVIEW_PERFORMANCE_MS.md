@@ -1,6 +1,6 @@
 # NexaDash Preview — UI terkini dan Performance check
 
-[Download APK Preview (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/dist/preview/NexaDash-Preview-1.0.apk).
+[Download APK Preview (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-native-panel-experiment/dist/preview/NexaDash-Preview-1.0.apk).
 
 Install sebagai **app baharu**, buka ikon **NexaDash Preview**. Package `com.shazwan.nexadash.preview`, version1.0-preview1, source native11. App/data Native Lab lama kekal. Preview tiada HOME filter dan tidak menjadi launcher default; ia boleh dibuka dari Apps/Recents. Setting/layout lama tidak dimigrasikan.
 

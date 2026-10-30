@@ -2,16 +2,16 @@
 
 Launcher head unit Android dikelola oleh **[shazwannoor95-jpg](https://github.com/shazwannoor95-jpg)**.
 
-![Dashboard NexaDash](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/main/docs/img/nexadash-dashboard-public.png)
+![Dashboard NexaDash](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/docs/img/nexadash-dashboard-public.png)
 
 *Contoh desain versi terdahulu, gambar disunting untuk mengosongkan pelat.*
 
-NexaDash Next 1.2 adalah public beta untuk dicoba pada head unit Android. [Halaman utama NexaDash](README.md) menjelaskan fitur dan batasan versi saat ini.
+NexaDash Next 1.3 adalah public beta untuk dicoba pada head unit Android. [Halaman utama NexaDash](README.md) menjelaskan fitur dan batasan versi saat ini.
 
-- [Unduh APK Next 1.2](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/main/dist/next/NexaDash-Next-1.2.apk)
-- [Panduan pemasangan head unit (Bahasa Melayu)](https://github.com/shazwannoor95-jpg/klikdash/blob/main/docs/PUBLIC_BETA_MS.md)
-- [Preview mobil sendiri: video atau 8 sudut PNG](https://github.com/shazwannoor95-jpg/klikdash/blob/main/docs/CAR_PREVIEW_MS.md)
-- [Source dashboard NexaDash](https://github.com/shazwannoor95-jpg/klikdash/tree/main)
+- [Unduh APK Next 1.3](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.3.apk)
+- [Panduan pemasangan head unit (Bahasa Melayu)](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)
+- [Preview mobil sendiri: video atau 8 sudut PNG](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/CAR_PREVIEW_MS.md)
+- [Source dashboard NexaDash](https://github.com/shazwannoor95-jpg/NexaDash/tree/main)
 
 Maps native masih eksperimen; Radio FM native belum selesai. Ikuti status di panduan sebelum menganggap fitur tersebut berfungsi pada perangkat sendiri.
 

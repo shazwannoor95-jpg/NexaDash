@@ -161,7 +161,7 @@ final class DashNavigationView extends LinearLayout {
                 if(!wanted(task))return;
                 String[] coordinate=key.split("_");URL url=new URL("https://tile.openstreetmap.org/"+coordinate[0]+"/"+coordinate[1]+"/"+coordinate[2]+".png");
                 connection=(HttpURLConnection)url.openConnection();task.connection=connection;
-                connection.setConnectTimeout(5000);connection.setReadTimeout(7000);connection.setRequestProperty("User-Agent","NexaDash/1.6.7 (+https://github.com/shazwannoor95-jpg/klikdash)");connection.setRequestProperty("Accept","image/png");
+                connection.setConnectTimeout(5000);connection.setReadTimeout(7000);connection.setRequestProperty("User-Agent","NexaDash/1.6.7 (+https://github.com/shazwannoor95-jpg/NexaDash)");connection.setRequestProperty("Accept","image/png");
                 if(info.has("etag"))connection.setRequestProperty("If-None-Match",info.optString("etag"));if(info.has("modified"))connection.setRequestProperty("If-Modified-Since",info.optString("modified"));
                 if(!wanted(task))return;
                 int code=connection.getResponseCode();boolean noStore=directive(connection,"no-store");long expiry=expiry(connection);

@@ -13,7 +13,6 @@
     <!-- Deskripsi alat -->
     <string name="as_tool_open_app">Buka aplikasi yang terpasang di headunit. Pakai nama persis dari daftar aplikasi di instruksi sistem.</string>
     <string name="as_tool_navigate">Mulai navigasi ke tujuan (nama tempat atau alamat), misalnya \'masjid terdekat\' atau \'Alun-alun Kendal\'.</string>
-    <string name="as_tool_play_quran">Putar murattal Al-Qur\'an (Mishary Alafasy). Surah boleh nomor (1-114) atau nama Latin, misalnya \'Yasin\'. Bila ragu dengan nama Latinnya, kirim nomor surahnya.</string>
     <string name="as_tool_media_control">Kendalikan audio yang sedang diputar (murattal, musik, radio).</string>
     <string name="as_tool_set_volume">Atur volume media. Isi level 0-100, atau change naik/turun.</string>
     <string name="as_tool_prayer_times">Jadwal sholat hari ini di lokasi mobil, dan waktu sholat berikutnya.</string>
@@ -34,8 +33,6 @@
     <string name="as_res_opening">Membuka %1$s.</string>
     <string name="as_res_no_nav">Tidak ada aplikasi navigasi.</string>
     <string name="as_res_navigating">Navigasi ke %1$s dimulai.</string>
-    <string name="as_res_surah_not_found">Surah \'%1$s\' tidak ditemukan; minta nomor surahnya.</string>
-    <string name="as_res_playing">Memutar %1$s ayat %2$d.</string>
     <string name="as_res_dzikir_pagi">Membuka dzikir pagi.</string>
     <string name="as_res_dzikir_petang">Membuka dzikir petang.</string>
     <string name="as_res_protected">%1$s dilindungi agar navigasi/CarPlay tetap jalan.</string>

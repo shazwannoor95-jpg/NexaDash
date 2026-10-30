@@ -7,7 +7,6 @@
 
     <string name="as_tool_open_app">Open an app installed on the headunit. Use the exact name from the app list in the system instructions.</string>
     <string name="as_tool_navigate">Start navigation to a destination (place name or address), for example \'nearest mosque\' or \'Kendal town square\'.</string>
-    <string name="as_tool_play_quran">Play Quran recitation (Mishary Alafasy). The surah may be a number (1-114) or its Latin name, for example \'Yasin\'. When unsure of the Latin name, send the surah number.</string>
     <string name="as_tool_media_control">Control the audio that is playing (recitation, music, radio).</string>
     <string name="as_tool_set_volume">Set the media volume. Give level 0-100, or change up/down.</string>
     <string name="as_tool_prayer_times">Today\'s prayer times at the car\'s location, and the next prayer.</string>
@@ -27,8 +26,6 @@
     <string name="as_res_opening">Opening %1$s.</string>
     <string name="as_res_no_nav">No navigation app.</string>
     <string name="as_res_navigating">Navigation to %1$s started.</string>
-    <string name="as_res_surah_not_found">Surah \'%1$s\' not found; ask for the surah number.</string>
-    <string name="as_res_playing">Playing %1$s from verse %2$d.</string>
     <string name="as_res_dzikir_pagi">Opening the morning dhikr.</string>
     <string name="as_res_dzikir_petang">Opening the evening dhikr.</string>
     <string name="as_res_protected">%1$s is protected so navigation/CarPlay keeps working.</string>

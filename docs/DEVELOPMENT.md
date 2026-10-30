@@ -1,3 +1,5 @@
+> Historical upstream notes: the Quran reader and its build tool/promotional headers have been removed from NexaDash Next1.3. For the current launcher use [the public guide](PUBLIC_BETA_MS.md) and [Next build instructions](../tools/next/README.md). Reader/header commands below are archival and no longer apply.
+
 # KlikDash for developers
 
 [English](DEVELOPMENT.md) | [Bahasa Indonesia](DEVELOPMENT.id.md) · back to the [README](../README.md)

@@ -1,19 +1,19 @@
 {
-  "file": "NexaDash-Next-1.2.apk",
+  "file": "NexaDash-Next-1.3.apk",
   "label": "NexaDash Next",
   "application_id": "com.shazwan.nexadash.next",
-  "version_name": "1.2-next3",
-  "version_code": 3,
-  "source_version": "1.6.7-nexadash.8-native13",
+  "version_name": "1.3-next4",
+  "version_code": 4,
+  "source_version": "1.6.7-nexadash.8-native14",
   "min_sdk": 24,
   "target_sdk": 29,
-  "size_bytes": 3066765,
-  "sha256": "18c7ade9cd3fa731336adfe3417834e78454d73ad47c94e1870706bf96205d1d",
+  "size_bytes": 3033926,
+  "sha256": "3bb70711b7090fbeca7d77214187228e7084039657effb9cec0adbfc9beea758",
   "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
   "home_candidate": true,
   "old_launcher_replaced_or_data_migrated": false,
   "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
-  "validation": "Signed APK/CRC/alignment/API27 signature validation; 12 JVM raster boundary/aspect/touch-extent cases passed; Android build and test-source compilation checked. No runtime head-unit/Maps validation.",
+  "validation": "Signed build, CRC/alignment and no-Quran DEX/data guard passed. Old APK fails the guard as expected. Android debug/release builds and existing test-source compilation passed; no emulator/head-unit runtime test.",
   "radio_native_controller_delivered": false,
   "radio_runtime_probe": "Read-only source/native-library/OAT/shared-library/bootclasspath paths; no tuner commands",
   "maps_panel_status": "Host target integrated; separate experimental real-Maps companion statically verified, runtime navigation unverified.",
@@ -24,5 +24,17 @@
     "Keyboard Send and IME cleanup; one Next native Maps selector",
     "Always attempt browser destroy after OEM stop/pause failure"
   ],
-  "privacy": "Blank plate image atlas and wallpaper. Bundled car video and old screenshot/APK downloads withdrawn."
+  "privacy": "Blank plate image atlas and wallpaper. Bundled car video and old screenshot/APK downloads withdrawn.",
+  "offline_quran_reader_included": false,
+  "removed_quran_classes": [
+    "QuranActivity",
+    "QuranService",
+    "QuranData",
+    "QuranNotch"
+  ],
+  "release_changes": [
+    "Remove legacy Quran reader/player/notch/data classes, reader resources and builder",
+    "Remove old AI/media and legacy home links to the removed subsystem",
+    "Correct owned repository links to NexaDash after confirmed GitHub rename"
+  ]
 }
