@@ -1,8 +1,10 @@
+> Privacy update: bundled transparent car video has been withdrawn. Current Next1.2 offers car image angles and your own imported video; older video instructions below are for custom source builds.
+
 # Paparan kereta dan shortcut — Saga Dash
 
 **Nak buat preview kereta sendiri?** [Panduan lengkap: video tanpa coding atau8 PNG untuk drag](CAR_PREVIEW_MS.md), termasuk contoh prompt dan alat susun atlas.
 
-Paparan awal sekarang ialah **Saga image angles (lightweight)**: lapan imej sudut kereta yang
+Paparan awal sekarang ialah **Car image angles (lightweight)**: lapan imej sudut kereta yang
 dihasilkan daripada rujukan Saga merah yang diberi, dengan plat **NEXA**. Ia bukan model 3D
 atau kamera bebas. Tiada animasi berjalan apabila kereta tidak disentuh.
 
@@ -18,7 +20,7 @@ atau kamera bebas. Tiada animasi berjalan apabila kereta tidak disentuh.
 Di panel **Car preview**, ketuk butang View/Angles/Cutout dengan simbol **▾** di atas kereta.
 Pilih salah satu:
 
-1. **Saga image angles (lightweight)** — pilihan utama untuk penggunaan sumber yang rendah.
+1. **Car image angles (lightweight)** — pilihan utama untuk penggunaan sumber yang rendah.
 2. **Transparent Saga video** — rakaman kereta tanpa latar; ketuk untuk Play/Pause.
 3. **Choose car video…** — import video lain dari peranti.
 4. **Imported video preview** — muncul jika video sendiri telah disimpan.

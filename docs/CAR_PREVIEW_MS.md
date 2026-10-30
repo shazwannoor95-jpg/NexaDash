@@ -8,7 +8,7 @@ Preview Saga merah yang disertakan menggunakan **8 imej sudut**, bukan model 3D.
 
 | Mahu buat apa? | Cara yang ada sekarang | Perlu bina APK? |
 | --- | --- | --- |
-| Guna Saga yang disertakan | Pilih Car preview → Angles ▾ → Saga image angles (lightweight) | Tidak |
+| Guna Saga yang disertakan | Pilih Car preview → Angles ▾ → Car image angles (lightweight) | Tidak |
 | Paparkan video kereta sendiri | Import MP4 melalui Choose car video… | Tidak |
 | Tukar kepada kereta sendiri dan drag antara 8 sudut | Sediakan 8 PNG, susun menjadi atlas, gantikan aset dalam source | **Ya** |
 | Import foto/8 PNG terus dari Settings | Belum ada menu import gambar dalam Next1.1 | Belum tersedia |
@@ -22,7 +22,7 @@ Preview kereta tidak memerlukan companion Maps atau app tambahan. Panduan ini me
 3. Buka NexaDash → pilihan **left panel → Car preview**.
 4. Ketuk **Angles ▾ / Cutout ▾ / Video ▾** di atas kereta → **Choose car video…**.
 5. Pilih MP4 dan tunggu mesej **Car video ready**. Ketuk preview untuk Play/Pause.
-6. Selepas import, **Imported video preview** muncul dalam pilihan Vehicle view. Pilih **Saga image angles (lightweight)** untuk kembali ke imej asal.
+6. Selepas import, **Imported video preview** muncul dalam pilihan Vehicle view. Pilih **Car image angles (lightweight)** untuk kembali ke imej asal.
 
 Had import dalam kod: **32MiB**, durasi maksimum **2 minit**, jumlah piksel setiap frame maksimum **3840×2160**. Ini had penerimaan, bukan jaminan semua codec/firmware boleh memainkan fail. App menyimpan salinan video dalam storan peribadinya; import yang gagal mengekalkan fail sebelumnya. Preview dimatikan bunyi, tidak auto-play dan tidak auto-loop. Apabila satu panel video/web/native dipilih, preview kereta kembali kepada imej untuk mengelakkan dua player serentak.
 
@@ -101,16 +101,18 @@ Untuk menjalankan semula alat, gunakan output lain atau tambahkan `--force`. Inp
 Menukar gambar tidak menukar tulisan **PROTON SAGA** secara automatik. Dalam checkout sendiri:
 
 - `src/com/shazwan/sagadash/DashboardActivity.java`: cari `text("PROTON SAGA",16,MUTED)` dalam `buildVehicleContent()` dan ubah teks model sahaja.
-- Dalam fail sama, `vehicleDialog()` mengandungi label `Saga image angles (lightweight)`. Boleh tukar label imej kepada model sendiri; jangan namakan semula label **Transparent Saga video** jika video asal belum diganti.
+- Dalam fail sama, `vehicleDialog()` mengandungi label `Car image angles (lightweight)`. Boleh tukar label imej kepada model sendiri; jangan namakan semula label **Transparent Saga video** jika video asal belum diganti.
 - `src/com/shazwan/sagadash/SagaAngleView.java`: dalam `describe()`, tukar ayat `Red Saga NEXA` untuk padankan kereta sendiri. Itu label accessibility, bukan lukisan plat. Plat pada preview datang daripada piksel PNG dan mesti diubah pada gambar jika mahu.
 
 Buka root projek dalam Android Studio, tunggu Gradle Sync, pilih konfigurasi **app**, kemudian Run pada emulator landscape. Semak8 sudut, drag, pinch, double-tap/reset, saiz panel dan teks model. **Build Studio lalai menghasilkan NexaDash Native Lab**, bukan identiti APK Next GitHub; kelas/package Java tidak perlu dinamakan semula untuk menukar kereta. [Panduan Android Studio](WINDOWS_ANDROID_STUDIO_MS.md) menerangkan setup IDE, tetapi rujuk branch semasa di atas untuk versi eksperimen terkini.
 
 Untuk identiti **Next** melalui shell build, ikut [tools/next/README.md](../tools/next/README.md). Untuk APK sendiri, gunakan signing key sendiri dan simpan backup di luar repo. APK custom tidak boleh menimpa APK GitHub dengan package sama jika signing key berbeza; jangan terus uninstall app yang mempunyai data penting. Menukar preview kereta tidak memerlukan patch Maps atau APK vendor.
 
-## 5. Kalau mahu video transparent seperti Saga
+## 5. Jika mahu video transparent sendiri
 
-Ini langkah lanjutan di komputer. [Panduan transparent video](TRANSPARENT_VIDEO.md) menerangkan segmentation dengan U2Net dan encoding FFmpeg. Video bundled menggunakan MP4 khas **RGB + matte bersebelahan** dan shader app; ia bukan MP4 transparent biasa. Video biasa yang diimport tidak menggunakan laluan matte itu. Untuk kereta sendiri dengan kaedah tersebut, hasil packed mesti menggantikan `res/raw/saga_showroom_alpha.mp4` dalam source dan APK perlu dibina semula. Uji codec/driver pada peranti; tepi kereta hasil mask automatik boleh kurang kemas.
+Video transparent bundled yang lama telah ditarik balik untuk privasi. Next1.2 tidak menawarkannya dalam menu; mod imej dan import video sendiri kekal. Fail raw dalaman kini placeholder neutral.
+
+[Nota pipeline video](TRANSPARENT_VIDEO.md) ialah rujukan build-time lama untuk segmentation U2Net dan encoding FFmpeg, bukan video contoh untuk dimuat turun. Video biasa yang diimport tetap berlatar. Menggunakan packed RGB/matte sendiri memerlukan aset dan laluan/menu source yang diselaraskan semula; ia bukan ciri import transparent yang tersedia dalam APK semasa.
 
 ## Jika preview tidak menjadi
 
