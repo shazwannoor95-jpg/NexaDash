@@ -10,5 +10,15 @@
     "Generated viewpoints may differ in trim/reflections from the supplied car.",
     "Frames are changed on touch; no autoplay, WebView or 3D renderer is used for image angles."
   ],
-  "privacy": "Visible plate text removed from all eight views with image editing. Source photo not distributed."
+  "privacy": "Original visible plate restored in the vehicle angle atlas at the owner's explicit request on 2026-10-31. Documentation screenshot and wallpaper remain edited.",
+  "restoration": {
+    "source": "Original eight-view image atlas recovered from the previous preview build",
+    "image_generation_or_plate_repainting_used": false,
+    "sha256": "bf66dff16b62b882a20a832f4b56e49f4547c7c4eaa55cc88c42cee1e966b2f9",
+    "dimensions": [
+      1774,
+      887
+    ],
+    "owner_requested_original_plate_visible": true
+  }
 }

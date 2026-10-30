@@ -8,7 +8,7 @@
 
 Untuk sambungan semakan ini, **tidak perlu export ZIP atau APK sekali lagi**:
 
-1. Update kepada **[NexaDash Next1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** atas Next sedia ada; package/key sama.
+1. Update kepada **[NexaDash Next1.7](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk)** atas Next sedia ada; package/key sama.
 2. Buka **Settings → Radio runtime paths → Copy report**.
 3. Hantar teks report. Ia kini merekod property pemilih FM, komponen yang dipilih firmware, UID app dan metadata/flag akses bagi tiga driver yang dikenal pasti.
 
@@ -24,7 +24,7 @@ Laporan runtime daripada TEST9278B menunjukkan lokasi APK, dua fail preoptimized
 
 ## Langkah pada head unit
 
-1. Install **[NexaDash Next1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** atas Next sedia ada. Package dan key sama; tidak perlu uninstall atau pasang semula companion Maps/TizenTube.
+1. Install **[NexaDash Next1.7](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk)** atas Next sedia ada. Package dan key sama; tidak perlu uninstall atau pasang semula companion Maps/TizenTube.
 2. Buka **Settings → Export Radio files**.
 3. Dalam pemilih simpan Android, pilih folder **Download** pada storan tempatan dan tekan **Save**. Nama fail: **`NexaDash-Radio-files.zip`**.
 4. Tunggu mesej **Radio files saved**. Ia menunjukkan berapa daripada lima fail berjaya disalin.

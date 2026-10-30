@@ -47,7 +47,7 @@ Sediakan **lapan fail PNG berasingan dengan background transparent**. Bahagian t
 
 Contoh susunan asal: baca baris atas dari kiri ke kanan, kemudian baris bawah. Ia **bukan** grid dengan petak yang semuanya sama besar.
 
-[Contoh atlas dengan plat kosong](../res/drawable-nodpi/saga_angles.png)
+[Contoh atlas Saga 8 sudut semasa](../res/drawable-nodpi/saga_angles.png) — plat asal dipulihkan dalam Next1.7 atas permintaan pemilik. Contoh prompt di bawah tetap menggunakan plat rekaan NEXA untuk kereta pengguna sendiri.
 
 ### Contoh prompt untuk sediakan gambar
 

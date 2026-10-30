@@ -1,19 +1,19 @@
 {
-  "file": "NexaDash-Next-1.6.apk",
+  "file": "NexaDash-Next-1.7.apk",
   "label": "NexaDash Next",
   "application_id": "com.shazwan.nexadash.next",
-  "version_name": "1.6-next7",
-  "version_code": 7,
-  "source_version": "1.6.7-nexadash.8-native17",
+  "version_name": "1.7-next8",
+  "version_code": 8,
+  "source_version": "1.6.7-nexadash.8-native18",
   "min_sdk": 24,
   "target_sdk": 29,
-  "size_bytes": 3038022,
-  "sha256": "64fbe9741c6cfab6fe3a97d53f57ec0883317b3723464ef3b2b9bed2bfa68685",
+  "size_bytes": 3050310,
+  "sha256": "1542cde29ef689b6b32281f2e06c54e28ec13f80091a1e571a340b4b7d69f379",
   "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
   "home_candidate": true,
   "old_launcher_replaced_or_data_migrated": false,
   "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
-  "validation": "Signed build/CRC/alignment/API27 signature and no-Quran guard passed; Android debug/release builds and all test-source compilation passed. Radio JVM PASS30 file checks + PASS18 recovered-selector boundaries; actual API27 integration PASS23. Native host unchanged since Next1.4 PASS47. No FM driver open/control, OEM library load or new native-client runtime pass.",
+  "validation": "Original eight-view atlas restored byte-for-byte from previous preview build; exact packaged RGBA pixel match, transparency/dimensions and all eight frame bounds checked. Signed APK API27 verification, CRC/alignment, no-Quran guard and Android Studio debug/release builds passed. No new emulator/head-unit runtime test for this asset-only update. Earlier Radio1.6 and native1.4 checks remain separate.",
   "radio_native_controller_delivered": false,
   "radio_runtime_probe": "One fixed FM selector property, host/app UIDs, fixed device stat/access metadata and existing source/native-library/OAT/shared-library/bootclasspath paths; no driver open or tuner commands",
   "maps_panel_status": "Owner reports Maps companion works outside panel but map/search content stays blank inside, including when Maps alone is active. Routes/voice in panel remain unverified; this update does not fix Maps.",
@@ -24,7 +24,7 @@
     "Keyboard Send and IME cleanup; one Next native Maps selector",
     "Always attempt browser destroy after OEM stop/pause failure"
   ],
-  "privacy": "Blank plate image atlas and wallpaper. Bundled car video and old screenshot/APK downloads withdrawn.",
+  "privacy": "Original visible plate intentionally restored in the vehicle angle atlas at the owner's request. Documentation illustration and wallpaper remain edited. Old withdrawn videos/APKs are not restored.",
   "offline_quran_reader_included": false,
   "removed_quran_classes": [
     "QuranActivity",
@@ -33,15 +33,16 @@
     "QuranNotch"
   ],
   "release_changes": [
-    "Recover Radio dispatcher from complete five-file firmware export; publish static findings/checksums without OEM binaries",
-    "Extend Radio runtime paths report with exact recovered selector and fixed driver metadata/access flags; no hardware commands",
-    "Record owner TizenTube/Maps observations and current Maps limitation; Maps/TizenTube companions and native host unchanged"
+    "Restore original plated eight-view red Saga atlas at the owner's explicit request",
+    "Preserve 1774x887 RGBA atlas, eight angle ordering and existing sampled bitmap budget",
+    "Use Red Proton Saga accessibility description and update source/build documentation",
+    "Radio diagnostics, Maps/TizenTube companions and native host are unchanged"
   ],
   "active_native_panel_limit": 2,
   "active_web_or_file_panel_limit": 1,
   "mixed_native_web_file_concurrency": false,
   "same_native_package_in_two_panels": false,
-  "native_test_runtime": "Earlier Next1.4 PASS47 on API27 x86_64 software emulator with secondary-display feature enabled to match head-unit capability. Native implementation unchanged in1.6; suite not rerun for Radio report-only release. Unreleased UI sizing work did not pass and is not in this APK. Not Maps/TizenTube/ARM certification.",
+  "native_test_runtime": "Earlier Next1.4 PASS47 on API27 x86_64 software emulator with secondary-display feature enabled to match head-unit capability. Native implementation unchanged in1.7; no new dual-native runtime claim. Unreleased sizing work remains excluded. Not Maps/TizenTube/ARM certification.",
   "tizentube_panel_status": "Owner videos show TizenTube native video advancing in left panel while Maps UI is visible in right. All controls, search/keyboard, audio focus and long-session stability are not established.",
   "control_permission_owner": "Next host declares its own signature permission; install host first for new deployments.",
   "radio_file_export": {
@@ -54,5 +55,21 @@
     "manifest_report": "RADIO_EXPORT_REPORT.txt"
   },
   "radio_file_export_owner_evidence": "Complete owner ZIP: five of five expected firmware binaries copied and matching recorded SHA256; see docs/qa/radio-runtime-files-review.json",
-  "maps_ui_size_controls_delivered": false
+  "maps_ui_size_controls_delivered": false,
+  "vehicle_preview": {
+    "views": 8,
+    "atlas_dimensions": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "original_plate_visible": true,
+    "owner_requested_original_plate_visible": true,
+    "restoration_source": "Original eight-view atlas from earlier preview build",
+    "atlas_sha256": "bf66dff16b62b882a20a832f4b56e49f4547c7c4eaa55cc88c42cee1e966b2f9",
+    "packaged_rgba_pixels_match_restored_atlas": true,
+    "image_generation_or_plate_repainting_for_restoration": false,
+    "sampled_argb_bytes_upper_bound": 1575312,
+    "retained_atlas_limit_bytes": 2097152
+  }
 }

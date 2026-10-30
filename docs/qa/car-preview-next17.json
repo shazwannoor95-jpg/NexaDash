@@ -1,0 +1,24 @@
+{
+  "release": "1.7-next8",
+  "review_date_local": "2026-10-31",
+  "owner_request": "Restore original visible vehicle plate in the app",
+  "apk_sha256": "1542cde29ef689b6b32281f2e06c54e28ec13f80091a1e571a340b4b7d69f379",
+  "atlas_sha256": "bf66dff16b62b882a20a832f4b56e49f4547c7c4eaa55cc88c42cee1e966b2f9",
+  "verified": [
+    "Restored original atlas bytes from the previous preview build",
+    "1774x887 RGBA, alpha0..255 and visible content in eight existing frame bounds",
+    "Packaged APK atlas RGBA pixels exactly match restored source",
+    "Sampled ARGB upper bound1575312 bytes remains below existing2MiB limit",
+    "APK signature valid for API27 and matches previous Next signing certificate",
+    "ZIP CRC/alignment and no legacy Quran guard pass",
+    "Android Studio debug/release builds successful; lint0 errors,4 existing warnings"
+  ],
+  "limits": [
+    "No new emulator or physical head-unit runtime test for this asset-only release",
+    "Earlier Radio1.6 and native1.4 QA are historical, not new1.7 runtime passes",
+    "Maps/Radio panel functionality unchanged"
+  ],
+  "image_generation_or_plate_repainting_for_restoration": false,
+  "previous_radio_qa": "radio-runtime-next16-api27.json",
+  "previous_native_host_qa": "dual-native-api27.json"
+}

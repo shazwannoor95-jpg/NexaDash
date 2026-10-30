@@ -88,7 +88,7 @@ final class SagaAngleView extends View {
     }
     private void persist(){preferences.edit().putInt(FRAME_KEY,selected).apply();}
     private void describe(){
-        setContentDescription("Red Saga NEXA, rendered image angle "+(selected+1)+" of 8. Drag to change image angle, pinch to zoom, double tap to reset. These are eight images, not a live 3D model.");
+        setContentDescription("Red Proton Saga, rendered image angle "+(selected+1)+" of 8. Drag to change image angle, pinch to zoom, double tap to reset. These are eight images, not a live 3D model.");
     }
 
     void resume(){

@@ -1,12 +1,12 @@
 # NexaDash Next — dua companion native dalam panel
 
-**Semasa: Next1.6.** Update1.6 menambah [pemilih FM/metadata driver](RADIO_RUNTIME_FILES_REVIEW.md) dalam laporan Radio; kod hosting dua panel tidak berubah. [Ujian pemilik TizenTube dan Maps](MAPS_PANEL_MS.md).
+**Semasa: Next1.7.** Update1.6 menambah [pemilih FM/metadata driver](RADIO_RUNTIME_FILES_REVIEW.md) dalam laporan Radio; kod hosting dua panel tidak berubah. [Ujian pemilik TizenTube dan Maps](MAPS_PANEL_MS.md).
 
 Next1.4 membenarkan **dua app companion berbeza** berada dalam left/right panel serentak. Setiap panel mempunyai token proxy, display, binding, input worker dan rekod startup sendiri. Memilih native pada panel kedua tidak menutup panel pertama. **Ini belum menjadi host umum untuk semua app asal.**
 
 ## Download dan pasang pada head unit
 
-1. [NexaDash Next1.6 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk). Boleh update atas Next1.0–1.5 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
+1. [NexaDash Next1.7 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk). Boleh update atas Next1.0–1.6 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
 2. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk). Jika companion ini sudah dipasang, tidak perlu pasang semula; APK Maps tidak berubah dalam update ini.
 3. [TizenTube · NexaDash Next ARM32 (~81MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-tizentube-next/TizenTube-NexaDash-Next-arm32.apk). **TizenTube Native Lab lama / app asal bukan companion Next ini.** Ia dipasang berasingan dan menggunakan signing key serta permission Next.
 
@@ -43,7 +43,7 @@ Jangan anggap screenshot app ujian sebagai screenshot Maps/TizenTube atau bukti 
 
 ## Ujian sendiri tanpa ADB, termasuk emulator Android Studio
 
-Untuk mengasingkan masalah host daripada Maps/TizenTube, pasang dua app ujian pilihan ini bersama Next1.6:
+Untuk mengasingkan masalah host daripada Maps/TizenTube, pasang dua app ujian pilihan ini bersama Next1.7:
 
 - [Native Test A](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/native-tests/NexaDash-Native-Test-a.apk)
 - [Native Test B](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/native-tests/NexaDash-Native-Test-b.apk)

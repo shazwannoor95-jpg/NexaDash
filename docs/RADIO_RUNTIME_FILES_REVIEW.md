@@ -38,7 +38,7 @@ Sebahagian dependency ialah library platform persendirian. Ketersediaan namespac
 
 ## Langkah pemilik sekarang — tanpa ADB
 
-1. Install **[NexaDash Next1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** atas Next sedia ada. Package/key sama; tidak perlu uninstall atau reinstall Maps/TizenTube.
+1. Install **[NexaDash Next1.7](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk)** atas Next sedia ada. Package/key sama; tidak perlu uninstall atau reinstall Maps/TizenTube.
 2. Buka **Settings → Radio runtime paths → Copy report**.
 3. Hantar teks report. Bahagian baharu menunjukkan nilai selector/komponen terpilih, UID launcher/app Radio, serta mode/UID/GID dan flag read/write bagi tiga path driver tetap.
 

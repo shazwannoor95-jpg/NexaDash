@@ -8,17 +8,17 @@ Launcher head unit Android oleh **[shazwannoor95-jpg](https://github.com/shazwan
 
 NexaDash menyediakan dashboard dengan panel kaca, jam, maklumat solat, preview kereta, shortcut app dan susunan yang boleh diubah.
 
-**[Download NexaDash Next 1.6](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.6.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
+**[Download NexaDash Next 1.7](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.7.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
 
 Versi semasa ialah **public beta**, belum disahkan stabil pada head unit fizikal. Android minimum 7.0/API24; eksperimen native display memerlukan API26+. Sokongan firmware perlu diuji pada peranti sendiri.
 
 ## Mula guna
 
-1. Download APK Next 1.6 dan install melalui file manager head unit.
+1. Download APK Next 1.7 dan install melalui file manager head unit.
 2. Buka **NexaDash Next** dari Apps dan cuba dashboard dahulu.
 3. Selepas menguji, pilih **NexaDash Next** dalam Android Default launcher jika firmware menyediakan pilihan itu. Kekalkan launcher asal untuk kembali jika perlu.
 
-Next dipasang berasingan daripada NexaDash lama/Native Lab. Update daripada Next1.0–1.5 menggunakan package dan signing key sama. Pemasangan launcher asas tidak memerlukan companion Maps.
+Next dipasang berasingan daripada NexaDash lama/Native Lab. Update daripada Next1.0–1.6 menggunakan package dan signing key sama. Pemasangan launcher asas tidak memerlukan companion Maps.
 
 ## Ciri dan status
 
@@ -46,7 +46,7 @@ Next1.6 menambah semakan **pilihan app FM firmware dan metadata izin driver** da
 - [Maps companion, status native panel dan Radio](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/NEXT_INSTALL_MS.md)
 - [Ukuran CPU/RAM proses launcher](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PREVIEW_PERFORMANCE_MS.md)
 
-Plat pada aset awam semasa telah dikosongkan. APK, screenshot dan video lama yang berisiko telah ditarik; gunakan pautan Next 1.6 di atas.
+Next1.7 memulihkan set asal 8 sudut kereta dengan plat yang kelihatan, atas permintaan pemilik. Gambar contoh README kekal disunting. Gunakan pautan APK semasa di atas.
 
 ## Source dan build
 
