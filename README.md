@@ -1,3 +1,17 @@
+# NexaDash — launcher head unit
+
+![Contoh reka bentuk dashboard NexaDash](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-native-panel-experiment/docs/img/nexadash-dashboard-public.png)
+
+*Contoh reka bentuk versi terdahulu; plat pada gambar telah disunting untuk privasi. Susunan beta Next semasa mungkin berbeza.*
+
+**[Mula di sini: panduan tukar launcher head unit dan install NexaDash Next1.2](https://github.com/shazwannoor95-jpg/klikdash/blob/nexadash-native-panel-experiment/docs/PUBLIC_BETA_MS.md)**
+
+[Source NexaDash semasa](https://github.com/shazwannoor95-jpg/klikdash/tree/nexadash-native-panel-experiment) · [Panduan preview kereta sendiri](https://github.com/shazwannoor95-jpg/klikdash/blob/nexadash-native-panel-experiment/docs/CAR_PREVIEW_MS.md)
+
+NexaDash ialah fork KlikDash. NexaDash Next ialah public beta; Maps native masih eksperimen dan Radio FM native belum siap. Branch `main` ini mengekalkan source asas upstream; gunakan pautan source NexaDash di atas untuk build dashboard yang ditunjukkan.
+
+---
+
 <p align="center">
   <img src="design/header.png" alt="KlikDash on an Android car headunit: home screen with prayer times and an offline Quran">
 </p>
