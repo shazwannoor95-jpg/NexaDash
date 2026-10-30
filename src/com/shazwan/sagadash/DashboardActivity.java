@@ -63,6 +63,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     DashPanelCompatibility panelCompatibility;
     DashPerformance performance;
     DashRadioRuntime radioRuntime;
+    DashRadioExport radioExport;
     DashMedia media;
     LocationManager locations;
     Location previous;
@@ -415,7 +416,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         return installedVersion;
     }
     String footerLabel(){return "Native Lab · Vehicle settings     ·     NexaDash v"+versionName();}
-    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash","Vehicle settings","Performance check","Radio runtime paths"};}
+    String[] settingsLabels(){return new String[]{"Prayer zone & timetable","Media / notification access","Lyrics: "+(dashPrefs().getBoolean("lyrics",false)?"On":"Off"),"Location permission","Android settings","AI assistant","Screen lock","Power saver","AI profiles","Default launcher","Clock / GPS time","Dashboard layout","Appearance","App panel compatibility","About NexaDash","Vehicle settings","Performance check","Radio runtime paths","Export Radio files"};}
     void settings(){
         closeApps();
         if(!visible||isFinishing()||isDestroyed()||(settingsDialog!=null&&settingsDialog.isShowing()))return;
@@ -431,9 +432,10 @@ public class DashboardActivity extends Activity implements LocationListener {
     }
     void closeSettings(){if(settingsGrid!=null){settingsGrid.close();settingsGrid=null;}if(settingsDialog!=null){settingsDialog.dismiss();settingsDialog=null;}}
     void showRadioRuntime(){if(radioRuntime==null)radioRuntime=new DashRadioRuntime();radioRuntime.show(this,io);}
+    void exportRadioFiles(){if(radioExport==null)radioExport=new DashRadioExport();radioExport.choose(this);}
     void showPanelCompatibility(){if(panelCompatibility==null)panelCompatibility=new DashPanelCompatibility();panelCompatibility.show(this,io);}
     void settingsAction(int i){
-        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;case 15:shortcut("Vehicle settings");break;case 16:if(performance==null)performance=new DashPerformance(this,()->"left="+leftPane.mode+", right="+rightPane.mode,()->visible);performance.show();break;case 17:showRadioRuntime();break;}}
+        try{switch(i){case 0:prayerDialog();break;case 1:startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));break;case 2:new AlertDialog.Builder(this).setTitle("Online lyrics").setMessage("Send the current track title and artist to LRCLIB to find lyrics? Bluetooth itself does not supply lyrics. Synced lyrics depend on availability and playback position from the source.").setPositiveButton("Enable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",true).apply();lyricKey="";refreshMedia();}).setNeutralButton("Disable",(v,w)->{dashPrefs().edit().putBoolean("lyrics",false).apply();lyricKey="";refreshMedia();}).setNegativeButton("Cancel",null).show();break;case 3:requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},7);break;case 4:startActivity(new Intent(Settings.ACTION_SETTINGS));break;case 5:startActivity(new Intent(this,AskActivity.class));break;case 6:configureLock();break;case 7:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_POWER));break;case 8:startActivity(new Intent(this,SettingsActivity.class).putExtra(SettingsActivity.EXTRA_TAB,SettingsActivity.TAB_AI));break;case 9:startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));break;case 10:clockDialog();break;case 11:editLayoutMenu();break;case 12:appearance.show();break;case 13:showPanelCompatibility();break;case 14:showAbout();break;case 15:shortcut("Vehicle settings");break;case 16:if(performance==null)performance=new DashPerformance(this,()->"left="+leftPane.mode+", right="+rightPane.mode,()->visible);performance.show();break;case 17:showRadioRuntime();break;case 18:exportRadioFiles();break;}}
         catch(ActivityNotFoundException|SecurityException unavailable){toast("This setting is unavailable on this device");}
     }
     void showAbout(){
@@ -482,6 +484,12 @@ public class DashboardActivity extends Activity implements LocationListener {
     void launchVideo(){DashShortcuts.open(this,"YouTube");}
     @Override protected void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);
+        if(request==DashRadioExport.REQUEST){
+            if(result==RESULT_OK&&data!=null&&data.getData()!=null){
+                if(radioExport==null)radioExport=new DashRadioExport();radioExport.save(this,io,data.getData());
+            }
+            return;
+        }
         if(request==PICK_PANEL_VIDEO){
             if(result==RESULT_OK&&data!=null&&data.getData()!=null){
                 Uri uri=data.getData();
@@ -599,7 +607,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override protected void onStop(){pauseDashboard();super.onStop();}
     @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
     void pauseDashboard(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.pause();handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
-    @Override protected void onDestroy(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.close();closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onDestroy(){if(radioExport!=null)radioExport.close();if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.close();closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onBackPressed(){
         if(leftPane!=null&&leftPane.webPlayer!=null&&leftPane.webPlayer.exitFullscreen())return;
         if(rightPane!=null&&rightPane.webPlayer!=null&&rightPane.webPlayer.exitFullscreen())return;

@@ -1,0 +1,39 @@
+{
+  "host_version": "1.5-next6",
+  "host_sha256": "eb12689cac9bad6edd1bc5a98130552d29453fb2faf5b933c80dbd638b752d10",
+  "device": "isolated AOSP API27 x86_64 software emulator",
+  "resolution": "1024x600",
+  "density_dpi": 160,
+  "jvm_assertions_passed": 30,
+  "android_assertions_passed": 17,
+  "jvm_result": "PASS: 30 Radio file checks (no firmware executed)",
+  "android_result": "PASS: 17 Radio export API27 assertions (settings, save-picker handoff, local ZIP and read failures; not FM control)",
+  "verified": [
+    "Fixed five-path allowlist cannot be mutated by callers",
+    "Binary byte integrity and SHA256 records",
+    "Missing/permission-denied/partial reads omitted without aborting other files",
+    "Per-file and combined byte limits",
+    "Cancellation and normal temporary-file cleanup",
+    "Zero-progress source fails instead of hanging",
+    "Real Settings tile dispatch preserves previous indices",
+    "Android ACTION_CREATE_DOCUMENT ZIP picker handoff and cancellation",
+    "Actual content-provider output ZIP with consistent failure/runtime report",
+    "Normal app UID and rejection of non-content destinations"
+  ],
+  "limits": [
+    "Save-picker request was intercepted by instrumentation; local content-provider ZIP write tested; full DocumentsUI touch workflow not automated",
+    "Five-file success/read-failure scenarios use JVM fixtures; API27 emulator does not contain TEST9278B Radio firmware",
+    "No physical head-unit file-copy test",
+    "No native OEM library load, tuner control, Radio UI hosting or ARM client execution",
+    "No new two-panel native runtime claim; earlier Next1.4 PASS47 evidence remains separate"
+  ],
+  "gradle": "Offline debug/release build successful; lint0 errors,4 existing warnings",
+  "all_android_test_sources_compile": true,
+  "api27_signature_alignment_crc_passed": true,
+  "raw_user_apks_or_backup_data_published": false,
+  "source": [
+    "../../tests/jvm/RadioFilesChecks.java",
+    "../../tests/RadioExportChecks.java",
+    "../../tests/run-radio-export.sh"
+  ]
+}

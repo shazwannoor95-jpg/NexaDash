@@ -13,7 +13,7 @@ javac --release 8 -cp "$JAR:build/next/classes" -d "$OUT/classes" tests/DualNati
 (cd "$OUT/dex" && zip -q "$OUT/base.apk" classes.dex)
 "$BT/zipalign" -f 4 "$OUT/base.apk" "$OUT/aligned.apk"
 "$BT/apksigner" sign --ks "$NEXADASH_NEXT_KEYSTORE" --ks-key-alias webtest --ks-pass env:NEXADASH_NEXT_KS_PASS --out "$OUT/checks.apk" "$OUT/aligned.apk"
-adb -s "$DEVICE" install -r build/next/NexaDash-Next-1.4.apk
+adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.5.apk}"
 adb -s "$DEVICE" install -r build/native-tests/NexaDash-Native-Test-a.apk
 adb -s "$DEVICE" install -r build/native-tests/NexaDash-Native-Test-b.apk
 adb -s "$DEVICE" install -r "$OUT/checks.apk"

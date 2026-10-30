@@ -1,5 +1,7 @@
 # Radio follow-up: full35-part export (29 October2026)
 
+> Follow-up30 October: both later `fm.part1/2.rar` volumes extracted successfully. All five APKs are identical to this export, and the App Manager Radio backup's `oat` directory is empty. Next1.5 adds a fixed-path local firmware-file exporter to obtain the omitted binaries. [Results and steps](RADIO_EXPORT_MS.md).
+
 Read-only static analysis. No APK or OEM library executed, no head-unit command/broadcast sent, no original modified. This analysis uses only `/workspace/headunit35/extracted`, the new35-part set; the older16-part set was kept separate.
 
 ## Completed scope

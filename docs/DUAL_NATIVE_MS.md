@@ -1,10 +1,12 @@
-# Next1.4 — dua companion native dalam panel
+# NexaDash Next — dua companion native dalam panel
+
+**Semasa: Next1.5.** Update1.5 menambah [export fail Radio](RADIO_EXPORT_MS.md); API hosting dua panel tidak berubah.
 
 Next1.4 membenarkan **dua app companion berbeza** berada dalam left/right panel serentak. Setiap panel mempunyai token proxy, display, binding, input worker dan rekod startup sendiri. Memilih native pada panel kedua tidak menutup panel pertama. **Ini belum menjadi host umum untuk semua app asal.**
 
 ## Download dan pasang pada head unit
 
-1. [NexaDash Next1.4 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.4.apk). Boleh update atas Next1.3 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
+1. [NexaDash Next1.5 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.5.apk). Boleh update atas Next1.0–1.4 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
 2. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk). Jika companion ini sudah dipasang, tidak perlu pasang semula; APK Maps tidak berubah dalam update ini.
 3. [TizenTube · NexaDash Next ARM32 (~81MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-tizentube-next/TizenTube-NexaDash-Next-arm32.apk). **TizenTube Native Lab lama / app asal bukan companion Next ini.** Ia dipasang berasingan dan menggunakan signing key serta permission Next.
 
@@ -21,7 +23,7 @@ Jika setup/permission perlu dilakukan di luar panel, gunakan tindakan **Open out
 
 ![Dua app ujian native sebenar dalam panel API27](img/dual-native-api27.png)
 
-**47 assertions lulus pada emulator API27 x86_64,1024×600/density160**, menggunakan dua APK ujian native sebenar dengan UID berasingan. Piksel app disemak dalam kedua-dua panel, bukan sekadar menerima display ID. Sentuhan dihantar melalui input routing Android pada skrin utama; counter dan text field dalam app yang betul sahaja berubah.
+**Host Next1.4:47 assertions lulus pada emulator API27 x86_64,1024×600/density160**, menggunakan dua APK ujian native sebenar dengan UID berasingan. Piksel app disemak dalam kedua-dua panel, bukan sekadar menerima display ID. Sentuhan dihantar melalui input routing Android pada skrin utama; counter dan text field dalam app yang betul sahaja berubah.
 
 Ujian turut menyemak resize satu panel, perlindungan duplicate package, kegagalan sebelah kanan tanpa menutup kiri, laporan startup berasingan, Stop/mode switch bebas dan cleanup selepas meninggalkan dashboard. Kembali ke dashboard tidak auto-start. [Rekod QA dan had ujian](qa/dual-native-api27.json) · [Sumber ujian](../tests/DualNativeChecks.java).
 
@@ -41,7 +43,7 @@ Jangan anggap screenshot app ujian sebagai screenshot Maps/TizenTube atau bukti 
 
 ## Ujian sendiri tanpa ADB, termasuk emulator Android Studio
 
-Untuk mengasingkan masalah host daripada Maps/TizenTube, pasang dua app ujian pilihan ini bersama Next1.4:
+Untuk mengasingkan masalah host daripada Maps/TizenTube, pasang dua app ujian pilihan ini bersama Next1.5:
 
 - [Native Test A](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/native-tests/NexaDash-Native-Test-a.apk)
 - [Native Test B](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/native-tests/NexaDash-Native-Test-b.apk)

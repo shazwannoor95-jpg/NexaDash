@@ -31,7 +31,11 @@ final class DashSettingsGrid extends GridView implements AutoCloseable {
         android.R.drawable.ic_menu_crop,
         android.R.drawable.ic_menu_gallery,
         android.R.drawable.ic_menu_preferences,
-        android.R.drawable.ic_dialog_info
+        android.R.drawable.ic_dialog_info,
+        android.R.drawable.ic_menu_manage,
+        android.R.drawable.ic_menu_info_details,
+        android.R.drawable.ic_menu_search,
+        android.R.drawable.ic_menu_save
     };
     private final Activity activity;
     private final DashAppearance appearance;

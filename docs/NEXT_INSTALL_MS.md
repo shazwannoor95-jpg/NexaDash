@@ -1,13 +1,13 @@
-> **Semasa: Next1.4.** Untuk dua native panel dan TizenTube companion, ikut [panduan dual native](DUAL_NATIVE_MS.md). Nota lama tentang satu inline player di bawah digantikan oleh polisi: dua companion native berbeza dibenarkan; web/file kekal eksklusif.
+> **Semasa: Next1.5.** [Export fail Radio](RADIO_EXPORT_MS.md). Untuk dua native panel dan TizenTube companion, ikut [panduan dual native](DUAL_NATIVE_MS.md). Nota lama tentang satu inline player di bawah digantikan oleh polisi: dua companion native berbeza dibenarkan; web/file kekal eksklusif.
 
-> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use only the sanitised Next1.3 build. Old feature/build instructions below may refer to withdrawn media.
+> Privacy update: old screenshots, video exports and APK downloads withdrawn. Use the current sanitised Next1.5 build. Old feature/build instructions below may refer to withdrawn media.
 
 # NexaDash Next + Maps companion — install/status
 
 ## APKs
 
-1. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install **first**.
-2. [NexaDash Next (~5.5MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.4.apk) — install after the companion, then open from Apps.
+1. [NexaDash Next1.5 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.5.apk) — install **first**, then open from Apps.
+2. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk) — install the matching companion if not already installed.
 
 Separate packages: `com.shazwan.nexadash.maps.next` and `com.shazwan.nexadash.next`. Both use the same new signing key and a dedicated signature permission, different from old Native Lab. The original Google Maps and old NexaDash are not replaced or uninstalled; their data remains. Next starts with its own settings.
 
@@ -28,7 +28,7 @@ Memilih app asal dalam senarai Apps atau navigation shortcut tidak menambah brid
 
 ## Maps native panel
 
-In **Next**, open the right-panel selector → **Google Maps · native Next companion (test)** → **Start**. Host raster follows the surface aspect ratio (longest edge<=800), with corresponding touch coordinates. Only one inline web/file/native player is selected at once. The other panel can remain car or ordinary media controls.
+In **Next**, open the right-panel selector → **Google Maps · native Next companion (test)** → **Start**. Host raster follows the surface aspect ratio (longest edge<=800), with corresponding touch coordinates. Two distinct native companions can run in separate panels. Web/file playback remains exclusive with other inline panels.
 
 This companion contains the actual Maps25.32 base/ARM32/en/mdpi payload merged into one APK, with an opt-in/input bridge. It is not a Maps website. Original nine DEX/ten ARM32 libraries retained; shared UID and conflicting provider identities removed; MainActivity uses standard launch mode and embedding/resize opt-ins.
 
@@ -41,6 +41,8 @@ After a failed Start, Settings → App panel compatibility → Copy report inclu
 The 35-part export was fully scanned (141 APKs/187 regular DEX). Required Radio QtActivity and tuner libraries remain absent from the supplied APK payloads. Local Binder services are not a recovered remote controller API. No opaque tuner commands were guessed or sent.
 
 Next adds **Settings → Radio runtime paths**. In the Radio external-controls panel, the explanation can also be tapped to open this check. It reads installed package source/native/shared-library paths, bounded OAT/VDEX filenames, known system/vendor library visibility and bootclasspath paths. No shell, root, activity launch, service binding, native library load, broadcast, tuner command or file-content upload is performed. **Copy report** shares only the text chosen by the owner.
+
+Next1.5 also adds **Settings → Export Radio files** for a user-chosen local ZIP of the five known firmware binaries; see [the export guide](RADIO_EXPORT_MS.md). No tuner calls or automatic uploads are added.
 
 This check gathers missing firmware locations; it is not a substitute FM controller or hosted original Radio UI. The implementation is still blocked until a usable runtime/control path is established on the head unit. A nonvisible file may be hidden by permissions/SELinux rather than absent.
 

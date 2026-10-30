@@ -1,0 +1,95 @@
+{
+  "review_date": "2026-10-30",
+  "archive_parts": 2,
+  "archive_bytes": [
+    20971520,
+    10541782
+  ],
+  "multipart_validation": "RAR5 volume1 and volume2 extracted together with UNRAR; all archive CRCs passed.",
+  "files_extracted": 26,
+  "apks": [
+    {
+      "name": "CAN Settings_2.6.apk",
+      "size": 9395308,
+      "sha256": "8f9928a06eaa2f85dfb4d95646457a5e7b7449541dd56f05834eba5c9e466321",
+      "identical_old": "CAN_Settings_com.xygala.pvcanset/CAN_Settings_PvCanset.apk"
+    },
+    {
+      "name": "Launcher_1.0.1.5.apk",
+      "size": 25340429,
+      "sha256": "6759fdb9df4f02fcbe1b8a9790940c14b309f81bf119a4c9e9c6094b3aef8fe4",
+      "identical_old": "Launcher_com.xygala.launcherall/Launcher_LauncherXYAll.apk"
+    },
+    {
+      "name": "Radio_10.0.apk",
+      "size": 21049,
+      "sha256": "18454efc37917db1981b0e12da7fca99d2b99daecb2122e72daae612c1009eec",
+      "identical_old": "Radio_com.acloud.stub.localradio/Radio_GalaRadio_integrate.apk"
+    },
+    {
+      "name": "localradio_2.3.24.apk",
+      "size": 1574200,
+      "sha256": "a4445f8445a5f05dc863ee23bad141f60d048ed1d2227b120108fd15d72dae0d",
+      "identical_old": "localradio_com.acloud.stub.extradio/localradio_GalaRadio.apk"
+    },
+    {
+      "name": "localradio_3.1.apk",
+      "size": 3916452,
+      "sha256": "d4ddf380442643af8f258d087bcd60ea99a28761ee76258d31d02416b8fc4314",
+      "identical_old": "localradio_com.android.fmradio/localradio_FMRadio.apk"
+    }
+  ],
+  "all_five_apks_identical_to_previous_35_part_export": true,
+  "app_manager_backup_sources": [
+    {
+      "package": "com.acloud.stub.localradio",
+      "source_archive_entries": [
+        {
+          "name": "GalaRadio_integrate.apk",
+          "bytes": 21049,
+          "kind": "file",
+          "sha256": "18454efc37917db1981b0e12da7fca99d2b99daecb2122e72daae612c1009eec"
+        },
+        {
+          "name": "oat",
+          "bytes": 0,
+          "kind": "directory"
+        }
+      ]
+    },
+    {
+      "package": "com.acloud.stub.extradio",
+      "source_archive_entries": [
+        {
+          "name": "GalaRadio.apk",
+          "bytes": 1574200,
+          "kind": "file",
+          "sha256": "a4445f8445a5f05dc863ee23bad141f60d048ed1d2227b120108fd15d72dae0d"
+        }
+      ]
+    },
+    {
+      "package": "com.android.fmradio",
+      "source_archive_entries": [
+        {
+          "name": "FMRadio.apk",
+          "bytes": 3916452,
+          "kind": "file",
+          "sha256": "d4ddf380442643af8f258d087bcd60ea99a28761ee76258d31d02416b8fc4314"
+        }
+      ]
+    }
+  ],
+  "tool_jars": "am.jar and main.jar contain App Manager support code, not the OEM Radio implementation; not executed.",
+  "missing_from_this_upload": [
+    "GalaRadio_integrate.odex",
+    "GalaRadio_integrate.vdex",
+    "libRadioInterface.so",
+    "libfmjni.so"
+  ],
+  "radio_backup_oat_directory_empty": true,
+  "head_unit_runtime_path_evidence": "Owner screenshots show oat/arm files listed and both libraries readable in /system/lib; readability does not prove successful copy/load or tuner access.",
+  "radio_controller_or_native_hosting_verified": false,
+  "next_step": "Next1.5 Settings > Export Radio files attempts exactly five known firmware binaries into an owner-selected local ZIP, plus per-file results and runtime path report. No APK extraction loop or root/ADB requirement is assumed.",
+  "raw_binaries_published": false
+}
