@@ -8,13 +8,13 @@ Launcher head unit Android oleh **[shazwannoor95-jpg](https://github.com/shazwan
 
 NexaDash menyediakan dashboard dengan panel kaca, jam, maklumat solat, preview kereta, shortcut app dan susunan yang boleh diubah.
 
-**[Download NexaDash Next 1.3](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.3.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
+**[Download NexaDash Next 1.4](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.4.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
 
 Versi semasa ialah **public beta**, belum disahkan stabil pada head unit fizikal. Android minimum 7.0/API24; eksperimen native display memerlukan API26+. Sokongan firmware perlu diuji pada peranti sendiri.
 
 ## Mula guna
 
-1. Download APK Next 1.3 dan install melalui file manager head unit.
+1. Download APK Next 1.4 dan install melalui file manager head unit.
 2. Buka **NexaDash Next** dari Apps dan cuba dashboard dahulu.
 3. Selepas menguji, pilih **NexaDash Next** dalam Android Default launcher jika firmware menyediakan pilihan itu. Kekalkan launcher asal untuk kembali jika perlu.
 
@@ -28,17 +28,20 @@ Next dipasang berasingan daripada NexaDash lama/Native Lab. Update Next 1.0/1.1 
 | Preview kereta | 8 imej sudut; import video sendiri tersedia |
 | Local video / YouTube web | Tersedia; playback dan fullscreen perlu disahkan pada peranti |
 | Navigation shortcut | Membuka app Maps/Waze berasingan |
-| Google Maps native dalam panel | Eksperimen companion; rendering, carian, route dan suara belum disahkan pada head unit |
+| Dua panel native | Host dua companion diuji dengan47 assertions pada emulator API27; [panduan dan batasan](docs/DUAL_NATIVE_MS.md) |
+| Maps + TizenTube dalam panel | Companion ARM32 tersedia untuk percubaan; fungsi client sebenar belum disahkan pada head unit |
 | Radio FM native / Waze native dalam panel | Belum siap |
 
 ## Panduan
+
+- [Dua app companion native serentak: Next1.4, APK dan ujian tanpa ADB](docs/DUAL_NATIVE_MS.md)
 
 - [Tukar launcher head unit dan install beta](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)
 - [Preview kereta sendiri: video, 8 sudut PNG dan contoh prompt](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/CAR_PREVIEW_MS.md)
 - [Maps companion, status native panel dan Radio](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/NEXT_INSTALL_MS.md)
 - [Ukuran CPU/RAM proses launcher](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PREVIEW_PERFORMANCE_MS.md)
 
-Plat pada aset awam semasa telah dikosongkan. APK, screenshot dan video lama yang berisiko telah ditarik; gunakan pautan Next 1.3 di atas.
+Plat pada aset awam semasa telah dikosongkan. APK, screenshot dan video lama yang berisiko telah ditarik; gunakan pautan Next 1.4 di atas.
 
 ## Source dan build
 

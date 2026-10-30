@@ -1,0 +1,14 @@
+[
+  {
+    "file": "NexaDash-Native-Test-a.apk",
+    "size_bytes": 12713,
+    "sha256": "d04030cf96360a93b227ac2a7a11c7f3ea5fe8e0e95a59c3b1556db04d2b6d5a",
+    "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752"
+  },
+  {
+    "file": "NexaDash-Native-Test-b.apk",
+    "size_bytes": 12713,
+    "sha256": "b3ca307f706a63451c828bfb7178342c1ce57f1f30a78d86a9ea35084e3faadc",
+    "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752"
+  }
+]

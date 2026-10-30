@@ -15,6 +15,8 @@ for node in app:
  if name=='.DashboardActivity':node.set(a('excludeFromRecents'),'false')
 for node in list(app.findall('receiver')):
  if node.get(a('name'),'').endswith('.UpdatedReceiver'):app.remove(node)
+# Host owns the signature permission, so companion installation is not order-dependent.
+E.SubElement(r,'permission',{a('name'):'com.shazwan.nexadash.next.permission.CONTROL',a('protectionLevel'):'signature'})
 for perm in list(r.findall('uses-permission')):
  if perm.get(a('name'))=='com.shazwan.embedprobe.permission.CONTROL':r.remove(perm)
 out=Path(sys.argv[1]);out.parent.mkdir(parents=True,exist_ok=True);root.write(out,encoding='utf-8',xml_declaration=True)

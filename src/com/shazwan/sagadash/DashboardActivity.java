@@ -187,8 +187,8 @@ public class DashboardActivity extends Activity implements LocationListener {
             java.util.List<String> menuLabels=new ArrayList<>(),menuValues=new ArrayList<>();
             boolean next="com.shazwan.nexadash.next".equals(getPackageName());
             for(int i=0;i<values.length;i++){if(next&&("native_tizentube".equals(values[i])||"native_app".equals(values[i])))continue;menuLabels.add(labels[i]);menuValues.add(values[i]);}
-            if(next){menuLabels.add(0,"Google Maps · native Next companion (test)");menuValues.add(0,"native_maps");}
-            new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(menuLabels.toArray(new String[0]),(d,i)->{String picked=menuValues.get(i);if("native_maps".equals(picked))selectNativeTarget(3);else if("native_tizentube".equals(picked))selectNativeTarget(1);else setMode(picked);}).setNegativeButton("Cancel",null).show();
+            if(next){menuLabels.add(0,"TizenTube · native Next companion (test)");menuValues.add(0,"native_tizentube_next");menuLabels.add(0,"Google Maps · native Next companion (test)");menuValues.add(0,"native_maps");}
+            new AlertDialog.Builder(DashboardActivity.this).setTitle("Switch panel").setItems(menuLabels.toArray(new String[0]),(d,i)->{String picked=menuValues.get(i);if("native_maps".equals(picked))selectNativeTarget(3);else if("native_tizentube_next".equals(picked))selectNativeTarget(4);else if("native_tizentube".equals(picked))selectNativeTarget(1);else setMode(picked);}).setNegativeButton("Cancel",null).show();
         }
         void selectNativeTarget(int index){
             dashPrefs().edit().putInt("native_target_"+key,index).apply();
@@ -198,7 +198,7 @@ public class DashboardActivity extends Activity implements LocationListener {
             String valid=Arrays.asList("car","navigation","youtube","tizentube","media","radio","youtube_web","video_file","native_app").contains(requested)?requested:"media";
             if(valid.equals("car")&&!key.equals("vehicle"))valid="media";
             Pane other=key.equals("vehicle")?rightPane:leftPane;
-            if(inlineMode(valid)&&other!=null&&inlineMode(other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
+            if(other!=null&&inlineConflict(valid,other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
             if(navigation!=null){navigation.close();navigation=null;}
             if(webPlayer!=null){webPlayer.close();webPlayer=null;}
             if(filePlayer!=null){filePlayer.close();filePlayer=null;}
@@ -211,7 +211,7 @@ public class DashboardActivity extends Activity implements LocationListener {
             else if(mode.equals("navigation")){navigation=new DashNavigationView(DashboardActivity.this,()->shortcut("Navigation"));slot.addView(navigation,new FrameLayout.LayoutParams(-1,-1));if(latestFix!=null)navigation.setLocation(latestFix);if(visible&&editMode==0)navigation.resume();}
             else if(mode.equals("youtube_web")){webPlayer=new DashWebPlayer(DashboardActivity.this);slot.addView(webPlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0){webPlayer.resume();webPlayer.open("");}}
             else if(mode.equals("native_app")){
-                nativeFrame=new DashNativeFrame(DashboardActivity.this);
+                nativeFrame=new DashNativeFrame(DashboardActivity.this,key);
                 int savedTarget=0;try{savedTarget=dashPrefs().getInt("native_target_"+key,0);}catch(ClassCastException ignored){}
                 nativeFrame.select(savedTarget);
                 nativeFrame.setOnTargetSelected(index->dashPrefs().edit().putInt("native_target_"+key,index).apply());
@@ -231,11 +231,12 @@ public class DashboardActivity extends Activity implements LocationListener {
             }
             if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
         }
-        void pause(){if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
+        void pause(){if(nativeFrame!=null)nativeFrame.pause();if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
         void resume(){if(visible&&editMode==0){if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();if(nativeFrame!=null)nativeFrame.resume();}}
         void close(){if(nativeFrame!=null)nativeFrame.close();if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
     }
     static boolean inlineMode(String mode){return "youtube_web".equals(mode)||"video_file".equals(mode)||"native_app".equals(mode);}
+    static boolean inlineConflict(String a,String b){return inlineMode(a)&&inlineMode(b)&&!("native_app".equals(a)&&"native_app".equals(b));}
     boolean inlineSelected(){return leftPane!=null&&inlineMode(leftPane.mode)||rightPane!=null&&inlineMode(rightPane.mode);}
     void pickPanelVideo(Pane pane){
         pendingVideoPane=pane.key;dashPrefs().edit().putString("panel_video_target",pane.key).apply();
@@ -262,7 +263,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     void editLayoutMenu(){
         if(editMode!=0){finishEditing(true);return;}
         new AlertDialog.Builder(this).setTitle("Dashboard layout").setItems(new String[]{"Move / resize panels","Reorder dock icons","Reset default layout","Neon outline: "+(neon()?"On":"Off")},(d,i)->{
-            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;revealFooter();layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();if(leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
+            if(i<2){dockBeforeEdit=dashPrefs().getString("dock_order",android.text.TextUtils.join(",",DOCK_NAMES));for(int n=0;n<DOCK_NAMES.length;n++)dockSizesBefore[n]=dashPrefs().getFloat("dock_icon_scale_"+DOCK_NAMES[n],1);editMode=i+1;revealFooter();layoutSurface.setEditing(i==0);releaseVehicleResources();leftPane.pause();rightPane.pause();buildDock();editButton.setText("Done ✓");footerText.setText(i==0?"Drag a panel to move · Bottom-right handle to resize · Tap here to cancel":"Tap icon to resize · Long press + drag to reorder · Tap here to cancel");}
             else if(i==2){layoutSurface.resetLayout();android.content.SharedPreferences.Editor reset=dashPrefs().edit().remove("dock_order");for(String name:DOCK_NAMES)reset.remove("dock_icon_scale_"+name);reset.apply();buildDock();leftPane.setMode("car");rightPane.setMode("media");}
             else{boolean enabled=!neon();android.content.SharedPreferences.Editor edit=dashPrefs().edit().putBoolean("style_neon",enabled);if(enabled&&appearance.intensity()==0)edit.putInt("appearance_neon",65);edit.apply();applyStyle();}
         }).setNegativeButton("Close",null).show();
@@ -595,7 +596,7 @@ public class DashboardActivity extends Activity implements LocationListener {
     @Override public void onRequestPermissionsResult(int r,String[] p,int[] results){super.onRequestPermissionsResult(r,p,results);if(r==7&&visible)startGps();}
     @Override protected void onResume(){super.onResume();Notice.dismissExpired();visible=true;revealFooter();appearance.start();leftPane.resume();rightPane.resume();updateVehicleResources();media.start();handler.removeCallbacks(tick);tick.run();startGps();PrayerAlarm.home=new java.lang.ref.WeakReference<>(this);schedulePrayer();fetchPrayer();}
     boolean nativeRunning(){return leftPane!=null&&leftPane.nativeFrame!=null&&leftPane.nativeFrame.display!=null||rightPane!=null&&rightPane.nativeFrame!=null&&rightPane.nativeFrame.display!=null;}
-    @Override protected void onStop(){pauseDashboard();if(leftPane!=null&&leftPane.nativeFrame!=null)leftPane.nativeFrame.pause();if(rightPane!=null&&rightPane.nativeFrame!=null)rightPane.nativeFrame.pause();super.onStop();}
+    @Override protected void onStop(){pauseDashboard();super.onStop();}
     @Override protected void onPause(){if(!nativeRunning())pauseDashboard();super.onPause();}
     void pauseDashboard(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.pause();handler.removeCallbacks(hideFooter);visible=false;closeApps();closeSettings();if(aboutDialog!=null){aboutDialog.dismiss();aboutDialog=null;}if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(editMode!=0)finishEditing(false);leftPane.pause();rightPane.pause();releaseVehicleResources();if(prayerLocation!=null)prayerLocation.signalLost();handler.removeCallbacks(tick);media.stop();locations.removeUpdates(this);previous=null;dashPrefs().edit().putFloat("trip",(float)tripMetres).apply();PrayerAlarm.home.clear();}
     @Override protected void onDestroy(){if(radioRuntime!=null)radioRuntime.close();if(performance!=null)performance.close();closeSettings();if(panelCompatibility!=null)panelCompatibility.close();appearance.stop();if(clockEventsRegistered)unregisterReceiver(clockEvents);leftPane.close();rightPane.close();io.shutdownNow();lyricsIo.shutdownNow();prayerIo.shutdownNow();handler.removeCallbacksAndMessages(null);super.onDestroy();}

@@ -1,22 +1,22 @@
 {
-  "file": "next/NexaDash-Next-1.3.apk",
+  "file": "next/NexaDash-Next-1.4.apk",
   "label": "NexaDash Next",
   "application_id": "com.shazwan.nexadash.next",
-  "version_name": "1.3-next4",
-  "version_code": 4,
-  "source_version": "1.6.7-nexadash.8-native14",
+  "version_name": "1.4-next5",
+  "version_code": 5,
+  "source_version": "1.6.7-nexadash.8-native15",
   "min_sdk": 24,
   "target_sdk": 29,
   "size_bytes": 3033926,
-  "sha256": "3bb70711b7090fbeca7d77214187228e7084039657effb9cec0adbfc9beea758",
+  "sha256": "2e487ea1887c9b1e58b4c2e1a85911bb3e709c0e0a490480ea4b8dc8946580eb",
   "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
   "home_candidate": true,
   "old_launcher_replaced_or_data_migrated": false,
   "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
-  "validation": "Signed build, CRC/alignment and no-Quran DEX/data guard passed. Old APK fails the guard as expected. Android debug/release builds and existing test-source compilation passed; no emulator/head-unit runtime test.",
+  "validation": "Signed build/CRC/alignment and no-Quran guard passed; Android debug/release and test-source compilation passed; real dual-native API27 integration PASS47. No physical head-unit/ARM client runtime test.",
   "radio_native_controller_delivered": false,
   "radio_runtime_probe": "Read-only source/native-library/OAT/shared-library/bootclasspath paths; no tuner commands",
-  "maps_panel_status": "Host target integrated; separate experimental real-Maps companion statically verified, runtime navigation unverified.",
+  "maps_panel_status": "Maps Next companion supported by host; ARM/head-unit map rendering/search/routes/voice remain unverified.",
   "fixes": [
     "Reject queued Back/text commands from stopped or replaced sessions",
     "Cancel active gesture on raster resize/queue overflow; wait for fresh Down",
@@ -33,12 +33,22 @@
     "QuranNotch"
   ],
   "release_changes": [
-    "Remove legacy Quran reader/player/notch/data classes, reader resources and builder",
-    "Remove old AI/media and legacy home links to the removed subsystem",
-    "Correct owned repository links to NexaDash after confirmed GitHub rename"
+    "Two independent native panel sessions, preserving explicit Start",
+    "New matching-key TizenTube Next target alongside existing Maps Next",
+    "Duplicate-package startup blocked without stealing the other display",
+    "Per-panel startup diagnostics and independent lifecycle cleanup",
+    "Native test A/B APKs for emulator or optional head-unit diagnosis"
   ],
-  "source_version_name": "1.6.7-nexadash.8-native14",
-  "source_version_code": 46,
+  "active_native_panel_limit": 2,
+  "active_web_or_file_panel_limit": 1,
+  "mixed_native_web_file_concurrency": false,
+  "same_native_package_in_two_panels": false,
+  "native_test_runtime": "PASS47 on API27 x86_64 software emulator with secondary-display feature enabled to match head-unit capability; real separate apps/UIDs, pixels, touch/text, resize, isolation and cleanup. Not Maps/TizenTube/ARM playback certification.",
+  "tizentube_panel_status": "New matching-key ARM32 Next companion statically checked; head-unit rendering/playback unverified.",
+  "control_permission_owner": "Next host declares its own signature permission; install host first for new deployments.",
+  "source_version_name": "1.6.7-nexadash.8-native15",
+  "source_version_code": 47,
   "source_build_info": "next/artifact.json",
-  "active_inline_player_limit": 1
+  "active_inline_player_limit": 2,
+  "inline_concurrency_policy": "Two distinct native companions; web/file remains exclusive with other inline panels."
 }

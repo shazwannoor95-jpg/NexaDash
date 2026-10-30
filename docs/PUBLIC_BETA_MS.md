@@ -4,15 +4,19 @@
 
 *Contoh reka bentuk daripada screenshot versi terdahulu yang telah disunting untuk mengosongkan plat. Susunan versi Next semasa mungkin berbeza. Ini menunjukkan dashboard launcher; bukan bukti Maps/Radio native berfungsi.*
 
-NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [shazwannoor95-jpg](https://github.com/shazwannoor95-jpg). Versi untuk percubaan komuniti sekarang: **Next 1.3 (`1.3-next4`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
+NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [shazwannoor95-jpg](https://github.com/shazwannoor95-jpg). Versi untuk percubaan komuniti sekarang: **Next 1.4 (`1.4-next5`)**. Build dan semakan statik lulus; versi ini belum disahkan stabil pada head unit fizikal. Gunakan ketika kereta berhenti dan kekalkan launcher asal untuk kembali jika perlu.
 
 ## Install
 
-[Download NexaDash Next 1.3](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.3.apk).
+[Download NexaDash Next 1.4](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.4.apk).
 
 Android minimum API24 (Android7.0). Native-display experiment memerlukan API26+. Syarat minimum bukan jaminan keserasian firmware OEM. Install APK melalui file manager, buka **NexaDash Next** dari Apps dahulu. Selepas menguji, pengguna boleh memilihnya dalam Android Default launcher jika firmware menyediakan pilihan itu. Ia tidak perlu dijadikan Home untuk dicuba. Kekalkan app launcher asal.
 
 Next1.3 mengemas kini Next1.0/1.1/1.2 dengan package/signing key sama. Ia dipasang berasingan daripada NexaDash lama/Native Lab; data lama tidak dipindahkan. APK GitHub dan build Android Studio dengan signing key sendiri tidak semestinya boleh update antara satu sama lain.
+
+## Dua panel native
+
+Next1.4 membenarkan dua companion native berbeza tanpa menutup panel sebelah. Host lulus47 assertions dengan dua app ujian pada emulator API27 yang diiklankan secondary-display-capable; Maps/TizenTube ARM dan firmware fizikal belum disahkan. [Panduan, APK companion dan ujian tanpa ADB](DUAL_NATIVE_MS.md). App asal WhatsApp/Spotify tidak menjadi embeddable secara automatik.
 
 ## Status ciri
 

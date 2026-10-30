@@ -128,7 +128,7 @@ final class DashNativeChecks {
                 check("confirmed".equals(confirmed.get("result"))&&confirmed.equals(diagnostics.getAll()),"Stop preserves the real Demo startup confirmation and display IDs");
                 frame[0].resume();check(!frame[0].wanted&&frame[0].display==null,"resume does not auto-launch the native app");
             });
-            DashAppsChecks.onMain(i,()->{dash.rightPane.setMode("native_app");check(dash.leftPane.nativeFrame==null&&"car".equals(dash.leftPane.mode),"selecting native on the other panel releases the previous inline/native panel");frame[0]=dash.rightPane.nativeFrame;frame[0].select(2);frame[0].start();if(frame[0].inputThread!=null)workers.add(frame[0].inputThread);});
+            DashAppsChecks.onMain(i,()->{dash.rightPane.setMode("native_app");check(dash.leftPane.nativeFrame!=null&&"native_app".equals(dash.leftPane.mode),"selecting native on the other panel preserves the first native host");frame[0]=dash.rightPane.nativeFrame;frame[0].select(2);frame[0].start();if(frame[0].inputThread!=null)workers.add(frame[0].inputThread);});
             await(i,()->frame[0].display!=null,"native companion can start in the right panel too");
             await(i,()->frame[0].targetConfirmed,"right native panel confirms the real Demo startup display too");
             DashAppsChecks.onMain(i,()->{

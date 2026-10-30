@@ -1,0 +1,33 @@
+{
+  "host_version": "1.4-next5",
+  "host_sha256": "2e487ea1887c9b1e58b4c2e1a85911bb3e709c0e0a490480ea4b8dc8946580eb",
+  "device": "isolated AOSP API27 x86_64 software emulator",
+  "resolution": "1024x600",
+  "density_dpi": 160,
+  "secondary_display_feature_added_to_test_system": true,
+  "secondary_display_feature_reason": "Stock image does not advertise activities_on_secondary_displays; TEST9278B report does. This changes only the emulator system capability flag. Host and clients run as normal app UIDs; physical head unit was not modified.",
+  "assertions_passed": 47,
+  "result": "PASS: 47 assertions (two real native test apps, separate UIDs/displays, touch/text, resize, failure, cleanup; not Maps/TizenTube playback)",
+  "clients": [
+    "com.shazwan.nexadash.test.a",
+    "com.shazwan.nexadash.test.b"
+  ],
+  "verified": [
+    "two real distinct non-primary display IDs",
+    "host and both clients use three independent UIDs",
+    "real native pixels in both panels",
+    "trusted primary-screen Android input routing and isolated counter/editor updates",
+    "left resize preserves right session",
+    "duplicate package blocked without stealing other display",
+    "right failure isolated; left startup record retained",
+    "independent Stop and panel mode switch",
+    "leaving dashboard cleans up and return does not autoplay"
+  ],
+  "not_verified": [
+    "Maps ARM rendering/location/search/routes/voice",
+    "TizenTube ARM rendering/playback/IME/background lifecycle",
+    "physical TEST9278B firmware and performance",
+    "arbitrary unpatched apps such as WhatsApp/Spotify"
+  ],
+  "screenshot": "../img/dual-native-api27.png"
+}

@@ -29,3 +29,5 @@ or Kemenag RI. Product names are trademarks of their owners.
 ## Aset dan APK pihak ketiga
 
 Lesen projek tidak melesenkan semula Google Maps, YouTube atau app vendor. Eksperimen companion berasingan tidak patut dianggap sebahagian daripada kod berlesen MIT. Tanda dagang serta hak aset pihak ketiga kekal pada pemiliknya. Foto input peribadi dan signing key tidak patut diterbitkan. Kredit/lesen font dan header lesen komponen dalam source kekal.
+
+TizenTube/Cobalt Next companion is adapted from [TizenTubeCobalt2.0.3](https://github.com/reisxd/TizenTubeCobalt/tree/v2.0.3). Its upstream copyright/license is reproduced in [tools/tizentube-next/UPSTREAM_LICENSE.txt](tools/tizentube-next/UPSTREAM_LICENSE.txt), and original APK third-party notices/assets are retained. Host tests with A/B do not certify the upstream app.
