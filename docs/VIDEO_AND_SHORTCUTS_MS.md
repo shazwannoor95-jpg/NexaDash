@@ -1,5 +1,7 @@
 # Paparan kereta dan shortcut — Saga Dash
 
+**Nak buat preview kereta sendiri?** [Panduan lengkap: video tanpa coding atau8 PNG untuk drag](CAR_PREVIEW_MS.md), termasuk contoh prompt dan alat susun atlas.
+
 Paparan awal sekarang ialah **Saga image angles (lightweight)**: lapan imej sudut kereta yang
 dihasilkan daripada rujukan Saga merah yang diberi, dengan plat **NEXA**. Ia bukan model 3D
 atau kamera bebas. Tiada animasi berjalan apabila kereta tidak disentuh.

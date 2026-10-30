@@ -1,5 +1,7 @@
 **For community testers:** [Public beta install, feature status and bug reports](docs/PUBLIC_BETA_MS.md). Next1.1 is a beta; physical head-unit validation is pending.
 
+**Your own car preview:** [Guide: import a car video or build eight draggable image views](docs/CAR_PREVIEW_MS.md). Includes photo/AI prompt, angle order and PNG atlas tool.
+
 **New full launcher: [NexaDash Next 1.1 (~5.5MB)](dist/next/NexaDash-Next-1.1.apk?raw=true)** · [Install and status](docs/NEXT_INSTALL_MS.md). Separate package/data and new signing key; can be chosen as Home manually. Old NexaDash/Native Lab remain installed. Includes current dashboard, web fullscreen, performance check and read-only Radio runtime paths.
 
 **[Maps · NexaDash Next ARM32 companion (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/klikdash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk)** — install first, then Next. In Next choose **Google Maps · native Next companion (test)** in a panel and tap **Start**. Actual Maps payload with a cooperative bridge; static/rebuild/signature checks passed. **No ARM/head-unit execution: map rendering, search, routes/voice, Google services and panel input remain unverified.** One inline player at a time. Radio FM native control is **not implemented**; the new read-only report gathers missing runtime paths.

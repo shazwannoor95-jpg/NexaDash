@@ -25,3 +25,8 @@ app/build/
 
 # Private signing-key backup archives must never be committed.
 *-private-signing-backup.zip
+
+# Local Python tools environment and personal car photo inputs from the guide.
+.venv/
+my-car/
+__pycache__/

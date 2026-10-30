@@ -24,6 +24,10 @@ Next1.1 mengemas kini Next1.0 dengan package/signing key sama. Ia dipasang beras
 
 Launcher asas tidak memerlukan companion Maps. Pengguna yang mahu mencuba eksperimen Maps boleh membaca [panduan berasingan](NEXT_INSTALL_MS.md). Jangan menganggap kejayaan build sebagai pengesahan navigasi atau sokongan semua app.
 
+## Preview kereta sendiri
+
+Nak guna kereta sendiri seperti preview Saga? Ikut **[panduan preview kereta](CAR_PREVIEW_MS.md)**. Video sendiri boleh diimport terus; preview8 sudut memerlukan PNG transparent, atlas dan build APK sendiri. Panduan merangkumi contoh prompt, susunan8 sudut, alat packing dan lokasi menukar nama model. Menu import foto belum ada dalam Next1.1.
+
 ## Apa yang perlu diuji sebelum stable
 
 Buka/tutup launcher, tekan Home dan kembali ke launcher asal; uji Apps/Settings dan simpan layout; uji jam selepas restart/sleep/wake; cuba video/web fullscreen dan Back; ambil Performance check. Rekod model, **API sebenar**, resolusi, versi app dan langkah menghasilkan masalah. Uji eksperimen Maps secara berasingan. Hardware yang belum diuji tidak disenaraikan sebagai disokong/disahkan.

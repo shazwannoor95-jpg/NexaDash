@@ -111,6 +111,8 @@ boleh mempunyai key berbeza; app dengan Package ID sama hanya boleh di-update de
 
 ## 8. Lokasi fail
 
+Untuk menukar preview Saga kepada kereta sendiri, ikut [panduan8 sudut dan atlas PNG](CAR_PREVIEW_MS.md). Menggantikan aset memerlukan build semula; menu import video tidak mengimport gambar.
+
 - `app\build.gradle`: SDK, application ID dan tetapan build.
 - `AndroidManifest.xml` di root: manifest sumber utama.
 - `src\com\shazwan\sagadash\DashboardActivity.java`: dashboard/panel.
