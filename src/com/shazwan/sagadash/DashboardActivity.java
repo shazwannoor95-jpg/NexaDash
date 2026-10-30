@@ -176,14 +176,14 @@ public class DashboardActivity extends Activity implements LocationListener {
     final class Pane {
         final String key;final LinearLayout box;final FrameLayout slot;final TextView selector;
         String mode;DashNavigationView navigation;DashMediaPanel mediaPanel;DashSourcePanel sourcePanel;
-        DashWebPlayer webPlayer;DashFilePlayer filePlayer;DashNativeFrame nativeFrame;
+        DashWebPlayer webPlayer;DashFilePlayer filePlayer;DashNativeFrame nativeFrame;DashFmPanel fmPanel;
         Pane(String key,String initial){
             this.key=key;box=card();LinearLayout head=row();TextView caption=text(key.equals("vehicle")?"LEFT PANEL":"RIGHT PANEL",11,MUTED);head.addView(caption,new LinearLayout.LayoutParams(0,-1,1));
             selector=text("Switch ▾",14,BLUE);selector.setGravity(Gravity.CENTER);selector.setOnClickListener(v->menu());selector.setContentDescription("Switch "+key+" panel");head.addView(selector,new LinearLayout.LayoutParams(px(142),-1));box.addView(head,new LinearLayout.LayoutParams(-1,px(27)));
             slot=new FrameLayout(DashboardActivity.this);box.addView(slot,new LinearLayout.LayoutParams(-1,0,1));setMode(initial);
         }
         void menu(){
-            String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","YouTube · external app controls","TizenTube · external app controls","Media controls","Radio · external app controls"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","Radio · external app controls","YouTube · external app controls","TizenTube · external app controls"};
+            String[] labels=key.equals("vehicle")?new String[]{"Car preview","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","YouTube · external app controls","TizenTube · external app controls","Media controls","Radio FM · in panel"}:new String[]{"Media controls","YouTube web · in panel (beta)","Video file · in panel","TizenTube · native panel (experimental)","Native app · experimental","Navigation preview","Radio FM · in panel","YouTube · external app controls","TizenTube · external app controls"};
             String[] values=key.equals("vehicle")?new String[]{"car","youtube_web","video_file","native_tizentube","native_app","navigation","youtube","tizentube","media","radio"}:new String[]{"media","youtube_web","video_file","native_tizentube","native_app","navigation","radio","youtube","tizentube"};
             java.util.List<String> menuLabels=new ArrayList<>(),menuValues=new ArrayList<>();
             boolean next="com.shazwan.nexadash.next".equals(getPackageName());
@@ -200,10 +200,12 @@ public class DashboardActivity extends Activity implements LocationListener {
             if(valid.equals("car")&&!key.equals("vehicle"))valid="media";
             Pane other=key.equals("vehicle")?rightPane:leftPane;
             if(other!=null&&inlineConflict(valid,other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
+            if(other!=null&&"radio".equals(valid)&&"radio".equals(other.mode))other.setMode(other.key.equals("vehicle")?"car":"media");
             if(navigation!=null){navigation.close();navigation=null;}
             if(webPlayer!=null){webPlayer.close();webPlayer=null;}
             if(filePlayer!=null){filePlayer.close();filePlayer=null;}
             if(nativeFrame!=null){nativeFrame.close();nativeFrame=null;}
+            if(fmPanel!=null){fmPanel.close();fmPanel=null;}
             if("car".equals(mode))releaseVehicleResources();
             slot.removeAllViews();mode=valid;mediaPanel=null;sourcePanel=null;dashPrefs().edit().putString("pane_"+key,mode).apply();
             String caption=mode.equals("car")?"Car":mode.equals("navigation")?"Map preview":mode.equals("media")?"Media controls":mode.equals("youtube_web")?"YouTube web":mode.equals("video_file")?"Video file":mode.equals("native_app")?"Native app lab":mode.equals("youtube")?"YT app controls":mode.equals("tizentube")?"TizenTube external":"Radio controls";selector.setText(caption+" ▾");
@@ -222,6 +224,9 @@ public class DashboardActivity extends Activity implements LocationListener {
                 String saved=dashPrefs().getString("panel_video_uri","");Uri uri=saved.startsWith("content://")?Uri.parse(saved):null;
                 filePlayer=new DashFilePlayer(DashboardActivity.this,io,uri,()->pickPanelVideo(this));slot.addView(filePlayer,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0)filePlayer.resume();
             }
+            else if(mode.equals("radio")){
+                fmPanel=new DashFmPanel(DashboardActivity.this,unit(),DashboardActivity.this::showRadioRuntime);slot.addView(fmPanel,new FrameLayout.LayoutParams(-1,-1));if(visible&&editMode==0)fmPanel.resume();
+            }
             else{
                 String name=mode.equals("youtube")?"YouTube":mode.equals("tizentube")?"TizenTube":"Radio";
                 String app=mode.equals("youtube")?"YouTube app":name;
@@ -232,9 +237,9 @@ public class DashboardActivity extends Activity implements LocationListener {
             }
             if(leftPane!=null)updateVehicleResources();styleButtons(box);refreshMedia();
         }
-        void pause(){if(nativeFrame!=null)nativeFrame.pause();if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
-        void resume(){if(visible&&editMode==0){if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();if(nativeFrame!=null)nativeFrame.resume();}}
-        void close(){if(nativeFrame!=null)nativeFrame.close();if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
+        void pause(){if(fmPanel!=null)fmPanel.pause();if(nativeFrame!=null)nativeFrame.pause();if(navigation!=null)navigation.pause();if(webPlayer!=null)webPlayer.pause();if(filePlayer!=null)filePlayer.pause();}
+        void resume(){if(visible&&editMode==0){if(fmPanel!=null)fmPanel.resume();if(navigation!=null)navigation.resume();if(webPlayer!=null)webPlayer.resume();if(filePlayer!=null)filePlayer.resume();if(nativeFrame!=null)nativeFrame.resume();}}
+        void close(){if(fmPanel!=null)fmPanel.close();if(nativeFrame!=null)nativeFrame.close();if(navigation!=null)navigation.close();if(webPlayer!=null)webPlayer.close();if(filePlayer!=null)filePlayer.close();}
     }
     static boolean inlineMode(String mode){return "youtube_web".equals(mode)||"video_file".equals(mode)||"native_app".equals(mode);}
     static boolean inlineConflict(String a,String b){return inlineMode(a)&&inlineMode(b)&&!("native_app".equals(a)&&"native_app".equals(b));}
@@ -409,7 +414,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         lyricsIo.execute(()->{if(generation!=lyricGeneration)return;DashLyrics found=new DashLyrics();try{found=DashLyrics.parse(new JSONObject(DashNetwork.get("https://lrclib.net/api/get?track_name="+URLEncoder.encode(t,"UTF-8")+"&artist_name="+URLEncoder.encode(a,"UTF-8"))));}catch(Exception ignored){}final DashLyrics result=found;handler.post(()->{if(!isDestroyed()&&generation==lyricGeneration&&lyricKey.equals(key)&&dashPrefs().getBoolean("lyrics",false)){lyrics=result;updateMediaPosition();}});});
     }
     String appName(String pkg){try{return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg,0)).toString();}catch(Exception e){return pkg;}}
-    void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Open Radio");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
+    void sources(){List<MediaController> sessions=media.sessions();List<String> names=new ArrayList<>();names.add("Auto · Follow playing media");for(MediaController c:sessions)names.add(appName(c.getPackageName()));names.add("Open Bluetooth");names.add("Radio FM · in panel");names.add("Open YouTube / TizenTube");new AlertDialog.Builder(this).setTitle("Media source").setItems(names.toArray(new String[0]),(d,i)->{if(i==0)media.choose("");else if(i<=sessions.size())media.choose(sessions.get(i-1).getPackageName());else if(i==sessions.size()+1)shortcut("Bluetooth");else if(i==sessions.size()+2)shortcut("Radio");else launchVideo();}).show();}
     String versionName(){
         if(installedVersion==null)try{installedVersion=getPackageManager().getPackageInfo(getPackageName(),0).versionName;}
         catch(PackageManager.NameNotFoundException ignored){installedVersion="unknown";}
@@ -476,7 +481,7 @@ public class DashboardActivity extends Activity implements LocationListener {
         });
     }
     void closeApps(){appsGeneration++;if(appsGrid!=null){appsGrid.close();appsGrid=null;}if(appsDialog!=null){appsDialog.dismiss();appsDialog=null;}}
-    void shortcut(String name){if(name.equals("YouTube")){launchOfficialYouTube();return;}if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
+    void shortcut(String name){if(name.equals("Radio")){if(rightPane!=null)rightPane.setMode("radio");return;}if(name.equals("YouTube")){launchOfficialYouTube();return;}if(name.equals("Navigation"))DashDirections.show(this);else DashShortcuts.open(this,name);}
     void launchOfficialYouTube(){
         Intent launch=getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
         if(launch==null||!DashShortcuts.start(this,launch))toast("Official YouTube is not installed or cannot be opened on this device.");

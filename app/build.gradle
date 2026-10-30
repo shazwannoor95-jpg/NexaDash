@@ -18,8 +18,8 @@ android {
         applicationId 'com.shazwan.nexadash.lab'
         minSdk 24
         targetSdk 29
-        versionCode 50
-        versionName '1.6.7-nexadash.8-native18'
+        versionCode 51
+        versionName '1.6.7-nexadash.8-native19'
     }
     sourceSets {
         main {

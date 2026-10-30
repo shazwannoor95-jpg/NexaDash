@@ -121,6 +121,7 @@ final class DashRadioRuntime {
         out.append("NEXADASH — RADIO RUNTIME PATHS\nRead-only visibility check; not a Radio controller or native-hosting test.\nAPI: ").append(Build.VERSION.SDK_INT)
             .append("\nHost UID: ").append(android.os.Process.myUid()).append('\n');
         backend(out);
+        out.append("\nLast in-panel FM session\n").append(DashFmController.report(context)).append('\n');
         out.append("\nInstalled Radio packages\n");PackageManager pm=context.getPackageManager();
         for(String pkg:PACKAGES){
             cancelled(stop);out.append('\n').append(pkg).append('\n');
