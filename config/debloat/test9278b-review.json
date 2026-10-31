@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "device": "TEST9278B",
+  "api": 27,
+  "abi": "armeabi-v7a",
+  "mode": "review-only",
+  "automatic_disable_enabled": false,
+  "privileged_access_verified": false,
+  "basis": "Owner APK export static review; not a measurement of background RAM/CPU",
+  "candidates": [
+    {
+      "package": "com.google.android.syncadapters.calendar",
+      "condition": "Only if calendar account sync is unused; confirm exact installed identity first"
+    },
+    {
+      "package": "org.videolan.vlc",
+      "condition": "Only if VLC is unused and not selected for local media"
+    }
+  ],
+  "protected_exact": [
+    "android",
+    "com.android.systemui",
+    "com.android.settings",
+    "com.android.shell",
+    "com.android.phone",
+    "com.android.inputmethod.latin",
+    "com.google.android.gms",
+    "com.android.vending",
+    "com.android.fmradio",
+    "com.acloud.stub.localradio",
+    "com.acloud.stub.extradio",
+    "com.autochips.bluetooth",
+    "com.acloud.stub.localmusic",
+    "com.acloud.stub.video",
+    "com.google.android.apps.maps"
+  ],
+  "protected_categories": [
+    "All installed HOME handlers, including original OEM launcher",
+    "Bluetooth stack and OEM Bluetooth UI",
+    "Audio, DSP, MCU, CarSet, CanBus and vehicle settings services",
+    "Active WebView provider and its donor dependencies",
+    "Location, permissions, installers, storage and account providers",
+    "ZLink and activation components pending dependency review"
+  ],
+  "execution_requirements": [
+    "Read current enabled/disabled state and resolve exact installed packages",
+    "Obtain working authorized ADB shell or root; ordinary APK cannot disable other system apps",
+    "Only disable-user; never uninstall system packages",
+    "Record original state and restore only changes made by this tool",
+    "Apply small batches and verify Radio/Bluetooth/GPS/Home after each batch"
+  ],
+  "not_established": [
+    "Full installed service dependency graph",
+    "Which candidates actually consume background memory",
+    "Firmware persistence of disable state after reboot"
+  ]
+}
