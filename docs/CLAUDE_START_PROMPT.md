@@ -1,0 +1,11 @@
+# Paste into Claude Code from the NexaDash repository root
+
+Continue development of my NexaDash Android head-unit launcher. First read CLAUDE.md, docs/CLAUDE_HANDOFF.md, docs/qa/owner-feedback-next19-20261031.json, dist/next/artifact.json and docs/handoff-inputs-manifest.json.
+
+My TEST9278B is actual Android API27/ARM32,1024x600@160dpi,1GB RAM. I want two functional in-dashboard panels. Google Maps companion still does NOT work in the panel after Next1.9, despite confirmed matching display IDs and707x480 raster. It worked outside the panel per my earlier test. Do not claim the larger layout fixed it. TizenTube video was observed advancing in-panel, but full controls/audio/stability are not certified. FM client UI exists, but antenna audio/tuning is not verified. The separate native NexaDash map has fixture-tested online search/routes; its physical-device results remain unconfirmed.
+
+Review code and existing evidence before asking me for the same files/reports. Distinguish renderer, lifecycle, input/focus, permission/network and layout causes with specific evidence. Do not guess a root cause from RAM or missing privileged permissions alone. Preserve the native-map alternative; do not route anything through DiAuto. No blanket debloating or firmware changes. Keep the owner-restored car preview assets and fork/license credit.
+
+Use tools/handoff/fetch-inputs.py --list to see the prepared originals/APKs/reports. Existing published companions can be downloaded by group. The roughly1GB original-input branch is staged locally but its public upload was blocked by automatic approval review; obtain my explicit informed destination/visibility confirmation before uploading that payload, and do not bypass the block. Never publish signing secrets or assume a fresh clone has the private key. Explain incompatible signing before installing anything that would require deleting my existing app/data.
+
+Implement changes, run meaningful checks and report actual limits. Keep versionCode/artifact hashes/docs consistent. Publish completed authorized code/APK updates to my GitHub repository without force-pushing. Do not describe emulator fixtures as successful Google Maps/FM hardware tests. Start with a concise summary of what the latest owner evidence proves and the next diagnostic hypothesis you can actually test.

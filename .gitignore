@@ -30,3 +30,6 @@ app/build/
 .venv/
 my-car/
 __pycache__/
+
+# Selectively downloaded handoff inputs stay outside source commits.
+.handoff-inputs/

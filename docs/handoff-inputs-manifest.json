@@ -1,0 +1,436 @@
+{
+  "schema": 1,
+  "owner_authorized_public_input_upload": true,
+  "branch": "handoff-inputs-20261031",
+  "system_archive_parts": 35,
+  "system_extracted_apks": 141,
+  "files": [
+    {
+      "path": "archives/system/android system.part01.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "1d6b85e58684c5e6ae0de18674a9c9f11bb0c0b0a9b734f8f955d01ef1b3782a"
+    },
+    {
+      "path": "archives/system/android system.part02.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "f227cd22c99e6a9e10344e31bb0769df1636eca71111a11610979613ee49ea2f"
+    },
+    {
+      "path": "archives/system/android system.part03.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "9b5ac312f9ee5edf315ae4bea9bd2051d54abf177b9dc414fa5247cd94201eb3"
+    },
+    {
+      "path": "archives/system/android system.part04.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "7e3b72f0d3d95bb79ada220f8d05528d70adbdbf23be9b687d0830b70b84d2fa"
+    },
+    {
+      "path": "archives/system/android system.part05.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "46baff4313654d6777f31b7eb816552a135471d56425a5bbd0d2d6db48b18134"
+    },
+    {
+      "path": "archives/system/android system.part06.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "b381e6f5e49c555b2bca7a1d431acd5efdde2a10f214ae6e769d38ef21860c68"
+    },
+    {
+      "path": "archives/system/android system.part07.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "c7edbc55239de27cffe3232aff64276e127212535c584c38fc4ab51baa0ea5ba"
+    },
+    {
+      "path": "archives/system/android system.part08.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "c81a16915214671deb8ce98df3e0606a39422796299b5830f9b1157861e1c1c2"
+    },
+    {
+      "path": "archives/system/android system.part09.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "631d4e4a568f91ca427c66f5fe40f6d9c8ae33eabdd294487176cc4477e9cc70"
+    },
+    {
+      "path": "archives/system/android system.part10.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "94b07d059a8802b5baa670f711811eff0e2a45d962f5b948ca293a343073b981"
+    },
+    {
+      "path": "archives/system/android system.part11.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "78441d5b0ad4cb71d7fb7afd52b95ff2b711fb6e4a49040b18fac9583c85ae84"
+    },
+    {
+      "path": "archives/system/android system.part12.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "3b106963fbbaa0fe81fd4986d2dfbb95e0bf1f797d38b3bda35bccb0b0149946"
+    },
+    {
+      "path": "archives/system/android system.part13.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "ee21e75d475587a00d62cf65d552e51825fe1331b113599ef83d379301687b8a"
+    },
+    {
+      "path": "archives/system/android system.part14.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "effe3d995961c79628a29ef8e739e21a13d4cf63a1ee9f499f57067cab322f28"
+    },
+    {
+      "path": "archives/system/android system.part15.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "1400dcb7e4c9998a3637187c7302a966edee0d84e932e478c7d97cafed1cad32"
+    },
+    {
+      "path": "archives/system/android system.part16.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "443b53d0e49fe22ff8141e324c4b2664e4e7742d969c72219ada4093897525a1"
+    },
+    {
+      "path": "archives/system/android system.part17.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "270a5e7cc176ca7e116d892b0000ff44f6418d981e649115056c81c6a7a58dfe"
+    },
+    {
+      "path": "archives/system/android system.part18.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "00d51c7c501d6c768dd468b35b838d264350d36fdf84a1d630a0bb48e0aa0d46"
+    },
+    {
+      "path": "archives/system/android system.part19.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "004632a26700e5ed54a8f4ba11be7cca30c3db8b99ad6b23e2bbc78741c6b4a5"
+    },
+    {
+      "path": "archives/system/android system.part20.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "441536835cabf8c97bf32aa7508962c26809f71a6895f4eed5e7233a4f5b3692"
+    },
+    {
+      "path": "archives/system/android system.part21.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "0d072372ad8abba8d41a2b3c03df5af5f371144b2b89bda884b890acc10a1c22"
+    },
+    {
+      "path": "archives/system/android system.part22.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "33d7a7123af1a4924203b1373c96dd29bc0f2fc4ea14c43dfb991517c9524015"
+    },
+    {
+      "path": "archives/system/android system.part23.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "2e44e4411b4eef2358aad42b56543c4d7fcf49087e05f191e5d74c656aebbc76"
+    },
+    {
+      "path": "archives/system/android system.part24.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "a9dcb6c234915a6311415b6e57e2ce81b04d745a550de2729581d7e2d9ab61b3"
+    },
+    {
+      "path": "archives/system/android system.part25.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "0e609d85b9559044f0aa066456584798e128f25649674cd6d5ec62fe3b539675"
+    },
+    {
+      "path": "archives/system/android system.part26.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "60dc8c483dccac615dc4beb89cea2d4bdf15354756db2ae10fb28ace7fc083f3"
+    },
+    {
+      "path": "archives/system/android system.part27.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "8080106525720daaa5e7f2938a8aef8acade452a2e490e7dc711f5f6595af3b1"
+    },
+    {
+      "path": "archives/system/android system.part28.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "a29194b1beeab43c441238619abcc10f4be694078de95800074b61f98e9a2d92"
+    },
+    {
+      "path": "archives/system/android system.part29.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "9cefd75e82146351287d9c359fe62c2ef9e55428c8e5b977ee732cfcc764300f"
+    },
+    {
+      "path": "archives/system/android system.part30.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "b0780e8b9329553c640a50cb501bc11999c01bfa091583084b69cc6984c77905"
+    },
+    {
+      "path": "archives/system/android system.part31.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "8c6999840b1332a975180d0f1d4e1f0dd56143f596f9519c140048cf1baed7a1"
+    },
+    {
+      "path": "archives/system/android system.part32.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "daf8f9aef0d135e725c964bf5354c2bf6ef84f9c1d128eb553098bcab2d1209c"
+    },
+    {
+      "path": "archives/system/android system.part33.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "a1cf1653ef769a794d8dadb9b7ca393ae4632bcc7e0e6a1d384cbb61a7d1c7fe"
+    },
+    {
+      "path": "archives/system/android system.part34.rar",
+      "group": "system-archives",
+      "size_bytes": 20971520,
+      "sha256": "2945ae7f7fff84b34a70da311c9f2b744ad21565f0c70df02ae4238a55a3f8ce"
+    },
+    {
+      "path": "archives/system/android system.part35.rar",
+      "group": "system-archives",
+      "size_bytes": 19377856,
+      "sha256": "60e0b59d2f10f59cf541c2da4f823d0c0722b96591e7b45d6af0539192c3150e"
+    },
+    {
+      "path": "archives/fm/fm.part1.rar",
+      "group": "fm-archives",
+      "size_bytes": 20971520,
+      "sha256": "2979807cbaf80e108eb5720abefb39cddb4cdcfdc55eb3f9950009bdeabd3fc3"
+    },
+    {
+      "path": "archives/fm/fm.part2.rar",
+      "group": "fm-archives",
+      "size_bytes": 10541782,
+      "sha256": "ef1e2897a619bc9ff5aae1cb17e6faada74507a7f3b64a59357f54e9c82b54d2"
+    },
+    {
+      "path": "archives/radio/NexaDash-Radio-files.zip",
+      "group": "radio",
+      "size_bytes": 71388,
+      "sha256": "c74841ae040a79dfd060eb8cee551ebb365937686fa3d773075df07353905add"
+    },
+    {
+      "path": "apks/original/Maps_com.google.android.apps.maps/Maps_split_config.mdpi.apk",
+      "group": "maps",
+      "size_bytes": 795744,
+      "sha256": "4b8bda6bf76717f30c40d4043bb21492cf1062313e1bc75f8f21bdb6d49c297b"
+    },
+    {
+      "path": "apks/original/Maps_com.google.android.apps.maps/Maps_split_config.armeabi_v7a.apk",
+      "group": "maps",
+      "size_bytes": 25207982,
+      "sha256": "75d9504932f3054422a0370f9b095b8cfc36f6bd87702b5431cd936e51dc7430"
+    },
+    {
+      "path": "apks/original/Maps_com.google.android.apps.maps/Maps_split_config.en.apk",
+      "group": "maps",
+      "size_bytes": 1192345,
+      "sha256": "5f488b185310e34023023065305fdb39bbc4b69a53f4e5f1872bbf30c47d29ff"
+    },
+    {
+      "path": "apks/original/Maps_com.google.android.apps.maps/Maps_base.apk",
+      "group": "maps",
+      "size_bytes": 35809651,
+      "sha256": "21b4913c5110f54f5e178389ef03d9bdcb2bf1094a83ebd1dd2a88c8f7a71ab7"
+    },
+    {
+      "path": "apks/original/Radio_com.acloud.stub.localradio/Radio_GalaRadio_integrate.apk",
+      "group": "radio",
+      "size_bytes": 21049,
+      "sha256": "18454efc37917db1981b0e12da7fca99d2b99daecb2122e72daae612c1009eec"
+    },
+    {
+      "path": "apks/original/localradio_com.android.fmradio/localradio_FMRadio.apk",
+      "group": "radio",
+      "size_bytes": 3916452,
+      "sha256": "d4ddf380442643af8f258d087bcd60ea99a28761ee76258d31d02416b8fc4314"
+    },
+    {
+      "path": "apks/original/localradio_com.acloud.stub.extradio/localradio_GalaRadio.apk",
+      "group": "radio",
+      "size_bytes": 1574200,
+      "sha256": "a4445f8445a5f05dc863ee23bad141f60d048ed1d2227b120108fd15d72dae0d"
+    },
+    {
+      "path": "apks/original/CarSet_com.kyhero.car.myhost/CarSet_CanBus1.apk",
+      "group": "oem",
+      "size_bytes": 5408751,
+      "sha256": "77cb6d70aa12f1db6004c4c68fa29372000ffd540c3374481a820cbbd6ad7b36"
+    },
+    {
+      "path": "apks/original/CanBus2_com.kyhero.car.myhost2/CanBus2_CanBus2.apk",
+      "group": "oem",
+      "size_bytes": 5768430,
+      "sha256": "f5983fce75724fa9137e669ab815f049207176b33f19c15200f858b3fe49431f"
+    },
+    {
+      "path": "apks/original/Car_Settings_com.xyauto.Settings/Car_Settings_XyautoSettings.apk",
+      "group": "oem",
+      "size_bytes": 13834726,
+      "sha256": "2d751d65e3366fd88cdf2fa1ab85097c4f06b118eb284fecd9f74a3c5c74ed2d"
+    },
+    {
+      "path": "apks/original/Sound_Effects_com.xy.tda7729/Sound_Effects_SoundEffects.apk",
+      "group": "oem",
+      "size_bytes": 4660231,
+      "sha256": "957b614f8130762975c264132004168e091b7a8b46e70692ad59b037fb71695b"
+    },
+    {
+      "path": "apks/original/Bluetooth_com.autochips.bluetooth/Bluetooth_BTSuite.apk",
+      "group": "oem",
+      "size_bytes": 9693621,
+      "sha256": "d00404d1f7ba0989387f7cf475a0293e64ad901224ae6e7281fb883e28548759"
+    },
+    {
+      "path": "apks/original/Bluetooth_com.android.bluetooth/Bluetooth_MtkBluetooth.apk",
+      "group": "oem",
+      "size_bytes": 1825412,
+      "sha256": "3a74a6520adb59453f1a77cbd6c3cfcb8b1d83369a8d3394ca681ea79d30eba4"
+    },
+    {
+      "path": "apks/original/Launcher_com.xygala.launcherall/Launcher_LauncherXYAll.apk",
+      "group": "oem",
+      "size_bytes": 25340429,
+      "sha256": "6759fdb9df4f02fcbe1b8a9790940c14b309f81bf119a4c9e9c6094b3aef8fe4"
+    },
+    {
+      "path": "apks/original/localmusic_com.acloud.stub.localmusic/localmusic_GalaMusic.apk",
+      "group": "oem",
+      "size_bytes": 33998445,
+      "sha256": "21652754aa40a18c902a2fa341ef8bcceeaf8df0e0fa6272427b8ef893e87a60"
+    },
+    {
+      "path": "radio-runtime/system/lib/libRadioInterface.so",
+      "group": "radio",
+      "size_bytes": 37244,
+      "sha256": "c56737d7e1cac40d49c5a96e4e554ce250df0bd535c88a00909137fd9602bfc6"
+    },
+    {
+      "path": "radio-runtime/system/lib/libfmjni.so",
+      "group": "radio",
+      "size_bytes": 50076,
+      "sha256": "4795ff9eea41934ea70ad8390413b1cd0ddbecf873f08c59f324fa97b39b064a"
+    },
+    {
+      "path": "radio-runtime/system/app/GalaRadio_integrate/GalaRadio_integrate.apk",
+      "group": "radio",
+      "size_bytes": 21049,
+      "sha256": "18454efc37917db1981b0e12da7fca99d2b99daecb2122e72daae612c1009eec"
+    },
+    {
+      "path": "radio-runtime/system/app/GalaRadio_integrate/oat/arm/GalaRadio_integrate.vdex",
+      "group": "radio",
+      "size_bytes": 2478,
+      "sha256": "b0ef47263000de64407e7965230e1583f736997af88bcce3a4884d5e02d90893"
+    },
+    {
+      "path": "radio-runtime/system/app/GalaRadio_integrate/oat/arm/GalaRadio_integrate.odex",
+      "group": "radio",
+      "size_bytes": 16864,
+      "sha256": "726146ffa0eb4ace2ca28cc1a7484cdcc8bfc30f59f2925dd738c52608544ba7"
+    },
+    {
+      "path": "apks/companions/TizenTube-NativeLab-arm.apk",
+      "group": "tizentube",
+      "size_bytes": 80702817,
+      "sha256": "097530c5403f1ebba0db24e2cfcc4b3b33d3ca55ea0724364ed57e976185ba40"
+    },
+    {
+      "path": "reports/radio-runtime/inventory.json",
+      "group": "reports",
+      "size_bytes": 1042,
+      "sha256": "6c643682801a802cb26bc1744eb6bfb62ba24df9db5e1c651f7bda3e111cd767"
+    },
+    {
+      "path": "reports/radio-runtime/RADIO_EXPORT_REPORT.txt",
+      "group": "reports",
+      "size_bytes": 4789,
+      "sha256": "1be999ab2b902f01e7321e4b7104c7f5999cbd2c3609912b86725fbbe911c6cb"
+    },
+    {
+      "path": "reports/radio-runtime/libfmjni-static.json",
+      "group": "reports",
+      "size_bytes": 11681,
+      "sha256": "058384221ba229cbcb26be7f5dffafc10b982109c9ff0b3d0be66fcf5aebf3a7"
+    },
+    {
+      "path": "reports/radio-runtime/libRadioInterface-static.json",
+      "group": "reports",
+      "size_bytes": 12220,
+      "sha256": "2bb5a1d76b7d4503c417d06f2fea18ea53c2dc51c7f78c7af1565f3002a9f6de"
+    },
+    {
+      "path": "reports/system/inventory.json",
+      "group": "reports",
+      "size_bytes": 42941,
+      "sha256": "a00b67fa8d00ac5f6d83a1685de38794714956d27e9b9ea48424a3a53aca8c5f"
+    },
+    {
+      "path": "reports/system/zip-checks.json",
+      "group": "reports",
+      "size_bytes": 17214,
+      "sha256": "287ee3372b2cc02f148d51949d32007155250fc048ac0be9a83d333499be8933"
+    },
+    {
+      "path": "reports/fm/apk-comparison.json",
+      "group": "reports",
+      "size_bytes": 1145,
+      "sha256": "22504a6207f2dbb5abbaf105f3691a725ae404f2eac957f8db532789973003e6"
+    }
+  ],
+  "published_companions": [
+    {
+      "path": "published-companions/Maps-NexaDash-Next-arm32.apk",
+      "group": "published-companions",
+      "size_bytes": 62668811,
+      "sha256": "da6b18a6c73b9f34784ff0e75e91d33c172a098e8f1091308a1b4c93339f9bdf",
+      "url": "https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk"
+    },
+    {
+      "path": "published-companions/TizenTube-NexaDash-Next-arm32.apk",
+      "group": "published-companions",
+      "size_bytes": 80690527,
+      "sha256": "48260595ac9b87c2699d5f90435789dbe16a876e498cff8f891e7f693257b1f5",
+      "url": "https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-tizentube-next/TizenTube-NexaDash-Next-arm32.apk"
+    }
+  ],
+  "excluded": [
+    "Private signing keystore/password",
+    "Account/app-data backups: no such entries in the reviewed35-part system APK archive",
+    "Raw owner photos/videos and their metadata",
+    "Unrelated/incompatible or currently unavailable V58/V62/Waze multipart uploads"
+  ],
+  "notes": [
+    "The full system RAR set contains141 APK files, not a flashable firmware image.",
+    "FM RAR source tar archives contain only APKs and an empty oat directory; metadata key_store fields were empty.",
+    "Installing OEM system APKs as normal apps does not grant their firmware identity or driver access. Use inputs for analysis; do not mass-install.",
+    "Runtime report/protocol/library inventory is evidence, not a working hardware test."
+  ],
+  "input_commit": "2c8be6498fab3832f9b6ccc2f42c6a4b69916a88",
+  "binary_branch_published": false,
+  "publication_status": "Staged and CRC/hash reviewed locally; public binary upload blocked by automatic approval review pending explicit owner confirmation of public1GB proprietary-system payload. No binary input uploaded."
+}

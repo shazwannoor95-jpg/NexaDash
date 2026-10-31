@@ -55,6 +55,10 @@ Next1.9 menambah **peta native NexaDash dengan carian/laluan dalam panel**, pand
 
 Next1.7 memulihkan set asal 8 sudut kereta dengan plat yang kelihatan, atas permintaan pemilik. Gambar contoh README kekal disunting. Gunakan pautan APK semasa di atas.
 
+## Sambung pembangunan dalam Claude Code
+
+Buka [panduan handoff lengkap](docs/CLAUDE_HANDOFF.md), [prompt permulaan](docs/CLAUDE_START_PROMPT.md) dan [inventori input](docs/handoff-inputs-manifest.json). Laporan pemilik terkini mengesahkan Maps companion masih gagal selepas Next1.9. Arkib asal disusun secara lokal; muat naik binari ke repo awam belum diluluskan oleh semakan automatik.
+
 ## Source dan build
 
 **[Source dashboard NexaDash semasa](https://github.com/shazwannoor95-jpg/NexaDash/tree/main)** · [Download source ZIP](https://codeload.github.com/shazwannoor95-jpg/NexaDash/zip/refs/heads/main) · [Arahan build Next](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/tools/next/README.md)

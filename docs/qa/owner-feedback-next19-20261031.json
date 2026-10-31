@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-31",
+  "timezone": "Asia/Kuala_Lumpur",
+  "source": "Owner photos of App panel compatibility report plus explicit follow-up message",
+  "host": "1.9-next10",
+  "device": {
+    "manufacturer": "alps",
+    "model": "TEST9278B",
+    "reported_android": "9.1",
+    "actual_api": 27,
+    "abis": [
+      "armeabi-v7a",
+      "armeabi"
+    ],
+    "display": "1024x600@160dpi",
+    "secondary_display_feature": true,
+    "freeform_feature": false,
+    "pip_feature": true
+  },
+  "companion": "com.shazwan.nexadash.maps.next /25.32.00.790560726-next1",
+  "historical_panel_attempts": {
+    "left": {
+      "requested": 8,
+      "proxy": 8,
+      "reported": 8,
+      "raster": "707x480@160dpi"
+    },
+    "right": {
+      "requested": 6,
+      "proxy": 6,
+      "reported": 6,
+      "raster": "707x480@160dpi"
+    }
+  },
+  "webview_provider": "com.android.chrome /138.0.7204.179",
+  "root": "not probed",
+  "privileged_permissions_granted": false,
+  "owner_followup": "masih sama tk berhasil",
+  "maps_companion_resolved": false,
+  "interpretation": [
+    "Startup display/size confirmation is not useful map rendering or search verification",
+    "Photos show a Maps search screen behind the diagnostic dialog, but not a successful search or regional map",
+    "Per-panel records do not establish simultaneous duplicate Maps sessions",
+    "Missing privileged permissions alone do not diagnose cooperative bridge failure"
+  ],
+  "native_nexadash_map_physical_result": "Not established by this report",
+  "raw_photos_published": false,
+  "fm_hardware_result": "Not established by these images"
+}
