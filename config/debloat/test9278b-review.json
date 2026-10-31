@@ -40,7 +40,8 @@
     "Audio, DSP, MCU, CarSet, CanBus and vehicle settings services",
     "Active WebView provider and its donor dependencies",
     "Location, permissions, installers, storage and account providers",
-    "ZLink and activation components pending dependency review"
+    "ZLink and activation components pending dependency review",
+    "Selected Android text-to-speech engine and voice data when panel navigation speech is used"
   ],
   "execution_requirements": [
     "Read current enabled/disabled state and resolve exact installed packages",

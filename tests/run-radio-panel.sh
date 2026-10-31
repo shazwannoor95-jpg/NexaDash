@@ -43,7 +43,7 @@ cleanup(){
 }
 trap cleanup EXIT
 for KEY in "${ANIMATION_KEYS[@]}";do adb -s "$DEVICE" shell settings put global "$KEY" 0;done
-adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.8.apk}"
+adb -s "$DEVICE" install -r "${HOST_APK:-build/next/NexaDash-Next-1.9.apk}"
 adb -s "$DEVICE" install -r build/radio-fixtures/internal.apk
 adb -s "$DEVICE" install -r build/radio-fixtures/external.apk
 adb -s "$DEVICE" install -r "$OUT/checks.apk"

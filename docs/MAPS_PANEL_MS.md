@@ -1,5 +1,7 @@
 # Maps dalam panel — status ujian pemilik
 
+> **Next1.9:** [Peta native NexaDash dengan carian/laluan dan calon pembaikan layout Maps](PANEL_MAP_NEXT19_MS.md). Pemerhatian pemilik di bawah kekal belum diuji semula pada head unit. APK companion tidak berubah.
+
 Rakaman TEST9278B menunjukkan **video TizenTube bergerak dalam panel kiri** ketika UI Maps berada di kanan. Maps memaparkan **Latest in the area / Explore** dan bottom navigation, tetapi kandungan peta/carian masih kosong. Pemilik melaporkan Maps companion berfungsi apabila dibuka di luar panel, dengan sedikit tersangkut-sangkut; Maps asal belum dibandingkan. Maps sahaja dalam panel juga masih kosong walaupun TizenTube dihentikan. [Rekod pemerhatian](qa/head-unit-native-owner-20261030.json).
 
 Ini mengesahkan video TizenTube dalam sesi yang dirakam, bukan semua fungsi/kawalan, audio focus atau kestabilan jangka panjang. UI Maps berjaya dilukis; peta, carian, route dan suara dalam panel belum disahkan. Punca khusus belum diketahui. RAM1GB sahaja tidak membuktikan punca lag, dan kejayaan penuh skrin tidak menentukan satu punca bagi panel kosong.
@@ -14,7 +16,7 @@ Sertakan hasil ujian itu dan **Settings → App panel compatibility → Copy rep
 
 ## Update semasa
 
-Next1.6 menambah semakan Radio, **bukan pembaikan Maps atau kawalan saiz baharu**. Host native dan APK companion tidak berubah. Eksperimen UI size/fokus disimpan sebagai kerja belum dilepas kerana semakan startup/sentuhan belum lulus; tiada APK percubaan itu dipautkan sebagai release.
+Next1.9 menambah peta sendiri dalam panel serta layout Maps Spacious/Compact yang menggunakan restart sesi dengan DPI160 tetap. Ini implementation baharu berasingan daripada eksperimen saiz lama yang tidak dilepas. Pemulihan tile/carian Google Maps sebenar masih memerlukan ujian pemilik; [langkah semasa](PANEL_MAP_NEXT19_MS.md).
 
 Apabila dashboard berhenti kerana app lain memenuhi skrin, NexaDash melepaskan kedua-dua virtual display, input worker dan service binding. Kembali memerlukan Start secara sengaja. Ia tidak force-stop proses/servis client atau menjamin RAM terus dipulangkan. Performance check launcher juga tidak mengukur keseluruhan proses Maps/TizenTube.
 

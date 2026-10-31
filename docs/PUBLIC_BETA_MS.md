@@ -8,11 +8,11 @@ NexaDash ialah launcher Android dengan dashboard panel kaca, diselenggara oleh [
 
 ## Install
 
-[Download NexaDash Next 1.8](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk).
+[Download NexaDash Next 1.9](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.9.apk).
 
 Android minimum API24 (Android7.0). Native-display experiment memerlukan API26+. Syarat minimum bukan jaminan keserasian firmware OEM. Install APK melalui file manager, buka **NexaDash Next** dari Apps dahulu. Selepas menguji, pengguna boleh memilihnya dalam Android Default launcher jika firmware menyediakan pilihan itu. Ia tidak perlu dijadikan Home untuk dicuba. Kekalkan app launcher asal.
 
-Next1.7 mengemas kini Next1.0–1.7 dengan package/signing key sama. Ia dipasang berasingan daripada NexaDash lama/Native Lab; data lama tidak dipindahkan. APK GitHub dan build Android Studio dengan signing key sendiri tidak semestinya boleh update antara satu sama lain.
+Next1.7 mengemas kini Next1.0–1.8 dengan package/signing key sama. Ia dipasang berasingan daripada NexaDash lama/Native Lab; data lama tidak dipindahkan. APK GitHub dan build Android Studio dengan signing key sendiri tidak semestinya boleh update antara satu sama lain.
 
 ## Dua panel native
 
@@ -67,3 +67,7 @@ Set asal8 sudut dengan plat dipulihkan atas permintaan pemilik. Saiz atlas, urut
 ## Radio dalam panel Next1.8
 
 Tekan **Radio → Start FM → Tune** untuk meminta frekuensi daripada servis FM asal head unit. Start/Stop, langkah0.1MHz dan enam preset tersedia dalam UI native NexaDash. Tiada companion Radio tambahan atau ADB diperlukan. Adapter menyokong versi servis yang dianalisis daripada arkib pemilik; audio/tuner TEST9278B masih memerlukan ujian sebenar. [Panduan](RADIO_PANEL_MS.md) · [Protokol dan batas pengesahan](RADIO_SERVICE_PROTOCOL.md).
+
+## Peta dalam panel Next1.9
+
+Pilih **Map · search / route** dalam selector panel untuk peta native NexaDash, carian destinasi dan laluan dalam panel. GPS, Internet dan data suara Android diperlukan mengikut fungsi. Google Maps companion menerima pilihan Spacious/Compact serta pautan permission, tetapi peta Google sebenar belum disahkan pulih pada head unit. [Panduan dan batas ujian](PANEL_MAP_NEXT19_MS.md).

@@ -1,12 +1,12 @@
 # NexaDash Next — dua companion native dalam panel
 
-**Semasa: Next1.8.** Update1.8 menambah [kawalan Radio FM native dalam panel](RADIO_PANEL_MS.md); kod hosting dua companion tidak berubah. Bunyi FM fizikal masih perlu diuji. [Ujian pemilik TizenTube dan Maps](MAPS_PANEL_MS.md).
+**Semasa: Next1.9.** [Peta native dan layout Maps1.9](PANEL_MAP_NEXT19_MS.md). Update1.8 menambah [kawalan Radio FM native dalam panel](RADIO_PANEL_MS.md); kod hosting dua companion tidak berubah. Bunyi FM fizikal masih perlu diuji. [Ujian pemilik TizenTube dan Maps](MAPS_PANEL_MS.md).
 
 Next1.4 membenarkan **dua app companion berbeza** berada dalam left/right panel serentak. Setiap panel mempunyai token proxy, display, binding, input worker dan rekod startup sendiri. Memilih native pada panel kedua tidak menutup panel pertama. **Ini belum menjadi host umum untuk semua app asal.**
 
 ## Download dan pasang pada head unit
 
-1. [NexaDash Next1.8 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk). Boleh update atas Next1.0–1.7 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
+1. [NexaDash Next1.9 (~3MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.9.apk). Boleh update atas Next1.0–1.8 dengan signing key sama, tanpa uninstall. Host kini mengisytiharkan permission signature sendiri; untuk pemasangan baharu, pasang Next dahulu.
 2. [Maps · NexaDash Next ARM32 (~63MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-maps-next-companion/Maps-NexaDash-Next-arm32.apk). Jika companion ini sudah dipasang, tidak perlu pasang semula; APK Maps tidak berubah dalam update ini.
 3. [TizenTube · NexaDash Next ARM32 (~81MB)](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/nexadash-tizentube-next/TizenTube-NexaDash-Next-arm32.apk). **TizenTube Native Lab lama / app asal bukan companion Next ini.** Ia dipasang berasingan dan menggunakan signing key serta permission Next.
 

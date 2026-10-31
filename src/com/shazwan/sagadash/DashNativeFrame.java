@@ -16,6 +16,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     static final String CONTROL="com.shazwan.embedprobe.permission.CONTROL",TOKEN="com.shazwan.embedprobe.CONTROL";
     static final int MAX_EDGE=800;
     int renderWidth=640,renderHeight=400;
+    boolean mapsSpacious=true;
     static final class Target {
         final String label,pkg,activity,service,permission;
         Target(String l,String p,String a,String s){this(l,p,a,s,CONTROL);}
@@ -58,7 +59,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     };}
     DashNativeFrame(Activity owner){this(owner,"standalone");}
     DashNativeFrame(Activity owner,String panel){
-        super(owner);this.owner=owner;panelKey="vehicle".equals(panel)?"vehicle":"media".equals(panel)?"media":"standalone";setOrientation(VERTICAL);
+        super(owner);this.owner=owner;panelKey="vehicle".equals(panel)?"vehicle":"media".equals(panel)?"media":"standalone";mapsSpacious=owner.getSharedPreferences("native_panel_layout",Context.MODE_PRIVATE).getBoolean("maps_spacious_"+panelKey,true);setOrientation(VERTICAL);
         int pad=Math.max(3,Math.round(4*owner.getResources().getDisplayMetrics().density));
         status=new TextView(owner);status.setTextSize(11);status.setTextColor(0xffdcefff);status.setMaxLines(2);status.setEllipsize(android.text.TextUtils.TruncateAt.END);
         status.setText("Native app lab · install the matching patched companion, then Start. No autoplay.");addView(status,new LayoutParams(-1,-2));
@@ -78,11 +79,18 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
         surface=new SurfaceView(owner);surface.setContentDescription("Cooperative native app surface");surface.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->fitSurface(r-l,b-t));surface.getHolder().addCallback(this);
         addView(surface,new LayoutParams(-1,0,1));surface.setOnTouchListener((view,event)->{forward(event);return true;});
         LinearLayout tools=new LinearLayout(owner);tools.setOrientation(VERTICAL);tools.setVisibility(GONE);
-        Button more=button("⋯",()->tools.setVisibility(tools.getVisibility()==VISIBLE?GONE:VISIBLE));more.setContentDescription("Show native panel input/setup tools");toolbar.addView(more,new LayoutParams(-2,-2));
+        Button more=button("⋯",()->{boolean showing=tools.getVisibility()!=VISIBLE;tools.setVisibility(showing?VISIBLE:GONE);if(showing){tools.setFocusableInTouchMode(true);tools.requestFocus();}else hideEntryInput();});more.setContentDescription("Show native panel input/setup tools");toolbar.addView(more,new LayoutParams(-2,-2));
         LinearLayout keys=new LinearLayout(owner);
         keys.addView(button("Back",()->command(4,null)),new LayoutParams(0,-2,1));
         keys.addView(button("Open outside panel",()->{stop();DashShortcuts.start(owner,new Intent(Intent.ACTION_MAIN).setComponent(new ComponentName(target.pkg,target.activity)));}),new LayoutParams(0,-2,2));
         tools.addView(keys,new LayoutParams(-1,-2));
+        tools.addView(button("Maps layout / permissions",()->{
+            if(target!=TARGETS[3]){note("Layout options apply to Maps only.");return;}
+            new AlertDialog.Builder(owner).setTitle("Maps panel setup").setItems(new String[]{"Spacious map layout (default)","Original compact layout","Maps location permission settings"},(d,index)->{
+                if(index==2){stop();try{owner.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,android.net.Uri.parse("package:"+target.pkg)));}catch(RuntimeException denied){note("Unable to open Maps settings.");}return;}
+                boolean restart=wanted;stop();mapsSpacious=index==0;owner.getSharedPreferences("native_panel_layout",Context.MODE_PRIVATE).edit().putBoolean("maps_spacious_"+panelKey,mapsSpacious).apply();fitSurface(surface.getWidth(),surface.getHeight());tools.setVisibility(GONE);if(restart)start();else note("Maps layout selected. Press Start.");
+            }).setNegativeButton("Cancel",null).show();
+        }),new LayoutParams(-1,-2));
         LinearLayout typing=new LinearLayout(owner);entry=new EditText(owner);entry.setSingleLine(true);entry.setTextSize(12);entry.setHint("Tap text field in app, type here");entry.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(240)});
         entry.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEND);
         entry.setOnEditorActionListener((v,action,event)->{if(action!=android.view.inputmethod.EditorInfo.IME_ACTION_SEND)return false;sendText();return true;});
@@ -95,7 +103,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
     }
     private void fitSurface(int width,int height){
         if(width<=0||height<=0||closed)return;
-        int[] size=fittedSize(width,height);
+        int[] size=target==TARGETS[3]&&mapsSpacious?DashNativeGeometry.mapsSize(width,height,MAX_EDGE):fittedSize(width,height);
         if(size[0]==renderWidth&&size[1]==renderHeight)return;
         cancelTouch();
         renderWidth=size[0];renderHeight=size[1];
@@ -241,6 +249,7 @@ final class DashNativeFrame extends LinearLayout implements SurfaceHolder.Callba
             finally{data.recycle();event.recycle();}
         }
     }
+    private void hideEntryInput(){if(entry==null)return;android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)owner.getSystemService(Context.INPUT_METHOD_SERVICE);if(keyboard!=null)keyboard.hideSoftInputFromWindow(entry.getWindowToken(),0);entry.clearFocus();}
     private void sendText(){
         if(!wanted||!targetConfirmed){note("Start and confirm the companion before sending text.");return;}
         command(5,entry.getText().toString());

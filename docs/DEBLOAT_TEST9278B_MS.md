@@ -12,6 +12,8 @@ CleanYourTV menggunakan ADB melalui rangkaian. Membungkusnya sebagai APK tidak m
 
 ## Peta dalam panel
 
+> Susulan Next1.9: peta native dengan carian/laluan kini dihantar; lihat [panduan semasa](PANEL_MAP_NEXT19_MS.md). Perancangan terdahulu di bawah bukan status release terkini.
+
 TerraDash menunjukkan pendekatan carian geocoding dan laluan OSRM dalam peta sendiri. NexaDash semasa mempunyai Map preview native dan cache tile terhad; butang directions masih membuka app luar. Integrasi carian/laluan dalam panel, belokan, suara dan pengesahan perjalanan belum dihantar oleh perubahan profil ini. Maps companion yang kosong juga belum dibaiki.
 
 Pelaksanaan peta perlu mengurus pembatalan request apabila panel ditutup, had respons/cache, lokasi yang lapuk, kegagalan Internet, atribusi penyedia dan had penggunaan servis awam. Cache tile tidak menjamin carian atau routing offline. Lesen/kredit mesti dikekalkan jika kod TerraDash digunakan.

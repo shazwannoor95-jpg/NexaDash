@@ -6,7 +6,7 @@ Next1.8 menambah **kawalan FM native dalam panel**: Start/Stop, masukkan frekuen
 
 ## Mula pada head unit
 
-1. Install **[NexaDash Next1.8](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk)** atas Next sedia ada. Package/signing key sama.
+1. Install **[NexaDash Next1.9](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.9.apk)** atas Next sedia ada. Package/signing key sama.
 2. Tekan ikon **Radio** pada dock. Ia memilih **Radio FM** dalam panel kanan. Radio juga boleh dipilih daripada menu panel kiri/kanan.
 3. Kekalkan **Auto**, kemudian tekan **Start FM**. Untuk FM dalaman, tunggu initialization servis selesai sebelum tune dihantar. Had menunggu ialah60s.
 4. Ketuk nombor frekuensi atau **Tune**, masukkan frekuensi stesen yang diketahui dan tekan Tune. Butang±0.1 menukar pilihan sebanyak0.1MHz. Ketika Stop, ia hanya memilih frekuensi untuk Start seterusnya.

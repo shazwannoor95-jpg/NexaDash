@@ -8,17 +8,17 @@ Launcher head unit Android oleh **[shazwannoor95-jpg](https://github.com/shazwan
 
 NexaDash menyediakan dashboard dengan panel kaca, jam, maklumat solat, preview kereta, shortcut app dan susunan yang boleh diubah.
 
-**[Download NexaDash Next 1.8](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.8.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
+**[Download NexaDash Next 1.9](https://raw.githubusercontent.com/shazwannoor95-jpg/NexaDash/main/dist/next/NexaDash-Next-1.9.apk)** · **[Panduan pemasangan head unit](https://github.com/shazwannoor95-jpg/NexaDash/blob/main/docs/PUBLIC_BETA_MS.md)** · [Lapor masalah](https://github.com/shazwannoor95-jpg/NexaDash/issues/new?template=nexadash-beta.md)
 
 Versi semasa ialah **public beta**, belum disahkan stabil pada head unit fizikal. Android minimum 7.0/API24; eksperimen native display memerlukan API26+. Sokongan firmware perlu diuji pada peranti sendiri.
 
 ## Mula guna
 
-1. Download APK Next 1.8 dan install melalui file manager head unit.
+1. Download APK Next 1.9 dan install melalui file manager head unit.
 2. Buka **NexaDash Next** dari Apps dan cuba dashboard dahulu.
 3. Selepas menguji, pilih **NexaDash Next** dalam Android Default launcher jika firmware menyediakan pilihan itu. Kekalkan launcher asal untuk kembali jika perlu.
 
-Next dipasang berasingan daripada NexaDash lama/Native Lab. Update daripada Next1.0–1.7 menggunakan package dan signing key sama. Pemasangan launcher asas tidak memerlukan companion Maps.
+Next dipasang berasingan daripada NexaDash lama/Native Lab. Update daripada Next1.0–1.8 menggunakan package dan signing key sama. Pemasangan launcher asas tidak memerlukan companion Maps.
 
 ## Ciri dan status
 
@@ -27,16 +27,21 @@ Next dipasang berasingan daripada NexaDash lama/Native Lab. Update daripada Next
 | Dashboard kaca, Apps/Settings dan susunan panel | Tersedia dalam beta |
 | Preview kereta | 8 imej sudut; import video sendiri tersedia |
 | Local video / YouTube web | Tersedia; playback dan fullscreen perlu disahkan pada peranti |
-| Navigation shortcut | Membuka app Maps/Waze berasingan |
+| Peta NexaDash dalam panel | Carian destinasi, laluan, belokan visual, pan/zoom dan pilihan suara Android — [panduan1.9](docs/PANEL_MAP_NEXT19_MS.md) |
+| Navigation shortcut luar | Kekal tersedia untuk membuka Maps/Waze berasingan |
 | Dua panel native | Host dua companion diuji dengan47 assertions pada emulator API27 (Next1.4); [panduan dan batasan](docs/DUAL_NATIVE_MS.md) |
-| Maps + TizenTube dalam panel | Video TizenTube bergerak dalam rakaman pemilik; Maps UI muncul tetapi peta/carian dalam panel masih kosong — [status](docs/MAPS_PANEL_MS.md) |
+| Maps + TizenTube dalam panel | Video TizenTube bergerak dalam rakaman pemilik; Maps UI muncul tetapi peta/carian masih kosong dalam ujian pemilik terdahulu;1.9 menambah calon pembaikan layout yang belum disahkan pada unit — [status](docs/MAPS_PANEL_MS.md) |
 | Radio FM dalam panel | Kawalan native Start/Stop, Tune dan preset tersedia; bunyi/tuner fizikal belum disahkan — [panduan](docs/RADIO_PANEL_MS.md) |
 | Waze native dalam panel | Belum siap |
 | Export fail Radio untuk analisis | Settings → Export Radio files; [panduan](docs/RADIO_EXPORT_MS.md) |
 
 Next1.8 menambah UI Radio FM dalam panel yang menghantar arahan kepada servis FM asal firmware. Tekan **Radio → Start FM**, kemudian **Tune** untuk pilih frekuensi. Tiada companion Radio tambahan atau ADB diperlukan. Sokongan servis dan bunyi sebenar masih perlu diuji pada head unit; [langkah dan versi firmware](docs/RADIO_PANEL_MS.md). Companion Maps/TizenTube dan kod host dua panel tidak berubah.
 
+Next1.9 menambah **peta native NexaDash dengan carian/laluan dalam panel**, panduan belokan asas dan suara English Android pilihan. Carian/routing memerlukan Internet; GPS sebenar diperlukan untuk titik mula. Maps companion mendapat layout Spacious/Compact dan tools yang tidak auto-focus keyboard. Ini belum pengesahan Google Maps pulih pada head unit.
+
 ## Panduan
+
+- [Peta sendiri dalam panel dan langkah Maps companion](docs/PANEL_MAP_NEXT19_MS.md)
 
 - [Radio FM dalam panel: pemasangan, frekuensi dan preset](docs/RADIO_PANEL_MS.md)
 - [Radio: fail firmware lengkap, penemuan dan semakan berikutnya](docs/RADIO_RUNTIME_FILES_REVIEW.md)

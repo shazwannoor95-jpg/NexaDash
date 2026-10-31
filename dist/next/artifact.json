@@ -1,22 +1,22 @@
 {
-  "file": "NexaDash-Next-1.8.apk",
+  "file": "NexaDash-Next-1.9.apk",
   "label": "NexaDash Next",
   "application_id": "com.shazwan.nexadash.next",
-  "version_name": "1.8-next9",
-  "version_code": 9,
-  "source_version": "1.6.7-nexadash.8-native19",
+  "version_name": "1.9-next10",
+  "version_code": 10,
+  "source_version": "1.6.7-nexadash.8-native20",
   "min_sdk": 24,
   "target_sdk": 29,
-  "size_bytes": 3058502,
-  "sha256": "c4cc1c79a10546112f8d11f132412a744a5f972621d3c5a2b81fac601c1033ad",
+  "size_bytes": 3066694,
+  "sha256": "ed5692933b4a6371584e5015724cf2e96b2019bbe7ccb07ce8e2ecfe3fbb3d00",
   "signer_sha256": "fa2d67d42fd40612e025c3f87b6a2f7ca9fc48bf613fca9f7a6cdcfcbfc5c752",
   "home_candidate": true,
   "old_launcher_replaced_or_data_migrated": false,
   "maps_companion_permission": "com.shazwan.nexadash.next.permission.CONTROL",
-  "validation": "PASS133 Radio native UI/IPC assertions on API27 emulator with two separate-UID firmware doubles; PASS25 frequency/unit JVM checks. Signed API27 APK verification, alignment/CRC, no-Quran build guard, Android Studio debug/release (lint0 errors,4 existing warnings) and all Android test-source compilation passed. Vehicle resources unchanged from Next1.7. No real tuner/audio or ARM/head-unit certification. Existing Radio report/export regression PASS23.",
+  "validation": "PASS30 native-map fixture assertions; PASS57 real-display/native-input Maps-layout host assertions with separate-UID test apps; PASS27 JVM route/layout assertions and12 existing geometry cases. Signed API27 verification, alignment/CRC, no-Quran guard and Android Studio debug/release (lint0 errors,4 warnings) passed. No Google Maps ARM, physical navigation or TTS-audio certification.",
   "radio_native_controller_delivered": true,
   "radio_runtime_probe": "One fixed FM selector property, host/app UIDs, fixed device stat/access metadata and existing source/native-library/OAT/shared-library/bootclasspath paths; no driver open or tuner commands",
-  "maps_panel_status": "Owner reports Maps companion works outside panel but map/search content stays blank inside, including when Maps alone is active. Routes/voice in panel remain unverified; this update does not fix Maps.",
+  "maps_panel_status": "Owner previously reported blank Maps map/search inside panel. Next1.9 adds Maps-specific Spacious/Compact canvas and setup permissions with fixed160dpi and verified host display/input restarts. Google Maps rendering on TEST9278B remains unverified; original companion APK unchanged.",
   "fixes": [
     "Reject queued Back/text commands from stopped or replaced sessions",
     "Cancel active gesture on raster resize/queue overflow; wait for fresh Down",
@@ -33,18 +33,18 @@
     "QuranNotch"
   ],
   "release_changes": [
-    "Native in-panel FM UI controls the installed OEM Radio service without opening its Activity",
-    "Use recovered explicit service Intent contracts with distinct internal MHz/external kHz units",
-    "Wait for internal complete initialization reply before tuning; ignore partial and late replies",
-    "Preserve active FM on repeated Radio dock tap; source picker on long press",
-    "Stop owned FM request and release receiver/timer when leaving or replacing the panel",
-    "Retain original vehicle preview, native host and Maps/TizenTube companions"
+    "Native in-panel destination search, result selection and driving route geometry",
+    "Native next-turn/distance/estimated-time display, pan/zoom, GPS follow, route overview and opt-in Android English TTS",
+    "Cancel pending routes on Clear/pause/replacement; reject stale/malformed/oversized results",
+    "Maps Spacious/Compact canvas with bounded800px edge, constant160dpi and isolated session restart",
+    "Maps location-settings link and non-editor tool focus to avoid automatic keyboard interception",
+    "Retain Radio1.8 controls, original vehicle atlas and existing Maps/TizenTube companion APKs"
   ],
   "active_native_panel_limit": 2,
   "active_web_or_file_panel_limit": 1,
   "mixed_native_web_file_concurrency": false,
   "same_native_package_in_two_panels": false,
-  "native_test_runtime": "Earlier Next1.4 PASS47 on API27 software emulator. Native host implementation unchanged in1.8; no new live dual-native or Maps/TizenTube/ARM certification. Unreleased Maps sizing work remains excluded.",
+  "native_test_runtime": "Next1.9 PASS57 Maps-layout host checks on API27 with separate-UID test apps and real display/input. Not Google Maps/TizenTube content or physical ARM certification. Prior Next1.4 dual-native evidence remains separate.",
   "tizentube_panel_status": "Owner videos show TizenTube native video advancing in left panel while Maps UI is visible in right. All controls, search/keyboard, audio focus and long-session stability are not established.",
   "control_permission_owner": "Next host declares its own signature permission; install host first for new deployments.",
   "radio_file_export": {
@@ -57,7 +57,7 @@
     "manifest_report": "RADIO_EXPORT_REPORT.txt"
   },
   "radio_file_export_owner_evidence": "Complete owner ZIP: five of five expected firmware binaries copied and matching recorded SHA256; see docs/qa/radio-runtime-files-review.json",
-  "maps_ui_size_controls_delivered": false,
+  "maps_ui_size_controls_delivered": true,
   "vehicle_preview": {
     "views": 8,
     "atlas_dimensions": [
@@ -74,7 +74,7 @@
     "sampled_argb_bytes_upper_bound": 1575312,
     "retained_atlas_limit_bytes": 2097152
   },
-  "source_version_code": 51,
+  "source_version_code": 52,
   "radio_hardware_verified": false,
   "radio_original_activity_embedded": false,
   "radio_companion_required": false,
@@ -97,5 +97,20 @@
     "verification_guide": "docs/RADIO_PANEL_MS.md",
     "protocol": "docs/RADIO_SERVICE_PROTOCOL.md"
   },
-  "radio_qa": "docs/qa/radio-panel-next18-api27.json"
+  "radio_qa": "docs/qa/radio-panel-next18-api27.json",
+  "native_panel_map": {
+    "delivered": true,
+    "implementation": "Native Canvas/widgets; no Maps/WebView companion needed",
+    "search": "Photon, manual query and optional current-position bias",
+    "routing": "OSRM public demo, manual request/recalculation",
+    "tiles": "OpenStreetMap with existing bounded cache",
+    "voice": "Opt-in Android TTS, English voice data required; physical audio unverified",
+    "fresh_gps_required_for_departure": true,
+    "live_traffic": false,
+    "offline_routing": false,
+    "automatic_rerouting": false,
+    "physical_navigation_verified": false,
+    "guide": "docs/PANEL_MAP_NEXT19_MS.md"
+  },
+  "maps_qa": "docs/qa/maps-next19-api27.json"
 }

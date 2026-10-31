@@ -1,0 +1,62 @@
+{
+  "host_version": "1.9-next10",
+  "source_version": "1.6.7-nexadash.8-native20",
+  "source_version_code": 52,
+  "host_sha256": "ed5692933b4a6371584e5015724cf2e96b2019bbe7ccb07ce8e2ecfe3fbb3d00",
+  "device": "AOSP API27 x86_64 software emulator,1024x600@160dpi; secondary-display capability enabled",
+  "native_map_assertions": 30,
+  "native_map_result": "PASS: 30 native map panel assertions (offline transport fixtures, parsing, search/route UI, lifecycle; not real navigation or Maps rendering)",
+  "maps_layout_assertions": 57,
+  "maps_layout_result": "PASS: 57 Maps-layout host assertions (separate-UID native test apps, real displays and touch; not Google Maps rendering)",
+  "jvm_route_and_maps_geometry_assertions": 27,
+  "existing_jvm_geometry_cases": 12,
+  "live_photon_osrm_check": "Attempted once using public KL landmarks; environment network proxy rejected both domains with403. No live API response or physical journey certification.",
+  "network_fixtures": "Process-local HTTPS transport doubles; real JSON parsing/native dialogs/workers/lifecycle, synthetic coordinates, no real geocoder/router/TLS certification",
+  "native_map_verified": [
+    "Search/result selection stays in host panel; invalid destination coordinates omitted",
+    "GeoJSON lon/lat ordering and malformed route rejection",
+    "Native polyline state, next-turn progress, pan, overview and GPS follow",
+    "Clear route cancels pending response; stale response cannot recreate route",
+    "No route request without fresh GPS; no invented departure point",
+    "Bounded response, late callback rejection and worker teardown"
+  ],
+  "maps_layout_verified": [
+    "Actual bounded707x480 private display on tested panel geometry, DPI160",
+    "Distinct normal-UID apps and display IDs",
+    "Rendered counter pixel confirmed before actual Android input",
+    "Touch reaches native app before and after layout restart",
+    "Spacious/Compact changes restart only selected panel; other app remains live",
+    "Stopped layout change never auto-starts; choice survives host view replacement",
+    "Display, input worker and binding released on teardown"
+  ],
+  "input_boundary": [
+    "Native map dialog actions/query values invoked via native widget APIs; full physical keyboard workflow not automated",
+    "Maps-layout toolbar/surface events injected through Android input routing, menu rows selected through native accessibility",
+    "Native test app avoids automatic startup EditText focus; normal Android IME stays enabled",
+    "Host native tools now focus their non-editor container when shown; keyboard is not automatically requested"
+  ],
+  "not_verified": [
+    "Google Maps ARM companion tile/search/navigation restored on TEST9278B",
+    "Actual Photon/OSRM reachability and response quality on head unit",
+    "Physical GPS, driving route quality and actual Android TTS audio/voice data",
+    "Live traffic, automatic off-route recalculation and offline routing are not provided",
+    "Long-session RAM/GPU usage with actual Google Maps and TizenTube"
+  ],
+  "maps_companion_apk_changed": false,
+  "maps_render_fixed_dpi": 160,
+  "maps_max_raster_edge": 800,
+  "maps_min_short_edge_when_fitting": 480,
+  "radio_changes": false,
+  "vehicle_assets_unchanged_from_next18": true,
+  "gradle": "Android Studio debug/release passed; lint0 errors,4 existing warnings",
+  "all_android_test_sources_compile": true,
+  "signature_api27_alignment_crc_no_quran_passed": true,
+  "raw_owner_apks_or_export_data_published": false,
+  "source": [
+    "../../tests/PanelMapChecks.java",
+    "../../tests/MapsLayoutChecks.java",
+    "../../tests/jvm/RouteProgressChecks.java",
+    "../../tests/run-panel-map.sh",
+    "../../tests/run-maps-layout.sh"
+  ]
+}

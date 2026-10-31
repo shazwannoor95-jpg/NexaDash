@@ -4,7 +4,7 @@ This is an **unverified ARM32 native-display candidate**, not a working-navigati
 
 Output identity: `com.shazwan.nexadash.maps.next`, **Maps · NexaDash Next**, version `25.32.00.790560726-next1`, minAPI26/target36. Main Activity remains `com.google.android.maps.MapsActivity`. The only change to normal main task placement is standard launch mode + dedicated native task affinity + allowEmbedded/resizeable. The original app's nine DEX files and ten ARM32 libraries are retained byte-for-byte; bridge classes enter a new classes10.dex.
 
-The package/shared UID, owned custom permissions and provider authorities are isolated for co-installation. Signature-protected bridge permission is `com.shazwan.nexadash.next.permission.CONTROL`, separate from the older cloud Native Lab namespace. Install the companion first, then the matching-signed NexaDash Next host. Original Google notices/assets remain; only obsolete signing/stamp files are removed before signing with the test key. Packaged API credentials are neither printed nor changed by these tools.
+The package/shared UID, owned custom permissions and provider authorities are isolated for co-installation. Signature-protected bridge permission is `com.shazwan.nexadash.next.permission.CONTROL`, separate from the older cloud Native Lab namespace. Install the matching-signed NexaDash Next host first, then this companion. Original Google notices/assets remain; only obsolete signing/stamp files are removed before signing with the test key. Packaged API credentials are neither printed nor changed by these tools.
 
 ## Tool provenance / rebuild
 
@@ -32,3 +32,5 @@ Single APK ~62.7MB. No sharedUserId, required split markers or uses-split nodes 
 No Maps APK was executed during this build. Manifest/static checks do not prove the app is embeddable on the OEM firmware or that any map/search/navigation function works. The Next host must check the companion's reported display; a first frame alone is not full navigation validation. This build does not implement Radio FM.
 
 Archive provenance was rechecked against the published artifact hashes, all nine original DEX and ten ARM32 libraries. See [which Maps is connected to Next](../../docs/NEXT_INSTALL_MS.md#maps-mana-yang-digunakan--semakan-semula-arkib). This does not change the installed original Maps package or produce a new companion APK.
+
+Host Next1.9 adds bounded Spacious/Compact layout and permission setup options without changing this companion APK. See ../../docs/PANEL_MAP_NEXT19_MS.md. A larger logical canvas is a layout correction candidate, not proof of Google map/search restoration.
